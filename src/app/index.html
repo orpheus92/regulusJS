@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<header>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+  <title>Skeleton Example</title>
+</header>
+<body>
+  <div class="container row">
+    <div class="container col">
+      <div class="title">Skeleton example</div>
+      <div>
+        <!-- hide the ugly file loader-->
+        <input id="fileLoader" type="file" name="input_file" accept=".cpp" value="./" style="display:none">
+        <!-- this button will trigger the file loader -->
+        <button id="load">File</button>
+        <span id="filename"></span>
+      </div>
+
+      <div id="src">
+        <textarea id="editor"></textarea>
+      </div>
+    </div>
+
+    <div id="single"/>
+
+  </div>
+
+</body>
+</html>

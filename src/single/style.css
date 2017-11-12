@@ -1,0 +1,10 @@
+.charts {
+  flex: 1 1 auto;
+  padding: 5px;
+  margin: 10px;
+}
+
+.single-title {
+  font-size: 20px;
+  font-weight: bold;
+}

@@ -1,0 +1,38 @@
+
+body {
+}
+
+#load {
+  margin: 5px 0 5px 10px;
+}
+
+#filename {
+  padding: 5px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: bold;
+  padding: 5px 0 5px 10px;
+}
+
+.container {
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.col {
+  flex-direction: column;
+}
+
+#src {
+  border: 1px solid;
+  flex: 1 1 auto;
+  margin: 10px;
+}
