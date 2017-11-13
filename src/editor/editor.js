@@ -9,7 +9,7 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/comment-fold';
 
-import 'codemirror/addon/edit/matchBrackets';
+//import 'codemirror/addon/edit/matchBrackets';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/show-hint';
 
