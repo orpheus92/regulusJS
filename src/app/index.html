@@ -10,10 +10,18 @@
       <div class="title">Skeleton example</div>
       <div>
         <!-- hide the ugly file loader-->
-        <input id="fileLoader" type="file" name="input_file" accept=".csv" value="./" style="display:none">
+        <input id="csvLoader" type="file" name="input_file" accept=".csv" value="./" style="display:none">
         <!-- this button will trigger the file loader -->
-        <button id="load">File</button>
-        <span id="filename"></span>
+        <button id="csvload">File</button>
+        <span id="csvname"></span>
+      </div>
+
+      <div>
+        <!-- hide the ugly file loader-->
+        <input id="jsonLoader" type="file" name="input_file2" accept=".json" value="./" style="display:none">
+        <!-- this button will trigger the file loader -->
+        <button id="jsonload">File</button>
+        <span id="jsonname"></span>
       </div>
 
       <div id="loader">

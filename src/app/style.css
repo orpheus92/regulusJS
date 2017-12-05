@@ -2,10 +2,20 @@
 body {
 }
 
-#load {
+#csvload {
   margin: 5px 0 5px 10px;
 }
 
+#jsonload {
+  margin: 5px 0 5px 10px;
+}
+
+#csvname {
+  padding: 5px;
+}
+#jsonname {
+  padding: 5px;
+}
 #filename {
   padding: 5px;
 }

@@ -9,3 +9,12 @@ export function tree(selection) {
     .attr('class', 'tree')
     .text( d => d);
 }
+export function tree_init(data){
+
+
+}
+
+export function tree_update(tree, pers){
+
+
+}

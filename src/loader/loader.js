@@ -41,9 +41,9 @@ export function loader(node, options) {
 
 
 
-export function setValue(val,option) {
-    option = val;
+export function setValue(val) {
+    //option = val;
     console.log('Data loaded!');
     //console.log(option);
-    return option;
+    //return option;
 }
