@@ -2,71 +2,135 @@
 import './style.css';
 import * as d3 from 'd3';
 
-//import {editor} from '../editor';
-import {single} from '../single';
-import {loader,setValue} from '../loader';
+import {Crystal} from '../Crystal';
+import {Info} from '../Info';
+import {Tree} from '../Structure';
+import {Slider} from '../Slider';
 
-//import {tree} from '../tree';
+//import {loader,setValue} from '../loader';
 
-import simple from '../../data/test.csv';
-import simple2 from '../../data/test.csv';
-1
-//console.log(simple);
-let _loader;
-let _loader2;
-let _single;
-let _data;
-let _data2;
-//let _tree;
+import {Partition} from '../Process';
 
-console.log('Skeleton started');
-setup();
+//import simple from '../../data/test.csv';
+//import simple2 from '../../data/test.csv';
+//import {Plots} from './Plot';
+//import {Crystal} from './Crystal.js';
+//import * as d3 from 'd3';
+//read data;
+let pInter;
+let sizeInter;
+let tree;
+let partition;
+let loaddata;
+let treenode;
+d3.csv('../data/Pu_TOT.csv', rawdata=> {
+
+    //if (error) throw error;
+    //console.log(rawdata);
+    for (let i = 0; i< rawdata.columns.length; i++)
+    {
+        d3.selectAll("#y_attr")
+            .append("option")
+            .attr("value", rawdata.columns[i])
+            .text(rawdata.columns[i]);
+    }
+
+    let plots = new Crystal(rawdata, 600, 200);
+    window.plots = plots;
+    //Load data in JS
+    pInter = 2;
+    sizeInter = 20;
+    d3.json('../data/Tree_Data.json', function (error, data) {
+        if (error) throw error;
+        //will be updated later
+        tree = new Tree();
+        loaddata = new Info();
+        let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
+        partition = new Partition();
+        partition.initialPartition(data);
+
+        d3.csv('../data/Tree_Merge.csv', function (error, treedata){
+            d3.json('../data/Base_Partition.json', function (error, basedata) {
+                //console.log(rawdata);
+                treenode = tree.create(treedata, partition.pers, basedata,pInter,sizeInter,partition);
+                tree.updateTree(pInter,sizeInter);
+
+                //Slider Event
+                let x = d3.scaleLinear()
+                    .domain([minp, maxp])
+                    .range([0, 150])//size of slider and range of output, put persistence here
+                    .clamp(true);
+                let newslider= new Slider(d3.select("#treesvg"));
+                let slider = newslider.createslider([minp, maxp]);
+
+                slider.curslide.call(d3.drag()
+                    .on("start.interrupt", function() { slider.interrupt(); })
+                    .on("start drag", function() {
+                        slider.handle.attr("cx", x(x.invert(d3.event.x))); //initial position for the slider
+
+                        pInter = x.invert(d3.event.x);
+
+                        loaddata.update(pInter,sizeInter);
+                        tree.updateTree(pInter,sizeInter);
+
+                    }));
+
+                d3.select('#increase')
+                    .on('click', () => {
+                        pInter = tree.increasePersistence(pInter);
+                        slider.handle.attr("cx", x(pInter));
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#decrease')
+                    .on('click', () =>  {
+                        pInter = tree.decreasePersistence(pInter);
+                        slider.handle.attr("cx", x( pInter));
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#increaseS')
+                    .on('click', () =>  {
+                        sizeInter = tree.increaseSize();
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#decreaseS')
+                    .on('click', () =>  {
+                        sizeInter = tree.decreaseSize();
+                        loaddata.update(pInter,sizeInter);
+                    });
+
+                let clicks = 0;
+                let DELAY = 500;
+                //Separate clicking from double clicking
+                treenode.on("click", (nodeinfo)=>{
+                    let timer;
+                    clicks++;  //count clicks
+
+                    if(clicks === 1) {
+
+                        timer = setTimeout(function() {
+                            window.plots.update(nodeinfo);
+                            loaddata.select(nodeinfo);
+                            clicks = 0;             //after action performed, reset counter
+
+                        }, DELAY);
+
+                    } else {
+
+                        clearTimeout(timer);    //prevent Process-click action
+                        tree.reshape(nodeinfo);
+                        clicks = 0;             //after action performed, reset counter
+                    }
+
+                });
 
 
-function setup() {
-  // setup file loader
-  d3.select('#csvload')
-    .on('click', () =>  document.getElementById('csvLoader').click());
 
-  d3.select('#csvLoader')
-    .on('change', function () { selectFile(this.files.length && this.files[0]); });
+            });
+        });
 
-    d3.select('#jsonload')
-        .on('click', () =>  document.getElementById('jsonLoader').click());
+    })
 
-    d3.select('#jsonLoader')
-        .on('change', function () { selectFile2(this.files.length && this.files[0]); });
+});
 
 
-    // setup the editor
-  _loader= loader(document.getElementById('csvloader'), {});
-  _loader2= loader(document.getElementById('jsonloader'), {});
-
-    //console.log(_loader);
-  _data = setValue(simple,_data);
-  _data2 = setValue(simple2,_data2);
-
-    //_tree = tree('#tree');
-  _single = single('#single');
-}
-
-
-function selectFile(path) {
-  d3.select('#csvname').text(path.name);
-  if (path) load(path);
-}
-
-function selectFile2(path) {
-    d3.select('#jsonname').text(path.name);
-    if (path) load(path);
-}
-
-function load(path) {
-  let reader = new FileReader();
-  reader.onloadend = (event) => {
-    d3.text(event.target.result)
-      .get( data => setValue(data));
-  };
-  //console.log(_data);
-  reader.readAsDataURL(path);
-}
+function updateDataInfo(){}

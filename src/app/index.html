@@ -2,35 +2,65 @@
 <html>
 <header>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-  <title>Skeleton Example</title>
+  <title>Regulus - High Dimensional Data Analysis using MSC</title>
 </header>
 <body>
-  <div class="container row">
-    <div class="container col">
-      <div class="title">Skeleton example</div>
-      <div>
-        <!-- hide the ugly file loader-->
-        <input id="csvLoader" type="file" name="input_file" accept=".csv" value="./" style="display:none">
-        <!-- this button will trigger the file loader -->
-        <button id="csvload">File</button>
-        <span id="csvname"></span>
-      </div>
+<div class="container">
+  <header>
+    <h1>Regulus - High Dimensional Data Analysis using MSC</h1>
+    <h2> Di Wang </h2>
+  </header>
 
-      <div>
-        <!-- hide the ugly file loader-->
-        <input id="jsonLoader" type="file" name="input_file2" accept=".json" value="./" style="display:none">
-        <!-- this button will trigger the file loader -->
-        <button id="jsonload">File</button>
-        <span id="jsonname"></span>
-      </div>
+  <div id="loadData" class="view">
+    <h2 id="edition">Data</h2>
+    <h3>rawData</h3>
+    <span id="raw"></span>
+    <h3>Persistence</h3>
+    <span id="persistence"></span>
+    <h3>Filtering Type</h3>
+    <span id="cper"></span>
+    <span id="csize"></span>
+    <h3>selectedMSC</h3>
+    <span id="selected"></span>
 
-      <div id="loader">
-        <!--textarea id="loader"></textarea-->
-      </div>
-    </div>
-
-    <div id="single"/>
   </div>
+  <div id="treePlot" class="view">
+    <h2>Tree View</h2>
+    <button id="decrease">Decrease Persistence</button>
+    <button id="increase">Increase Persistence</button>
+    <button id="decreaseS">Decrease Partition Size</button>
+    <button id="increaseS">Increase Partition Size</button>
+    <svg id = "treesvg" width="700" height="400">
+      <g id="tree"></g>
+      <g id="slider"></g>
+    </svg>
+  </div>
+  <div id="hdPlot" class="view">
+    <h2 class="">Plot</h2>
+    <div id="plot-selector">
+      <label>Plot:</label>
+      <select id="dataset" onchange="printPlots()">
+        <option selected value="Coordinate">Coordinate</option>
+        <option value="Pairwise">Pariwise</option>
+        <option value="BoxPlot">BoxPlot</option>
+        <option value="HDView">3DView</option>
+        <option value="Stats">Statistics</option>
+        <option value="Histogram">Histogram</option>
+      </select>
+    </div>
+    <div id="attr-selector">
+      <label>Attr:</label>
+      <select id="y_attr" onchange="updateAttribute()">
+
+      </select>
+    </div>
+  </div>
+
+
+
+
+</div>
+
 
 </body>
 </html>

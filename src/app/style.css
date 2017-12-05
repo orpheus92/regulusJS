@@ -2,6 +2,108 @@
 body {
 }
 
+#loadData {
+  float: left;
+  text-align: left;
+  margin: 2px 10px;
+  display: inline-block;
+  width:400px;
+  height: 400px;
+
+}
+
+#treePlot {
+  text-align: left;
+  margin: 2px 10px;
+  display: inline-block;
+  left: 20px;
+  width:700px;
+  height: 400px;
+
+
+}
+
+#container
+{
+  text-align:center;
+}
+
+h1 {
+  margin-top: 0;
+  font-family: 'font2';
+  color: black;
+}
+
+h2 {
+  font-family: 'font2';
+  color: orange;
+  padding-bottom: 0;
+  margin-top: 3px;
+  margin-bottom: 0;
+}
+
+h3 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+
+#plot-selector {
+  float: right;
+  margin-bottom: 5px;
+
+}
+#increase {
+  float: right;
+  margin-bottom: 5px;
+}
+
+#decrease {
+  float: right;
+  margin-bottom: 5px;
+}
+
+#increaseS {
+  float: right;
+  margin-bottom: 5px;
+}
+
+#decreaseS {
+  float: right;
+  margin-bottom: 5px;
+}
+
+.view {
+  padding: 0.5em;
+
+}
+
+#slider{
+  float: right;
+  margin-up: 5px;
+  margin-left: 20px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}
+/*Before is new
+
 #csvload {
   margin: 5px 0 5px 10px;
 }
@@ -46,3 +148,4 @@ body {
   flex: 1 1 auto;
   margin: 10px;
 }
+*/

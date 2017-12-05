@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     main: './src/app/index.js',
     vendor: [
-      'd3', 'codemirror'
+      'd3','d3-tip'
     ]
   },
   output: {
