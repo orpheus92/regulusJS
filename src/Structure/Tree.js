@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import * as d3Tip from 'd3-tip';
+//import {line} from 'd3-shape';
+
 //d3.tip = d3Tip;
 
 import './style.css';
@@ -9,8 +11,51 @@ export class Tree{
      * Creates a Tree Object
      */
 
-    constructor() {
+    constructor(treeCSV,partition,basedata) {
 
+        let totalpers = [];
+        partition.pers.map(function(item) {
+            totalpers.push(parseFloat(item));
+        });
+        this.pers = totalpers;
+        treeCSV.forEach(d=> {
+
+            d.id = d.C1+ ", "+d.C2+", "+d.Ci;
+            d.index = d.C1+ ", "+d.C2;
+            d.par = d.P1+ ", "+d.P2+", "+d.Pi;
+            d._persistence = this.pers[d.Ci];
+
+        });
+        //Children relations
+        this._root = d3.stratify()
+            .id(d => d.id)
+            .parentId(d => d.par === ", , 0" ? '' : d.par)
+            (treeCSV);
+        let accum;
+        this._root.descendants().forEach(d=>{
+            accum = [];
+            accum = getbaselevelInd(d, accum);
+            //d.data.children = d.children;
+            //d.data.parent = d.parent;
+
+            d.data._baselevel = new Set(accum);
+            d.data._total = new Set();
+            d.data._baselevel.forEach(dd=> {
+                if (basedata[dd] != null) {
+                    basedata[dd].forEach(ddd=>{
+
+                        if (!d.data._total.has(ddd))
+                            d.data._total.add(ddd);
+                    })
+                }
+            });
+            d.data._size = d.data._total.size;
+
+        });
+        this._initsize = this._root.descendants().length;
+        this._alldata = treeCSV;
+        this._treefunc = d3.tree()
+            .size([670,330]);
     }
 
     /**
@@ -18,82 +63,62 @@ export class Tree{
      *
      * @param treeData an array of objects that contain parent/child information.
      */
+    nodeupdate(root, p, s){
+        newupdate(root,p,s);
+        //console.log(root);
+    }
 
-    create(treeCSV,pers,basedata,pInter,sizeInter,partition) {
-        this.pInter = pInter;
-        this.sizeInter = sizeInter;
-        let totalpers = [];
-        partition.pers.map(function(item) {
-            totalpers.push(parseFloat(item));
-        });
-        this.pers = totalpers;
-        treeCSV.forEach(function (d) {//console.log(d);
+    updateTree(ppp,sss) {
+        //model
+        this.pInter = ppp;
+        this.sizeInter = sss;
+        this.nodeupdate(this._root, this.pInter,this.sizeInter);
 
-            d.id = d.C1+ ", "+d.C2+", "+d.Ci;
-            d.index = d.C1+ ", "+d.C2;
-            d.par = d.P1+ ", "+d.P2+", "+d.Pi;
-            d.persistence = pers[d.Ci];
-
-        });
-
-        //Construct the tree
-        this._treefunc = d3.tree()
-            .size([670,330]);
-
-        this._root = d3.stratify()
-            .id(d => d.id)
-            .parentId(d => d.par === ", , 0" ? '' : d.par)//d.ParentGame ? treeData[d.ParentGame].id : '')
-            (treeCSV);
-
+        //layout
         this._treefunc(this._root);
 
-        let accum;
-
-        this._root.descendants().forEach(d=>{//console.log(d);
-            accum = [];
-            accum = getbaselevelInd(d, accum);
-            d.data._baselevel = new Set(accum);
-            d.data._total = new Set();
-            d.data._baselevel.forEach(dd=> {
-                //console.log(dd);
-                if (basedata[dd] != null) {
-                    //console.log(basedata[dd]);
-                    basedata[dd].forEach(ddd=>{
-                        //console.log(basedata[dd]);
-                        //console.log(ind);
-                        if (!d.data._total.has(ddd))
-                            d.data._total.add(ddd);
-                    })
-                    //console.log(d.data._total);
-                    //d.data._total = d.data._totalnumber + basedata[dd].length;
-                }
-            });
-            //d.data._baselevel
-        });
-        this._initsize = this._root.descendants().length;
-
+        //render
         let g = d3.select("#tree").attr("transform", "translate(15,40)");
 
-        this._link = g.selectAll(".link")
-            .data(this._root.descendants().slice(1))
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", function (d) {
-                return "M" + d.x + "," + d.y
-                    //+ "C" + d.x  + "," + d.y+10
-                    //+ " " + d.parent.x  + "," + d.parent.y+10
-                    +"L" + d.parent.x + "," + d.parent.y;
-            });
+        if(d3.select('#treetip')!=undefined)
+            d3.selectAll('#treetip').remove();
 
-        this._node = g.selectAll(".node")
-            .data(this._root.descendants())
-            .enter().append("g")
-            .attr("class", "node")
+        // Update Node
+        let curnode = g.selectAll(".node");
+
+        this._node = curnode.data(this._root.descendants())
+            .enter().append("circle")
+            .attr("r",5)
+            .attr("class", 'node')
+            .merge(curnode);
+
+        d3.selectAll('.node').data(this._root.descendants()).exit().remove();
+
+        this._node.attr("class", "node")
             .attr("transform", function (d) {
+                //console.log(d);
                 return "translate(" + d.x + "," + d.y + ")";
             });
 
-        //Need some change later to fix this design
+        //Update Link
+
+        let curlink = g.selectAll(".link");
+
+        this._link = curlink.data(this._root.descendants().slice(1))
+            .enter().append("path")
+            .attr("class", "link")
+            .merge(curlink);;
+
+        this._link.attr("d", d=>{//console.log(d);
+                return "M" + d.x + "," + d.y
+                //+ "C" + d.x  + "," + d.y+10
+                //+ " " + d.parent.x  + "," + d.parent.y+10
+                +"L" + d.parent.x + "," + d.parent.y;
+            });
+
+        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+
+
         let tip = d3Tip().attr('class', 'd3-tip').attr('id','treetip')
             .direction('se')
             .offset(function() {
@@ -109,18 +134,16 @@ export class Tree{
         this._node.call(tip);
         this._node.on('mouseover', tip.show)
             .on('mouseout', tip.hide);
-        this._alldata = treeCSV;
-        return(this._node);
+
 
     };
 
     tooltip_render(tooltip_data) {
-        //console.log(tooltip_data);
-        //let text = "";
+
 
         let text =  "<li>"+"Partition Extrema: " + tooltip_data.index;
         text += "<li>";
-        text +=  "Partition Persistence: " + tooltip_data.persistence;
+        text +=  "Partition Persistence: " + tooltip_data._persistence;
         text += "<li>";
         text +=  "Number of Points: " + tooltip_data._total.size;
 
@@ -133,6 +156,7 @@ export class Tree{
      *
      * @param row a string specifying which team was selected in the table.
      */
+    /*
     updateTree(ppp,sss) {
         this.pInter = ppp;
         this.sizeInter = sss;
@@ -206,9 +230,10 @@ export class Tree{
         g.selectAll(".node")
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
-            }).append("circle").attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");
+            }).attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");//.append("circle").attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");
 
     }
+    */
     /*
     updateTree2(ppp,sss) {
 
@@ -451,4 +476,23 @@ export function checknode(curnode){
     }
     else
         return true;
+}
+export function newupdate(node, p, s){
+    if ((node.data._persistence<p&&node.data._persistence !=-1)||node.data._size<s)
+    {   //node.parent._children = node.parent.children;
+        //delete node.parent.children;
+        node._children = (node.children!=undefined)?node.children:node._children;
+        delete node.children;
+        return}
+    else
+    {   node.children = (node.children!=undefined)?node.children:node._children;
+        delete node._children;
+        if (node.children!=undefined)
+        node.children.forEach(d=>{
+            newupdate(d, p, s);
+        });
+
+    }
+
+
 }

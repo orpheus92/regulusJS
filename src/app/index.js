@@ -46,7 +46,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
     d3.json('../data/Tree_Data.json', function (error, data) {
         if (error) throw error;
         //will be updated later
-        tree = new Tree();
+
         loaddata = new Info();
         let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
         partition = new Partition();
@@ -55,9 +55,10 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
         d3.csv('../data/Tree_Merge.csv', function (error, treedata){
             d3.json('../data/Base_Partition.json', function (error, basedata) {
                 //console.log(rawdata);
-                treenode = tree.create(treedata, partition.pers, basedata,pInter,sizeInter,partition);
+                tree = new Tree(treedata,partition,basedata);
+                //tree.create(pInter,sizeInter);
                 tree.updateTree(pInter,sizeInter);
-
+                console.log(tree);
                 //Slider Event
                 let x = d3.scaleLinear()
                     .domain([minp, maxp])
