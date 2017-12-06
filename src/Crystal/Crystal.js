@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as d3Tip from 'd3-tip';
+import './style.css';
 
 
 export class Crystal {
