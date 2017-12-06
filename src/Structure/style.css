@@ -1,11 +1,17 @@
+.link {
+  fill: none;
+  stroke: #555;
+  stroke-opacity: 0.4;
+  stroke-width: 2px;
+}
+
+.partitiontip{
+  fill: #de2d26;
+  color: #de2d26;
+  text-anchor:end;
+}
 
 
-.tree {
-  width: 100%;
-  height: 200px;
-  border: 1px solid;
-  padding: 5px;
-  margin: 5px 0;
-
-  background-color: #f0f0f0;
+.node circle {
+  fill: #be2714;
 }

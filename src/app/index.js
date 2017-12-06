@@ -6,7 +6,10 @@ import {Crystal} from '../Crystal';
 import {Info} from '../Info';
 import {Tree} from '../Structure';
 import {Slider} from '../Slider';
+import {updateAttribute} from "../Crystal";
+import {printPlots} from "../Crystal";
 
+//let updateAttribute = updateAttribute();
 //import {loader,setValue} from '../loader';
 
 import {Partition} from '../Process';
@@ -123,8 +126,10 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
 
                 });
 
-
-
+                d3.select("#dataset").on('change',printPlots);
+                //document.getElementById("dataset").addEventListener("change", printPlots);
+                //document.getElementById("y_attr").addEventListener("change", updateAttribute);
+                d3.select("#y_attr").on('change',updateAttribute);
             });
         });
 

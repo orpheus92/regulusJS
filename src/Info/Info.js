@@ -47,14 +47,6 @@ export class Info {
         this.cper.append("li").text("Current Persistence: "+ cpInter).classed("cplabel", true);
         this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
 
-        /*
-        console.log(ppInter);
-        team_text
-            .enter().append("li")
-            .text("Current Persistence: "+ ppInter)
-            .classed("team_label", true)
-        */
-        //this.cper.text("Current Persistence: "+ pInter);
     }
 
     select(snode){

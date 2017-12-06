@@ -12,6 +12,7 @@ export class Crystal {
         this._height = height;
         this._plot = d3.select("#hdPlot");
         this._y_attr = document.getElementById('y_attr').value;
+        console.log(this._y_attr);
     }
 
     //printPlots
@@ -581,13 +582,15 @@ export class Crystal {
     }
 }
 
+
 export function printPlots() {
     window.plots.printPlots()
+    //console.log("PrintPlots");
 }
 
 export function updateAttribute(){
     window.plots.updateAttribute()
-
+    //console.log("updateAttribute");
 }
 
 
