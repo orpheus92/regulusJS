@@ -8,18 +8,11 @@ import {Tree} from '../Structure';
 import {Slider} from '../Slider';
 import {updateAttribute} from "../Crystal";
 import {printPlots} from "../Crystal";
+import {Partition} from '../Process';
 
 //let updateAttribute = updateAttribute();
 //import {loader,setValue} from '../loader';
 
-import {Partition} from '../Process';
-
-//import simple from '../../data/test.csv';
-//import simple2 from '../../data/test.csv';
-//import {Plots} from './Plot';
-//import {Crystal} from './Crystal.js';
-//import * as d3 from 'd3';
-//read data;
 let pInter;
 let sizeInter;
 let tree;

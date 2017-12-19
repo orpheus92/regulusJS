@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
+//import { select, selectAll } from 'd3-selection';
+//import { transition } from 'd3-transition';
+let transition = d3.transition();
 import * as d3Tip from 'd3-tip';
-//import {line} from 'd3-shape';
 
-//d3.tip = d3Tip;
 
 import './style.css';
 
@@ -93,8 +94,9 @@ export class Tree{
             .merge(curnode);
 
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
-
-        this._node.attr("class", "node")
+        console.log(this._node);
+        this._node.transition()
+            .duration(500).attr("class", "node")
             .attr("transform", function (d) {
                 //console.log(d);
                 return "translate(" + d.x + "," + d.y + ")";
@@ -109,14 +111,15 @@ export class Tree{
             .attr("class", "link")
             .merge(curlink);;
 
-        this._link.attr("d", d=>{//console.log(d);
+            d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+
+        this._link.transition()
+            .duration(500).attr("d", d=>{
                 return "M" + d.x + "," + d.y
                 //+ "C" + d.x  + "," + d.y+10
                 //+ " " + d.parent.x  + "," + d.parent.y+10
                 +"L" + d.parent.x + "," + d.parent.y;
             });
-
-        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
 
 
         let tip = d3Tip().attr('class', 'd3-tip').attr('id','treetip')
