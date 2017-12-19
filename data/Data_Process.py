@@ -23,6 +23,8 @@ if __name__ == '__main__':
   main.loadData('Pu_TOT.csv')
 
 
+# Post-Process the results from MSC Algorithm
+# The modified code saves Merge of Maxima and Merge of Minima and basis partition
 
 def convertind(str):
     str1,str2 = str.split(',')
