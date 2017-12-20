@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 //import { select, selectAll } from 'd3-selection';
 //import { transition } from 'd3-transition';
-let transition = d3.transition();
+//let transition = d3.transition();
+//console.log(transition);
 import * as d3Tip from 'd3-tip';
 
 
@@ -64,21 +65,21 @@ export class Tree{
      *
      * @param treeData an array of objects that contain parent/child information.
      */
-    nodeupdate(root, p, s){
-        newupdate(root,p,s);
-        //console.log(root);
-    }
+
+
 
     updateTree(ppp,sss) {
-        //model
         this.pInter = ppp;
         this.sizeInter = sss;
-        this.nodeupdate(this._root, this.pInter,this.sizeInter);
-
-        //layout
-        this._treefunc(this._root);
-
-        //render
+        this.updatemodel();
+        this.layout();
+        this.render();
+    };
+    updatemodel(){
+        newupdate(this._root, this.pInter,this.sizeInter);
+    };
+    layout(){this._treefunc(this._root);};
+    render(){
         let g = d3.select("#tree").attr("transform", "translate(15,40)");
 
         if(d3.select('#treetip')!=undefined)
@@ -95,8 +96,8 @@ export class Tree{
 
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
         console.log(this._node);
-        this._node.transition()
-            .duration(500).attr("class", "node")
+        this._node//.transition()
+        //.duration(500).attr("class", "node")
             .attr("transform", function (d) {
                 //console.log(d);
                 return "translate(" + d.x + "," + d.y + ")";
@@ -111,14 +112,15 @@ export class Tree{
             .attr("class", "link")
             .merge(curlink);;
 
-            d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
 
-        this._link.transition()
-            .duration(500).attr("d", d=>{
+        this._link//.transition()
+        //.duration(500)
+            .attr("d", d=>{
                 return "M" + d.x + "," + d.y
-                //+ "C" + d.x  + "," + d.y+10
-                //+ " " + d.parent.x  + "," + d.parent.y+10
-                +"L" + d.parent.x + "," + d.parent.y;
+                    //+ "C" + d.x  + "," + d.y+10
+                    //+ " " + d.parent.x  + "," + d.parent.y+10
+                    +"L" + d.parent.x + "," + d.parent.y;
             });
 
 
@@ -137,8 +139,6 @@ export class Tree{
         this._node.call(tip);
         this._node.on('mouseover', tip.show)
             .on('mouseout', tip.hide);
-
-
     };
 
     tooltip_render(tooltip_data) {
@@ -159,153 +159,7 @@ export class Tree{
      *
      * @param row a string specifying which team was selected in the table.
      */
-    /*
-    updateTree(ppp,sss) {
-        this.pInter = ppp;
-        this.sizeInter = sss;
-        // return tree back to original
-        d3.selectAll(".treedis").remove();
-        //console.log(this._alldata);
-        //console.log(this);
-        //Filter on the tree to change children
-        //Problem here since it depends on the current tree structure.
-        //obj2 = Object.create(obj1)
-        //var copy = JSON.parse(JSON.stringify( original ));
-        //this._curroot = d3.stratify()
-        //    .id(d => d.id)
-        //    .parentId(d => d.par === ", , 0" ? '' : d.par)//d.ParentGame ? treeData[d.ParentGame].id : '')
-        //    (this._alldata);
-        this._curroot = this._root;
-        //Update function updated, change all _children back to children
-        this._node.data().forEach(d=>{
-            if(d["_children"]!=undefined){
-                d["children"] = d["_children"];
-                delete d["_children"];
-            }
-        });
 
-        this._curroot.descendants().forEach(d=>{
-            if(pfilter(d,this.pInter)||sizefilter(d,this.sizeInter))
-            {
-                if(d["children"]!=undefined){
-                    //console.log(d);
-                    d._children = d.children;
-                    delete d.children;
-                    //d.removeAttribute("children");
-                }
-            }
-            else{
-                if(d["_children"]!=undefined){
-                    //console.log(d);
-                    d.children = d._children;
-                    delete d._children;
-                    //d.removeAttribute("_children");
-                }
-            }
-
-        });
-        // Rebuild the tree
-        this._treefunc(this._curroot);
-        let cursize = this._curroot.descendants().length;
-
-        this._node.classed("node", true);
-        this._link.classed("link", true);
-
-        d3.selectAll(".link")
-            .classed("link",d=>{
-                return checknode(d);});
-
-        d3.selectAll(".node")
-            .classed("node",d=>{
-                return checknode(d);});
-
-        let g = d3.select("#tree").attr("transform", "translate(15,40)");
-        g.selectAll(".link")
-            .transition()
-            .duration(500)
-            .attr("d", function (d) {
-                return "M" + d.x + "," + d.y
-                    //+ "C" + d.x  + "," + d.y+10
-                    //+ " " + d.parent.x  + "," + d.parent.y+10
-                    +"L" + d.parent.x + "," + d.parent.y;
-            });
-
-        g.selectAll(".node")
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
-            }).attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");//.append("circle").attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");
-
-    }
-    */
-    /*
-    updateTree2(ppp,sss) {
-
-        //console.log(ppp);
-        this.pInter = ppp;
-        this.sizeInter = sss;
-        // return tree back to original
-        d3.select("#tree").selectAll("circle").remove();
-
-        //this._curroot = this._root;
-
-        this._curroot = d3.stratify()
-            .id(d => d.id)
-            .parentId(d => d.par === ", , 0" ? '' : d.par)//d.ParentGame ? treeData[d.ParentGame].id : '')
-            (this._alldata);
-
-        this._curroot.descendants().forEach(d=>{//console.log(this.pInter);
-            if(pfilter(d,this.pInter)||sizefilter(d,this.sizeInter))
-            {
-                if(d["children"]!=undefined){
-                    //console.log(d);
-                    d._children = d.children;
-                    delete d.children;
-                    //d.removeAttribute("children");
-                }
-            }
-            else{
-                if(d["_children"]!=undefined){
-                    //console.log(d);
-                    d.children = d._children;
-                    delete d._children;
-                    //d.removeAttribute("_children");
-                }
-            }
-
-        });
-
-        this._treefunc(this._curroot);
-        let cursize = this._curroot.descendants().length;
-        this._node.classed("node", true);
-        this._link.classed("link", true);
-
-        d3.selectAll(".link")
-            .classed("link",d=>{
-                return checknode(d);});
-
-        d3.selectAll(".node")
-            .classed("node",d=>{
-                return checknode(d);});
-
-        let g = d3.select("#tree").attr("transform", "translate(15,40)");
-
-        g.selectAll(".link")
-            .transition()
-            .duration(500)
-            .attr("d", function (d) {
-                return "M" + d.x + "," + d.y
-                    //+ "C" + d.x  + "," + d.y+10
-                    //+ " " + d.parent.x  + "," + d.parent.y+10
-                    +"L" + d.parent.x + "," + d.parent.y;
-            });
-
-        g.selectAll(".node")
-
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
-            }).append("circle").attr("r", Math.log(this._initsize/cursize));
-    }
-    */
 
     /**
      * Removes all highlighting from the tree.
@@ -319,51 +173,45 @@ export class Tree{
         //d3.selectAll(".node").selectAll("text").classed("selectedLabel",false);
 
     }
-    increasePersistence(ppp){
-        this.pInter = ppp;
-
-        for (let i=this.pers.length-1; i>=0; i--) {
-            if(this.pers[i]>this.pInter){
-                this.pInter = this.pers[i];
-                break;
+    setPersistence(option){
+        if(option === "increase"){
+            for (let i=this.pers.length-1; i>=0; i--) {
+                if(this.pers[i]>this.pInter){
+                    this.pInter = this.pers[i];
+                    break;
+                }
             }
+            this.updateTree(this.pInter,this.sizeInter);
+
         }
-        this.updateTree(this.pInter,this.sizeInter);
+        else if(option === "decrease"){
+            for (let i=1; i<this.pers.length; i++) {
+                if(this.pers[i]<this.pInter){
+                    this.pInter = this.pers[i];
+                    break;
+                }
+            }
+            this.updateTree(this.pInter,this.sizeInter);
+        }
         return this.pInter;
 
     }
-    decreasePersistence(ppp){
-        this.pInter = ppp;
-        //let pers =[];
-        //partition.pers.map(function(item) {
-        //    pers.push(parseFloat(item));
-        //});
-        for (let i=1; i<this.pers.length; i++) {
-            if(this.pers[i]<this.pInter){
-                this.pInter = this.pers[i];
-                break;
-            }
+    setSize(option){
+        if(option === "increase"){
+            this.sizeInter = this.sizeInter + 1;
+            this.updateTree(this.pInter,this.sizeInter);
         }
-        this.updateTree(this.pInter,this.sizeInter);
-        return this.pInter;
+        else if(option === "decrease"){
+            if (this.sizeInter >= 1){
+                this.sizeInter = this.sizeInter - 1;
+                this.updateTree(this.pInter, this.sizeInter);
+            }
 
-    }
-
-    increaseSize(){
-        this.sizeInter = this.sizeInter + 1;
-        this.updateTree(this.pInter,this.sizeInter);
+        }
         return this.sizeInter;
 
     }
-    decreaseSize() {
-        if (this.sizeInter >= 1){
-            this.sizeInter = this.sizeInter - 1;
-            this.updateTree(this.pInter, this.sizeInter);
-            return this.sizeInter;
-        }
-        else
-            return this.sizeInter;
-    }
+
     reshape(curnode){
 
         d3.select("#tree").selectAll("circle").remove();
@@ -404,8 +252,8 @@ export class Tree{
 
         let g = d3.select("#tree").attr("transform", "translate(15,40)");
         g.selectAll(".link")
-            .transition()
-            .duration(500)
+            //.transition()
+            //.duration(500)
             .attr("d", function (d) {
                 return "M" + d.x + "," + d.y
                     //+ "C" + d.x  + "," + d.y+10
@@ -419,32 +267,6 @@ export class Tree{
 
     }
 
-
-
-    /*
-        reshape(nodeclick){
-            let ymax = 0;
-            let xmax = 0;
-
-            d3.selectAll(".node").each(d=>{
-                xmax = (xmax>d.x)? xmax : d.x;
-                ymax = (ymax>d.y)? ymax : d.y;
-            });
-
-            let xscale = (xmax!=0)?this.xmax/xmax:100;
-            let yscale = (ymax!=0)?this.ymax/ymax:100;
-
-            //console.log("double click");
-            //console.log(nodeclick);
-            //nodeclick.classed(".node",true);
-
-            d3.selectAll(".node").each(d=>{
-                ymax = (ymax>d.y)? ymax : d.y;
-                xmax = (xmax>d.x)? xmax : d.x;
-            })
-
-        }
-    */
 }
 export function getbaselevelInd(node, accum) {
     let i;

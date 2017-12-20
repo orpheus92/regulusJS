@@ -1,7 +1,7 @@
 
 import './style.css';
 import * as d3 from 'd3';
-
+//import {drag} from 'd3-'
 import {Crystal} from '../Crystal';
 import {Info} from '../Info';
 import {Tree} from '../Structure';
@@ -59,7 +59,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     .clamp(true);
                 let newslider= new Slider(d3.select("#treesvg"));
                 let slider = newslider.createslider([minp, maxp]);
-
+                console.log(slider);
                 slider.curslide.call(d3.drag()
                     .on("start.interrupt", function() { slider.interrupt(); })
                     .on("start drag", function() {
@@ -74,30 +74,31 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
 
                 d3.select('#increase')
                     .on('click', () => {
-                        pInter = tree.increasePersistence(pInter);
+                        pInter = tree.setPersistence("increase");
                         slider.handle.attr("cx", x(pInter));
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#decrease')
                     .on('click', () =>  {
-                        pInter = tree.decreasePersistence(pInter);
+                        pInter = tree.setPersistence("decrease");
                         slider.handle.attr("cx", x( pInter));
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#increaseS')
                     .on('click', () =>  {
-                        sizeInter = tree.increaseSize();
+                        sizeInter = tree.setSize("increase");
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#decreaseS')
                     .on('click', () =>  {
-                        sizeInter = tree.decreaseSize();
+                        sizeInter = tree.setSize("decrease");
                         loaddata.update(pInter,sizeInter);
                     });
 
                 let clicks = 0;
                 let DELAY = 500;
                 //Separate clicking from double clicking
+                /*
                 treenode.on("click", (nodeinfo)=>{
                     let timer;
                     clicks++;  //count clicks
@@ -119,7 +120,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     }
 
                 });
-
+                */
                 d3.select("#dataset").on('change',printPlots);
                 //document.getElementById("dataset").addEventListener("change", printPlots);
                 //document.getElementById("y_attr").addEventListener("change", updateAttribute);
