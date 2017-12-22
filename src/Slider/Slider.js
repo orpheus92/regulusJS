@@ -1,5 +1,8 @@
 import * as d3 from 'd3';
 import './style.css';
+//import {event as currentEvent} from 'd3-selection';
+
+//import {event as currentEvent} from 'd3-selection';
 
 
 export class Slider{

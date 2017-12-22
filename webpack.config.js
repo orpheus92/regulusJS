@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     main: './src/app/index.js',
     vendor: [
-      'd3','d3-tip','d3-shape'
+      'd3','d3-tip','d3-shape'//,'d3-selection'
     ]
   },
   output: {

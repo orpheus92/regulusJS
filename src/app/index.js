@@ -1,7 +1,15 @@
 
 import './style.css';
 import * as d3 from 'd3';
-//import {drag} from 'd3-'
+//import {event as currentEvent} from 'd3-selection';
+//import {event as currentEvent} from 'd3-selection';
+//import {drag} from 'd3-drag';
+//import * as d3Tip from 'd3-tip';
+//console.log(d3.dispatch);
+//import {drag} from 'd3-drag'
+//console.log(d3drag);
+//import {event as currentEvent} from 'd3-selection';
+
 import {Crystal} from '../Crystal';
 import {Info} from '../Info';
 import {Tree} from '../Structure';
@@ -59,14 +67,13 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     .clamp(true);
                 let newslider= new Slider(d3.select("#treesvg"));
                 let slider = newslider.createslider([minp, maxp]);
-                console.log(slider);
-                slider.curslide.call(d3.drag()
-                    .on("start.interrupt", function() { slider.interrupt(); })
-                    .on("start drag", function() {
+                slider.curslide.call(d3.drag()//d3.drag()
+                    //.on("start.interrupt", function() {
+                    //    console.log("AAA");
+                    //    slider.interrupt(); })
+                    .on("start drag", function() {console.log("BBB");
                         slider.handle.attr("cx", x(x.invert(d3.event.x))); //initial position for the slider
-
                         pInter = x.invert(d3.event.x);
-
                         loaddata.update(pInter,sizeInter);
                         tree.updateTree(pInter,sizeInter);
 

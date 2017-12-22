@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-//import { select, selectAll } from 'd3-selection';
-//import { transition } from 'd3-transition';
+//import { select, Selection } from 'd3';
+import 'd3-transition';
 //let transition = d3.transition();
 //console.log(transition);
 import * as d3Tip from 'd3-tip';
@@ -96,8 +96,12 @@ export class Tree{
 
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
         console.log(this._node);
+        //var t = d3.transition()
+        //    .duration(750)
+        //     .ease(d3.easeLinear);
+
         this._node//.transition()
-        //.duration(500).attr("class", "node")
+        //.duration(500)//.attr("class", "node")
             .attr("transform", function (d) {
                 //console.log(d);
                 return "translate(" + d.x + "," + d.y + ")";
