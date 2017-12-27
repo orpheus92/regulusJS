@@ -10,7 +10,7 @@ import time
 import os.path
 
 # Load Source FIle, and calculate the MSC  
-from Topolib.MSC.connect.method import myObj
+from Topolib.MSC.connect.method import MSC
 
 
 def convertind(str):
@@ -78,17 +78,13 @@ def mergemax(c,p,d,per):
 
 if __name__ == '__main__':
 
-
-
   X = None
   Y = None
 
-  MSC = myObj(X,Y,debug=True)
+  new_MSC = MSC(X,Y,debug=True)
 
-  MSC.loadData('../data/Pu_TOT.csv')
-
-  #MSC.loadData(pard+'/data/Pu_TOT.csv')
-
+  new_MSC.loadData('../data/Pu_TOT.csv')
+  new_MSC.compute()
 # Post-Process the results from MSC Algorithm
 # The MSC Library saves Merge of Maxima and Merge of Minima and basis partition
 
