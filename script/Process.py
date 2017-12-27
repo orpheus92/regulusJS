@@ -7,24 +7,11 @@ import pandas as pd
 import fileinput, sys
 import csv
 import time
+import os.path
 
 # Load Source FIle, and calculate the MSC  
 from Topolib.MSC.connect.method import myObj
-from qtpy import QtWidgets as qtw
 
-if __name__ == '__main__':
-  app = qtw.QApplication(sys.argv)
-
-  X = None
-  Y = None
-
-  main = myObj(X,Y,debug=True)
-
-  main.loadData('Pu_TOT.csv')
-
-
-# Post-Process the results from MSC Algorithm
-# The modified code saves Merge of Maxima and Merge of Minima and basis partition
 
 def convertind(str):
     str1,str2 = str.split(',')
@@ -88,6 +75,24 @@ def mergemax(c,p,d,per):
             outlist.append(convertkey3(minin, int(c),per))
 
     return outlist
+
+if __name__ == '__main__':
+
+
+
+  X = None
+  Y = None
+
+  MSC = myObj(X,Y,debug=True)
+
+  MSC.loadData('../data/Pu_TOT.csv')
+
+  #MSC.loadData(pard+'/data/Pu_TOT.csv')
+
+# Post-Process the results from MSC Algorithm
+# The MSC Library saves Merge of Maxima and Merge of Minima and basis partition
+
+
 maxmerge = np.genfromtxt('Merge_Maxima.csv', delimiter=",")
 minmerge = np.genfromtxt('Merge_Minima.csv', delimiter=",")
 # Explain how the partitions merge
