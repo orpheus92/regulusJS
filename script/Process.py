@@ -85,24 +85,30 @@ if __name__ == '__main__':
 
   new_MSC.loadData('../data/Pu_TOT.csv')
   new_MSC.compute()
+  new_MSC.save()
+
+
 # Post-Process the results from MSC Algorithm
 # The MSC Library saves Merge of Maxima and Merge of Minima and basis partition
 
 
-maxmerge = np.genfromtxt('Merge_Maxima.csv', delimiter=",")
-minmerge = np.genfromtxt('Merge_Minima.csv', delimiter=",")
+#maxmerge = np.genfromtxt('Merge_Maxima.csv', delimiter=",")
+#minmerge = np.genfromtxt('Merge_Minima.csv', delimiter=",")
 # Explain how the partitions merge
 # Persistence, saddleIdx, mergedInd, parentInd
-maxmerge = np.delete(maxmerge,0,0)
-maxmerge[:,1] = 1 # 1 for maxima
-minmerge = np.delete(minmerge,0,0)
-minmerge[:,1] = 0 # 0 for minima
+#maxmerge = np.delete(maxmerge,0,0)
+#maxmerge[:,1] = 1 # 1 for maxima
+#minmerge = np.delete(minmerge,0,0)
+#minmerge[:,1] = 0 # 0 for minima
 # sort to avoid wrong merge
 
-totalmerge = np.concatenate((maxmerge, minmerge), axis=0)
+#totalmerge = np.concatenate((maxmerge, minmerge), axis=0)
+#np.concatenate((maxmerge, minmerge), axis=0)
+total_merge = np.genfromtxt('Total_Merge.csv', delimiter=",")
 
+totalmerge2 = total_merge[np.argsort(total_merge[:, 0])]
 
-totalmerge2 = totalmerge[np.argsort(totalmerge[:, 0])]
+#totalmerge2 = totalmerge[np.argsort(totalmerge[:, 0])]
 # Json file that stores the initial partition
 # Keys specified as "minInd, maxInd",
 # Values store the points that belong to the partition
