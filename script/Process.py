@@ -85,15 +85,16 @@ if __name__ == '__main__':
 
   new_MSC.loadData('../data/Pu_TOT.csv')
   new_MSC.compute()
-  new_MSC.save()
+  # assign name /dir for the files to be saved
+  new_MSC.save('../data/Total_Merge.csv', '../data/Base_Partition.json')
 
 
 
-total_merge = np.genfromtxt('Total_Merge.csv', delimiter=",")
+total_merge = np.genfromtxt('../data/Total_Merge.csv', delimiter=",")
 totalmerge2 = total_merge[np.argsort(total_merge[:, 0])]
 
 
-with open('Base_Partition.json') as data_file:
+with open('../data/Base_Partition.json') as data_file:
     data = json.load(data_file)
 
 Pinter = 8
@@ -133,7 +134,7 @@ for ind,i in reversed(list(enumerate(plist))):
 
     totallist = totallist + perdict[i]
 
-with open('Tree_Data.json', 'w') as fp:
+with open('../data/Tree_Data.json', 'w') as fp:
     json.dump(totaltree, fp)
 num = len(totaltree)
 
@@ -150,12 +151,12 @@ line1 = ",,0,"+pclist[0][0]
 line0 = "P1,P2,Pi,C1,C2,Ci"
 
 df = pd.DataFrame(pclist)
-df.to_csv("Tree_Merge.csv",header=None,index=False)
+df.to_csv("../data/Tree_Merge.csv",header=None,index=False)
 
-with open('Tree_Merge.csv', 'r') as original: data = original.read()
-with open('Tree_Merge.csv', 'w') as modified: modified.write(line0+"\n"+line1+"\n" + data)
+with open('../data/Tree_Merge.csv', 'r') as original: data = original.read()
+with open('../data/Tree_Merge.csv', 'w') as modified: modified.write(line0+"\n"+line1+"\n" + data)
 
-for line in fileinput.input(["Tree_Merge.csv"], inplace=True):
+for line in fileinput.input(["../data/Tree_Merge.csv"], inplace=True):
     line = line.replace("\"", "")
     line = line.replace(" ", "")
     # sys.stdout is redirected to the file
