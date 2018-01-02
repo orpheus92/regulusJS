@@ -9,158 +9,179 @@ import csv
 import time
 import os.path
 
-# Load Source FIle, and calculate the MSC  
 from Topolib.MSC.connect.method import MSC
 
+class Post_MSC():
+    def load(self, hierarchy, base):
+        self.hierarchy = np.genfromtxt(hierarchy, delimiter=",")
 
-def convertind(str):
-    str1,str2 = str.split(',')
-    return [int(str1),int(str2)]
+        with open(base) as data_file:
+            data = json.load(data_file)
+            data_file.close()
+        self.base_copy = data.copy()
 
-def convert(str):
-    newstr = []
-    for i in str:
-        str1,str2,str3 = i.split(',')
-        newstr.append(convertkey(int(str1), int(str2)))
-    return newstr
+    def compute(self):
+        hierarchy_sorted = self.hierarchy[np.argsort(self.hierarchy[:, 0])]
+        # Normalize the persistence
+        p_max = hierarchy_sorted[-1, 0]
+        hierarchy_sorted[:, 0] = hierarchy_sorted[:, 0] / p_max
 
-def convt(stra, ind):
+        # Remove indexes for the root from the hierarchy which did not merge to any parent
+        hierarchy_sorted = hierarchy_sorted[0:-2, :]
 
-    return(stra+', '+str(ind))
+        child = hierarchy_sorted[:, 2]
+        parent = hierarchy_sorted[:, 3]
 
-def convertkey(ind1,ind2):
-    return str(ind1)+', '+str(ind2)
+        [r, c] = hierarchy_sorted.shape
+        p_map = {}
+        total_partitions = []
+        # Convert to hierarchy to a python dictionary where persistence is the key and list of parent/children index and tree levels as values
+        for i in range(r):
+            if hierarchy_sorted[i, 1] == 0:
+                p_map[hierarchy_sorted[i, 0]] = self.mergemin(int(child[i]), int(parent[i]), self.base_copy, r - i)
 
-def convertkey3(ind1,ind2,ind3):
-    return str(ind1)+', '+str(ind2)+', '+str(ind3)
+            else:
+                p_map[hierarchy_sorted[i, 0]] = self.mergemax(int(child[i]), int(parent[i]), self.base_copy, r - i)
+        p_list = hierarchy_sorted[:, 0]
 
-def mergemin(c,p,d,per):
-    outlist = []
-    indpair = list(d.keys())
-    indpair2 = np.array([convertind(pair) for pair in indpair ])
-    listmax = indpair2[:,1][indpair2[:,0]==int(c)]
-    for maxin in listmax:
-        if convertkey(int(p),maxin) in indpair:
+        level_tree = {}
+        # Tree level as the key
+        level_tree[0] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
+        # Persistence as the key
+        p_tree = {}
+        p_tree[1] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
+        p_list = p_list[1:]
+        total = len(p_list)
 
-            temp = d[convertkey(int(c),maxin)]
-            d[convertkey(int(p),maxin)]=d[convertkey(int(p),maxin)]+temp
-            del d[convertkey(int(c),maxin)]
-            outlist.append(convertkey3(int(p),maxin,per-1))
-            outlist.append(convertkey3(int(c),maxin,per))
+        cur_partitions = []
 
+        # Calculate partition information based on base partition indexing for each persistence level
+        for ind, i in reversed(list(enumerate(p_list))):
+            cur_partitions = set(self.strlist2intlist(p_map[i]) + list(cur_partitions))
+            level_tree[total - ind] = list(cur_partitions)
+            p_tree[i] = list(cur_partitions)
+            total_partitions = total_partitions + p_map[i]
+        self.p_tree = p_tree
+
+        for i in range(len(level_tree)):
+            c_pars = level_tree[i]
+            for j in c_pars:
+                total_partitions = total_partitions + [self.appendint(j, i), self.appendint(j, i + 1)]
+
+        mlist = np.array(total_partitions)
+        pc_pars = mlist.reshape(int(len(mlist) / 2), 2)
+        self.pc_pars = pc_pars
+
+    def save(self, p_par, finaltree, ):
+        with open(p_par, 'w') as fp:
+            json.dump(self.p_tree, fp)
+            fp.close()
+
+        line1 = ",,0," + self.pc_pars[0][0]
+        ## Headers
+        line0 = "P1,P2,Pi,C1,C2,Ci"
+
+        df = pd.DataFrame(self.pc_pars)
+        df.to_csv(finaltree, header=None, index=False)
+
+        with open(finaltree, 'r') as original:
+            data = original.read()
+            original.close()
+        with open(finaltree, 'w') as modified:
+            modified.write(line0 + "\n" + line1 + "\n" + data)
+            modified.close()
+
+        for line in fileinput.input([finaltree], inplace=True):
+            line = line.replace("\"", "")
+            line = line.replace(" ", "")
+            # sys.stdout is redirected to the file
+            sys.stdout.write(line)
+
+    def mergemin(self, c, p, d, per):
+        outlist = []
+        indpair = list(d.keys())
+        indpair2 = np.array([self.str2int(pair) for pair in indpair])
+        listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
+        for maxin in listmax:
+            if self.int2str(int(p), maxin) in indpair:
+
+                temp = d[self.int2str(int(c), maxin)]
+                d[self.int2str(int(p), maxin)] = d[self.int2str(int(p), maxin)] + temp
+                del d[self.int2str(int(c), maxin)]
+                outlist.append(self.int2str(int(p), maxin, per - 1))
+                outlist.append(self.int2str(int(c), maxin, per))
+
+            else:
+                d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
+                outlist.append(self.int2str(int(p), maxin, per - 1))
+                outlist.append(self.int2str(int(c), maxin, per))
+
+        return outlist
+
+    def mergemax(self, c, p, d, per):
+        outlist = []
+        indpair = list(d.keys())
+        indpair2 = np.array([self.str2int(pair) for pair in indpair])
+        listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
+        for minin in listmin:
+            if self.int2str(minin, int(p)) in indpair:
+
+                temp = d[self.int2str(minin, int(c))]
+                d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
+                del d[self.int2str(minin, int(c))]
+                outlist.append(self.int2str(minin, int(p), per - 1))
+                outlist.append(self.int2str(minin, int(c), per))
+
+            else:
+                d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
+                outlist.append(self.int2str(minin, int(p), per - 1))
+                outlist.append(self.int2str(minin, int(c), per))
+
+        return outlist
+
+    def str2int(self, str):
+        str1, str2 = str.split(',')
+        return [int(str1), int(str2)]
+
+    def int2str(self, ind1, ind2, ind3=None):
+        if ind3 is None:
+            return str(ind1) + ', ' + str(ind2)
         else:
-            d[convertkey(int(p),maxin)] = d.pop(convertkey(int(c),maxin))
-            outlist.append(convertkey3(int(p),maxin,per-1))
-            outlist.append(convertkey3(int(c),maxin,per))
+            return str(ind1) + ', ' + str(ind2) + ', ' + str(ind3)
 
-    return outlist
+    def strlist2intlist(self, strlist):
+        newstr = []
+        for i in strlist:
+            str1, str2, str3 = i.split(',')
+            newstr.append(self.int2str(int(str1), int(str2)))
+        return newstr
 
-def mergemax(c,p,d,per):
-    outlist = []
-    indpair = list(d.keys())
-    indpair2 = np.array([convertind(pair) for pair in indpair ])
-    listmin = indpair2[:,0][indpair2[:,1]==int(c)]
-    for minin in listmin:
-        if convertkey(minin,int(p)) in indpair:
-
-            temp = d[convertkey(minin,int(c))]
-            d[convertkey(minin,int(p))]=d[convertkey(minin,int(p))]+temp
-            del d[convertkey(minin,int(c))]
-            outlist.append(convertkey3(minin,int(p),per-1))
-            outlist.append(convertkey3(minin,int(c),per))
-
-        else:
-            d[convertkey(minin, int(p))] = d.pop(convertkey(minin, int(c)))
-            outlist.append(convertkey3(minin, int(p),per-1))
-            outlist.append(convertkey3(minin, int(c),per))
-
-    return outlist
+    def appendint(self,string, ind):
+        return (string + ', ' + str(ind))
 
 if __name__ == '__main__':
+    # Using MSC library to calculate MSC, save base partitions and tree hierarchy
+    X = None
+    Y = None
 
-  X = None
-  Y = None
+    # Create MSC Object
+    new_MSC = MSC(X, Y, debug=True)
+    # Load Raw Data
+    new_MSC.loadData('../data/Pu_TOT.csv')
+    # Compute MSC
+    new_MSC.compute()
+    # Save
+    new_MSC.save('../data/Hierarchy.csv', '../data/Base_Partition.json')
 
-  new_MSC = MSC(X,Y,debug=True)
+    # Create Post-Processing Object
+    Post = Post_MSC()
+    # Load MSC results
+    Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
+    # Post Processing
+    Post.compute()
+    # Save
+    Post.save('../data/P_Partition.json','../data/Final_Tree.csv')
 
-  new_MSC.loadData('../data/Pu_TOT.csv')
-  new_MSC.compute()
-  # assign name /dir for the files to be saved
-  new_MSC.save('../data/Total_Merge.csv', '../data/Base_Partition.json')
-
-
-
-total_merge = np.genfromtxt('../data/Total_Merge.csv', delimiter=",")
-totalmerge2 = total_merge[np.argsort(total_merge[:, 0])]
-
-
-with open('../data/Base_Partition.json') as data_file:
-    data = json.load(data_file)
-
-Pinter = 8
-
-child = totalmerge2[totalmerge2[:,0]<Pinter][:,2]
-parent = totalmerge2[totalmerge2[:,0]<Pinter][:,3]
-tomerge = totalmerge2[totalmerge2[:,0]<Pinter]
-
-newdict = data.copy()
-
-[r,c] = tomerge.shape
-perdict = {}
-totallist = [];
-for i in range(r):
-
-    if tomerge[i,1]==0:
-        perdict[tomerge[i,0]] = mergemin(int(child[i]),int(parent[i]),newdict,r-i)
-
-    else:
-        perdict[tomerge[i,0]] = mergemax(int(child[i]),int(parent[i]),newdict,r-i)
-
-plist = tomerge[:,0]
-pre = plist[-1]
-curlist = []
-treedata = {}
-treedata[0]=convert([perdict[tomerge[-1,0]][0]])
-totaltree = {}
-totaltree[-1]=convert([perdict[tomerge[-1,0]][0]])
-plist = plist[1:]
-total = len(plist)
-
-for ind,i in reversed(list(enumerate(plist))):
-    curlist = set(convert(perdict[i])+list(curlist))
-    treedata[total-ind]=list(curlist)
-    totaltree[i]=list(curlist)
-    pre = i
-
-    totallist = totallist + perdict[i]
-
-with open('../data/Tree_Data.json', 'w') as fp:
-    json.dump(totaltree, fp)
-num = len(totaltree)
-
-for i in range(num):
-    clist = treedata[i]
-    for j in clist:
-        totallist = totallist + [convt(j,i),convt(j,i+1)]
-
-mlist = np.array(totallist)
-pclist = mlist.reshape(int(len(mlist)/2),2)
-## Root Node
-line1 = ",,0,"+pclist[0][0]
-## Headers
-line0 = "P1,P2,Pi,C1,C2,Ci"
-
-df = pd.DataFrame(pclist)
-df.to_csv("../data/Tree_Merge.csv",header=None,index=False)
-
-with open('../data/Tree_Merge.csv', 'r') as original: data = original.read()
-with open('../data/Tree_Merge.csv', 'w') as modified: modified.write(line0+"\n"+line1+"\n" + data)
-
-for line in fileinput.input(["../data/Tree_Merge.csv"], inplace=True):
-    line = line.replace("\"", "")
-    line = line.replace(" ", "")
-    # sys.stdout is redirected to the file
-    sys.stdout.write(line)
 
 
 
