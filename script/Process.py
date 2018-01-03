@@ -12,8 +12,13 @@ import os.path
 from Topolib.MSC.connect.method import MSC
 
 class Post_MSC():
-    def load(self, hierarchy, base):
+    def load(self, hierarchy = None, base=None):
+        if hierarchy is None:
+            hierarchy = '../data/Hierarchy.csv'
         self.hierarchy = np.genfromtxt(hierarchy, delimiter=",")
+
+        if base is None:
+            base = '../data/Base_Partition.json'
 
         with open(base) as data_file:
             data = json.load(data_file)
@@ -72,7 +77,13 @@ class Post_MSC():
         pc_pars = mlist.reshape(int(len(mlist) / 2), 2)
         self.pc_pars = pc_pars
 
-    def save(self, p_par, finaltree, ):
+    def save(self, p_par = None, finaltree=None ):
+        if p_par is None:
+            p_par = '../data/P_Partition.json'
+
+        if finaltree is None:
+            finaltree = '../data/Final_Tree.csv'
+
         with open(p_par, 'w') as fp:
             json.dump(self.p_tree, fp)
             fp.close()
@@ -163,25 +174,65 @@ if __name__ == '__main__':
     # Using MSC library to calculate MSC, save base partitions and tree hierarchy
     X = None
     Y = None
+    graph = None
+    gradient = None
+    knn = None
+    beta = None
+    normalization = None
+
+    hierarchy = None
+    base = None
+    p_par = None
+    tree = None
+
+    data = sys.argv[1]
+
+
+    if len(sys.argv) >= 7:
+        graph = sys.argv[2]
+        gradient = sys.argv[3]
+        knn = sys.argv[4]
+        beta = sys.argv[5]
+        normalization = sys.argv[6]
+        if len(sys.argv) == 11:
+            hierarchy = sys.argv[7]
+            base = sys.argv[8]
+            p_par = sys.argv[9]
+            tree = sys.argv[10]
+
+            # Whether wait for user's input for file names
 
     # Create MSC Object
     new_MSC = MSC(X, Y, debug=True)
+
     # Load Raw Data
-    new_MSC.loadData('../data/Pu_TOT.csv')
+    new_MSC.loadData(data)
+    #new_MSC.loadData('../data/Pu_TOT.csv')
+
     # Compute MSC
-    new_MSC.compute()
+    new_MSC.compute(graph,gradient,knn,beta,normalization)
+    #new_MSC.compute('relaxed beta skeleton', 'steepest', 50, 1.0, 'feature')
+
     # Save
-    new_MSC.save('../data/Hierarchy.csv', '../data/Base_Partition.json')
+    new_MSC.save(hierarchy,base)
+    #new_MSC.save('../data/Hierarchy.csv', '../data/Base_Partition.json')
+
 
     # Create Post-Processing Object
     Post = Post_MSC()
+
     # Load MSC results
-    Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
+    Post.load(hierarchy, base)
+    #Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
+
     # Post Processing
     Post.compute()
-    # Save
-    Post.save('../data/P_Partition.json','../data/Final_Tree.csv')
 
+    # Save
+    Post.save(p_par,tree)
+    #Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
+
+    os.remove('../data/Hierarchy.csv')
 
 
 
