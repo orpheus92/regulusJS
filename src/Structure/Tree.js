@@ -77,7 +77,19 @@ export class Tree{
     updatemodel(){
         newupdate(this._root, this.pInter,this.sizeInter);
     };
-    layout(){this._treefunc(this._root);};
+    layout(){
+        /*
+        this._root.descendants().forEach(function(d){
+            if(d.x!=null)
+            {d.oldx = d.x;
+            d.oldy = d.y;
+            }
+        }
+
+        )*/
+        this._treefunc(this._root);
+        //console.log(this._root);
+    };
     render(){
         let g = d3.select("#tree").attr("transform", "translate(15,40)");
 
@@ -89,17 +101,34 @@ export class Tree{
 
         this._node = curnode.data(this._root.descendants())
             .enter().append("circle")
+
             .attr("r",5)
             .attr("class", 'node')
+            .attr("transform", function (d) {//console.log(d)
+                if (d.parent != null)
+                    if(d.parent.oldx!=null)
+                    return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
+                //else
+                    //return "translate(" + d.x + "," + d.y + ")"
+            })
             .merge(curnode);
 
+        //console.log(this._node);
+
         let t = d3.transition()
-            .duration(500);
-            //.delay(100);
+            .duration(300);
             //.ease(easeLinear);
-
+        //let t2 = d3.transition()
+            //.delay(500);
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
-
+        /*
+        d3.selectAll('#newnode').attr("transform", function (d) {//console.log(d)
+            if (d.parent != null)
+                return "translate(" + d.parent.x + "," + d.parent.y + ")";
+            else
+                return "translate(" + d.x + "," + d.y + ")"
+        });
+        */
         t.selectAll('.node')
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
@@ -285,7 +314,7 @@ export function getbaselevelInd(node, accum) {
 }
 
 export function pfilter(mydata,ppp){
-    return (mydata.data.persistence<=ppp && mydata.data.persistence != -1)? true : false;
+    return (mydata.data.persistence<=ppp && mydata.data.persistence != 1)? true : false;
 }
 export function sizefilter(mydata,sss){
     return (mydata.data._total.size<sss)? true : false;
@@ -303,7 +332,8 @@ export function checknode(curnode){
         return true;
 }
 export function newupdate(node, p, s){
-    if ((node.data._persistence<p&&node.data._persistence !=-1)||node.data._size<s)
+    //Check current node, if meets the contraint, then check its children recursively
+    if ((node.data._persistence<p&&node.data._persistence !=1)||node.data._size<s)
     {   //node.parent._children = node.parent.children;
         //delete node.parent.children;
         node._children = (node.children!=undefined)?node.children:node._children;
@@ -312,6 +342,9 @@ export function newupdate(node, p, s){
     else
     {   node.children = (node.children!=undefined)?node.children:node._children;
         delete node._children;
+        node.oldx = node.x;
+        node.oldy = node.y;
+        //console.log(node);
         if (node.children!=undefined)
         node.children.forEach(d=>{
             newupdate(d, p, s);
