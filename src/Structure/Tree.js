@@ -11,8 +11,8 @@ export class Tree{
     /**
      * Creates a Tree Object
      */
-
     constructor(treeCSV,partition,basedata) {
+        this._maxsize = 0;
 
         let totalpers = [];
         partition.pers.map(function(item) {
@@ -51,12 +51,17 @@ export class Tree{
                 }
             });
             d.data._size = d.data._total.size;
+            this._maxsize = (this._maxsize>d.data._size)?this._maxsize :d.data._size;
 
         });
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
         this._treefunc = d3.tree()
             .size([670,330]);
+        this._color = d3.scaleSqrt().domain([1,this._maxsize])
+            //.interpolate(d3.interpolateHcl)
+            .range(["blue", 'red']);
+        //console.log(this);
     }
 
     /**
@@ -76,6 +81,7 @@ export class Tree{
     };
     updatemodel(){
         newupdate(this._root, this.pInter,this.sizeInter);
+        this._circlesize = this._root.descendants().length;
     };
     layout(){
         /*
@@ -96,13 +102,33 @@ export class Tree{
         if(d3.select('#treetip')!=undefined)
             d3.selectAll('#treetip').remove();
 
+        let t = d3.transition()
+            .duration(300);
+        //Update Link
+
+        let curlink = g.selectAll(".link");
+
+        this._link = curlink.data(this._root.descendants().slice(1))
+            .enter().insert("path")
+            .attr("class", "link")
+            .merge(curlink);;
+
+        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+
+        t.selectAll('.link')
+            .attr("d", d=>{
+                return "M" + d.x + "," + d.y
+
+                    +"L" + d.parent.x + "," + d.parent.y;
+            });
+
         // Update Node
         let curnode = g.selectAll(".node");
 
         this._node = curnode.data(this._root.descendants())
             .enter().append("circle")
 
-            .attr("r",5)
+            .attr("r",100/Math.sqrt(this._circlesize))
             .attr("class", 'node')
             .attr("transform", function (d) {//console.log(d)
                 if (d.parent != null)
@@ -115,8 +141,7 @@ export class Tree{
 
         //console.log(this._node);
 
-        let t = d3.transition()
-            .duration(300);
+
             //.ease(easeLinear);
         //let t2 = d3.transition()
             //.delay(500);
@@ -130,28 +155,17 @@ export class Tree{
         });
         */
         t.selectAll('.node')
+            .attr("r",100/Math.sqrt(this._circlesize))
+            .attr('fill',  (d)=> {//console.log(d);
+                //console.log(this);
+                return this._color(d.data._size);
+            })
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
 
-        //Update Link
 
-        let curlink = g.selectAll(".link");
-
-        this._link = curlink.data(this._root.descendants().slice(1))
-            .enter().append("path")
-            .attr("class", "link")
-            .merge(curlink);;
-
-        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
-
-        t.selectAll('.link')
-            .attr("d", d=>{
-                return "M" + d.x + "," + d.y
-
-                    +"L" + d.parent.x + "," + d.parent.y;
-            });
-
+        //console.log(this._node);
 
         let tip = d3Tip().attr('class', 'd3-tip').attr('id','treetip')
             .direction('se')
@@ -340,7 +354,8 @@ export function newupdate(node, p, s){
         delete node.children;
         return}
     else
-    {   node.children = (node.children!=undefined)?node.children:node._children;
+    {
+        node.children = (node.children!=undefined)?node.children:node._children;
         delete node._children;
         node.oldx = node.x;
         node.oldy = node.y;
@@ -351,6 +366,7 @@ export function newupdate(node, p, s){
         });
 
     }
+
 
 
 }
