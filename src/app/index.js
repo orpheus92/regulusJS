@@ -42,9 +42,9 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
     let plots = new Crystal(rawdata, 600, 200);
     window.plots = plots;
     //Load data in JS
-    pInter = 2;
+    pInter = 0.1;
     sizeInter = 20;
-    d3.json('../data/Tree_Data.json', function (error, data) {
+    d3.json('../data/P_Partition.json', function (error, data) {
         if (error) throw error;
         //will be updated later
 
@@ -53,13 +53,13 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
         partition = new Partition();
         partition.initialPartition(data);
 
-        d3.csv('../data/Tree_Merge.csv', function (error, treedata){
+        d3.csv('../data/Final_Tree.csv', function (error, treedata){
             d3.json('../data/Base_Partition.json', function (error, basedata) {
                 //console.log(rawdata);
                 tree = new Tree(treedata,partition,basedata);
                 //tree.create(pInter,sizeInter);
                 tree.updateTree(pInter,sizeInter);
-                console.log(tree);
+                //console.log(tree);
                 //Slider Event
                 let x = d3.scaleLinear()
                     .domain([minp, maxp])

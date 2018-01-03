@@ -187,7 +187,6 @@ if __name__ == '__main__':
 
     data = sys.argv[1]
 
-
     if len(sys.argv) >= 7:
         graph = sys.argv[2]
         gradient = sys.argv[3]

@@ -10,7 +10,8 @@ export class Partition{
         this.data = Pdata;
         //this.merge = Pdata2;
         this.pers = Object.keys(Pdata).sort(function(a,b){return b-a});
-        this.pers.unshift(this.pers.pop());
+        //console.log(this.pers);
+        //this.pers.unshift(this.pers.pop());
         this.length = this.pers.length;
         //console.log(Pdata);
 

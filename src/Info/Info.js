@@ -19,17 +19,20 @@ export class Info {
         this.raw.append("li").text("Total Number of Points: "+ rawdata.length);//.classed("cplabel", true);
         this.raw.append("li").text("All Attributes: "+ rawdata.columns);
         let totalper = Object.keys(data).sort(function(b,a){return b-a});
-        this.maxP = totalper.slice(-1)[0];
-        this.minP = totalper[1];
+        //console.log(totalper);
+        this.maxP = totalper[totalper.length-1];
+        this.minP = totalper[0];
+        //console.log(this.maxP);
+        //console.log(this.minP);
         //console.log(totalper);
         this.persistence.append("li")
             .attr("dy", 0)
             .attr("x",0)
-            .text("Maximum Persistence: "+ totalper.slice(-1)[0]);
+            .text("Maximum Persistence: "+ this.maxP);
         this.persistence.append("li")
             .attr("dy", "1.2em") // offest by 1.2 em
             .attr("x",0)
-            .text("Minimum Persistence: " + totalper[1]);
+            .text("Minimum Persistence: " + this.minP);
         this.cper.append("li").text("Current Persistence: "+ cpInter).classed("cplabel", true);
         this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
         this.sMSC.append("li").text("No Partition Selected").classed("sMSC", true);

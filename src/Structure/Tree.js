@@ -1,10 +1,9 @@
 import * as d3 from 'd3';
-//import { select, Selection } from 'd3';
-import 'd3-transition';
+//import { select, selection } from 'd3';
+//import * as aaaa from 'd3-transition';
 //let transition = d3.transition();
-//console.log(transition);
+//console.log(transition.sel);
 import * as d3Tip from 'd3-tip';
-
 
 import './style.css';
 
@@ -94,16 +93,15 @@ export class Tree{
             .attr("class", 'node')
             .merge(curnode);
 
-        d3.selectAll('.node').data(this._root.descendants()).exit().remove();
-        console.log(this._node);
-        //var t = d3.transition()
-        //    .duration(750)
-        //     .ease(d3.easeLinear);
+        let t = d3.transition()
+            .duration(500);
+            //.delay(100);
+            //.ease(easeLinear);
 
-        this._node//.transition()
-        //.duration(500)//.attr("class", "node")
+        d3.selectAll('.node').data(this._root.descendants()).exit().remove();
+
+        t.selectAll('.node')
             .attr("transform", function (d) {
-                //console.log(d);
                 return "translate(" + d.x + "," + d.y + ")";
             });
 
@@ -118,12 +116,10 @@ export class Tree{
 
         d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
 
-        this._link//.transition()
-        //.duration(500)
+        t.selectAll('.link')
             .attr("d", d=>{
                 return "M" + d.x + "," + d.y
-                    //+ "C" + d.x  + "," + d.y+10
-                    //+ " " + d.parent.x  + "," + d.parent.y+10
+
                     +"L" + d.parent.x + "," + d.parent.y;
             });
 
