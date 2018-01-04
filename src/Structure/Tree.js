@@ -93,6 +93,7 @@ export class Tree{
         }
 
         )*/
+        //console.log(this._root.children);
         this._treefunc(this._root);
         //console.log(this._root);
     };
@@ -158,7 +159,10 @@ export class Tree{
             .attr("r",100/Math.sqrt(this._circlesize))
             .attr('fill',  (d)=> {//console.log(d);
                 //console.log(this);
-                return this._color(d.data._size);
+                if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
+                    return this._color(d.data._size);
+                else
+                    return  "white"
             })
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
@@ -347,12 +351,29 @@ export function checknode(curnode){
 }
 export function newupdate(node, p, s){
     //Check current node, if meets the contraint, then check its children recursively
-    if ((node.data._persistence<p&&node.data._persistence !=1)||node.data._size<s)
+    //console.log(node.data._persistence);
+    //console.log(node.data._size);
+    //console.log(p);
+    //console.log(s);
+    if ((node.data._persistence<p)||node.data._size<s)
     {   //node.parent._children = node.parent.children;
         //delete node.parent.children;
         node._children = (node.children!=undefined)?node.children:node._children;
         delete node.children;
-        return}
+        /*
+        if (node.parent._children === undefined)
+        {
+            node.parent._children = node;
+        }
+        else
+            node.parent._children = [node.parent._children,node];
+
+        console.log("Delete node");
+        //console.log(getKeyByValue(node.parent.children, node));
+        delete node.parent.children[getKeyByValue(node.parent.children, node)];
+        */
+
+        return }
     else
     {
         node.children = (node.children!=undefined)?node.children:node._children;
@@ -362,11 +383,16 @@ export function newupdate(node, p, s){
         //console.log(node);
         if (node.children!=undefined)
         node.children.forEach(d=>{
-            newupdate(d, p, s);
+            //d.parent._children='ddd';
+            newupdate(d,p,s);
         });
 
     }
 
 
 
+}
+
+export function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
 }

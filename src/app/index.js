@@ -42,7 +42,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
     let plots = new Crystal(rawdata, 600, 200);
     window.plots = plots;
     //Load data in JS
-    pInter = 0.1;
+    pInter = 0.6;
     sizeInter = 20;
     d3.json('../data/P_Partition.json', function (error, data) {
         if (error) throw error;
@@ -105,8 +105,8 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                 let clicks = 0;
                 let DELAY = 500;
                 //Separate clicking from double clicking
-                /*
-                treenode.on("click", (nodeinfo)=>{
+
+                d3.select(".node").on("click", (nodeinfo)=>{
                     let timer;
                     clicks++;  //count clicks
 
@@ -127,7 +127,8 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     }
 
                 });
-                */
+
+
                 d3.select("#dataset").on('change',printPlots);
                 //document.getElementById("dataset").addEventListener("change", printPlots);
                 //document.getElementById("y_attr").addEventListener("change", updateAttribute);

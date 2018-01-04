@@ -180,7 +180,7 @@ if __name__ == '__main__':
     beta = None
     normalization = None
 
-    hierarchy = None
+    hierarchy = 'Hierarchy.csv'
     base = None
     p_par = None
     tree = None
@@ -193,11 +193,10 @@ if __name__ == '__main__':
         knn = sys.argv[4]
         beta = sys.argv[5]
         normalization = sys.argv[6]
-        if len(sys.argv) == 11:
-            hierarchy = sys.argv[7]
-            base = sys.argv[8]
-            p_par = sys.argv[9]
-            tree = sys.argv[10]
+        if len(sys.argv) == 10:
+            base = sys.argv[7]
+            p_par = sys.argv[8]
+            tree = sys.argv[9]
 
             # Whether wait for user's input for file names
 
@@ -231,7 +230,7 @@ if __name__ == '__main__':
     Post.save(p_par,tree)
     #Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
 
-    os.remove('../data/Hierarchy.csv')
+    os.remove(hierarchy)
 
 
 
