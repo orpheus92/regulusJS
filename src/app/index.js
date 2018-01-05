@@ -124,7 +124,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     } else {
 
                         clearTimeout(timer);    //prevent Process-click action
-                        tree.reshape(nodeinfo);
+                        tree.reshapeTree(nodeinfo);
                         clicks = 0;             //after action performed, reset counter
                     }
 

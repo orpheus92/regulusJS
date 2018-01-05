@@ -57,7 +57,7 @@ export class Tree{
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
         this._treefunc = d3.tree()
-            .size([670,330]);
+            .size([670,400]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
             .range(["blue", 'red']);
@@ -77,7 +77,7 @@ export class Tree{
         this.sizeInter = sss;
         this.updatemodel();
         this.layout();
-        this.render();
+        this.render('update');
     };
     updatemodel(){
         newupdate(this._root, this.pInter,this.sizeInter);
@@ -97,8 +97,8 @@ export class Tree{
         this._treefunc(this._root);
         //console.log(this._root);
     };
-    render(){
-        let g = d3.select("#tree").attr("transform", "translate(15,40)");
+    render(option){
+        let g = d3.select("#tree").attr("transform", "translate(20,60)");
 
         if(d3.select('#treetip')!=undefined)
             d3.selectAll('#treetip').remove();
@@ -161,8 +161,18 @@ export class Tree{
                 //console.log(this);
                 if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
                     return this._color(d.data._size);
+
                 else
-                    return  "white"
+                    return "transparent"
+                /*
+                else
+                { if (option === 'update')
+                    return  "transparent";
+                  else
+                    return this._color(d.data._size);
+                }
+                */
+
             })
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
@@ -212,8 +222,6 @@ export class Tree{
      * Removes all highlighting from the tree.
      */
     clearTree() {
-        // ******* TODO: PART VII *******
-
         // You only need two lines of code for this! No loops!
         this._node.classed(".node", true);
         this._link.classed(".link", true);
@@ -259,6 +267,7 @@ export class Tree{
 
     }
 
+    /*
     reshape(curnode){
 
         d3.select("#tree").selectAll("circle").remove();
@@ -313,7 +322,56 @@ export class Tree{
             }).append("circle").attr("r", Math.log(this._initsize/cursize)).attr("class","treedis");
 
     }
+    */
 
+    reshapemodel(curnode){
+        //expand
+        if(curnode.children===undefined)
+        {
+           curnode.children = curnode._children;
+           delete curnode._children;
+        }//console.log("Expand");
+
+        /*
+        {curnode.descendants().forEach(d=>{
+            if(d.id!=curnode.id) {
+                if (d._children != undefined) {
+                    d.children = d._children;
+                    delete d._children;
+                }
+            }
+        });}
+        */
+        //collapse
+        else{
+
+            if (curnode._children === undefined)
+            {
+                curnode._children = curnode.children;
+            }
+            else
+                curnode._children = [curnode.children,curnode];
+
+            delete curnode.children;
+            /*
+            curnode.descendants().forEach(d=>{
+                if(d.id!=curnode.id) {
+                    if(d.children != undefined) {
+                        d._children = d.children;
+                        delete d.children;
+                    }
+                }
+            });
+            */
+
+        }
+    }
+    reshapeTree(curnode){
+        this.reshapemodel(curnode);
+        this.layout();
+        this.render('reshape');
+
+    }
 }
 export function getbaselevelInd(node, accum) {
     let i;
