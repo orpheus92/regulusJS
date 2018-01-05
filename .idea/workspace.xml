@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="886d4960-4532-48f2-9cf0-597ec6dd8016" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Structure/Tree.js" afterPath="$PROJECT_DIR$/src/Structure/Tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.html" afterPath="$PROJECT_DIR$/src/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/style.css" afterPath="$PROJECT_DIR$/src/app/style.css" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,28 +22,28 @@
       <file leaf-file-name="Tree.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="387">
-              <caret line="166" column="18" lean-forward="true" selection-start-line="166" selection-start-column="18" selection-end-line="166" selection-end-column="18" />
+            <state relative-caret-position="514">
+              <caret line="200" column="34" lean-forward="true" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
               <folding>
                 <element signature="e#176#208#0" expanded="true" />
                 <element signature="n#!!doc;n#constructor#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!doc;n#updateTree#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#updatemodel#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#layout#0;n#Tree#0" expanded="false" />
-                <element signature="n#!!block;n#tooltip_render#0;n#Tree#0" expanded="false" />
-                <element signature="e#6319#6542#0" expanded="false" />
+                <element signature="e#6724#6947#0" expanded="false" />
                 <element signature="n#!!doc;n#clearTree#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#clearTree#0;n#Tree#0" expanded="false" />
+                <element signature="n#!!block;n#setPersistence#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#setSize#0;n#Tree#0" expanded="false" />
-                <element signature="e#7985#9786#0" expanded="false" />
+                <element signature="e#8390#10191#0" expanded="false" />
                 <element signature="n#!!block;n#reshapemodel#0;n#Tree#0" expanded="false" />
-                <element signature="e#12379#12765#0" expanded="false" />
-                <marker date="1515170855237" expanded="false" signature="2608:2712" ph="{...}" />
-                <marker date="1515170855237" expanded="false" signature="4506:4719" ph="{...}" />
-                <marker date="1515170855237" expanded="false" signature="8178:8390" ph="{...}" />
-                <marker date="1515170855237" expanded="false" signature="8425:8712" ph="{...}" />
-                <marker date="1515170855237" expanded="false" signature="10057:10269" ph="{...}" />
-                <marker date="1515170855237" expanded="false" signature="10628:10865" ph="{...}" />
+                <element signature="e#12784#13170#0" expanded="false" />
+                <marker date="1515180606234" expanded="false" signature="2613:2717" ph="{...}" />
+                <marker date="1515180606234" expanded="false" signature="4511:4724" ph="{...}" />
+                <marker date="1515180606234" expanded="false" signature="8583:8795" ph="{...}" />
+                <marker date="1515180606234" expanded="false" signature="8830:9117" ph="{...}" />
+                <marker date="1515180606234" expanded="false" signature="10462:10674" ph="{...}" />
+                <marker date="1515180606234" expanded="false" signature="11033:11270" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -117,7 +114,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>transition</find>
       <find>9150, 943</find>
       <find>selection</find>
       <find>d3-tra</find>
@@ -141,12 +137,13 @@
       <find>colorS</find>
       <find>drag</find>
       <find>update</find>
-      <find>resha</find>
       <find>g</find>
       <find>scatter</find>
       <find>_treefunc</find>
       <find>expand</find>
       <find>option</find>
+      <find>resha</find>
+      <find>render</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -206,10 +203,10 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1" />
+    <option name="x" value="2384" />
     <option name="y" value="-4" />
-    <option name="width" value="1922" />
-    <option name="height" value="1022" />
+    <option name="width" value="962" />
+    <option name="height" value="1008" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -322,15 +319,15 @@
       <workItem from="1513663518471" duration="249000" />
       <workItem from="1513703055887" duration="33281000" />
       <workItem from="1514913422136" duration="609000" />
-      <workItem from="1514927283523" duration="45462000" />
+      <workItem from="1514927283523" duration="47894000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156110000" />
+    <option name="totallyTimeSpent" value="158542000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-4" width="1922" height="1022" extended-state="6" />
+    <frame x="1919" y="-4" width="1922" height="1085" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17578332" sideWeight="0.49455675" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -338,8 +335,8 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.035460994" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12515964" sideWeight="0.4968085" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496017" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11583924" sideWeight="0.4968085" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15478723" sideWeight="0.5054432" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -355,19 +352,19 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12667479" sideWeight="0.50212765" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496955" sideWeight="0.5031915" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.035460994" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32886723" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22955145" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15478723" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11583924" sideWeight="0.4968085" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17578332" sideWeight="0.49455675" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31912303" sideWeight="0.49787235" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15478723" sideWeight="0.5054432" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -703,18 +700,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14">
-          <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding>
-            <element signature="e#1#22#0" expanded="true" />
-            <element signature="e#361#396#0" expanded="true" />
-            <element signature="e#3828#3972#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -755,30 +740,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14">
+          <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+          <folding>
+            <element signature="e#1#22#0" expanded="true" />
+            <element signature="e#361#396#0" expanded="true" />
+            <element signature="e#3828#3972#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="166" column="18" lean-forward="true" selection-start-line="166" selection-start-column="18" selection-end-line="166" selection-end-column="18" />
+        <state relative-caret-position="514">
+          <caret line="200" column="34" lean-forward="true" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
           <folding>
             <element signature="e#176#208#0" expanded="true" />
             <element signature="n#!!doc;n#constructor#0;n#Tree#0" expanded="false" />
             <element signature="n#!!doc;n#updateTree#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#updatemodel#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#layout#0;n#Tree#0" expanded="false" />
-            <element signature="n#!!block;n#tooltip_render#0;n#Tree#0" expanded="false" />
-            <element signature="e#6319#6542#0" expanded="false" />
+            <element signature="e#6724#6947#0" expanded="false" />
             <element signature="n#!!doc;n#clearTree#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#clearTree#0;n#Tree#0" expanded="false" />
+            <element signature="n#!!block;n#setPersistence#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#setSize#0;n#Tree#0" expanded="false" />
-            <element signature="e#7985#9786#0" expanded="false" />
+            <element signature="e#8390#10191#0" expanded="false" />
             <element signature="n#!!block;n#reshapemodel#0;n#Tree#0" expanded="false" />
-            <element signature="e#12379#12765#0" expanded="false" />
-            <marker date="1515170855237" expanded="false" signature="2608:2712" ph="{...}" />
-            <marker date="1515170855237" expanded="false" signature="4506:4719" ph="{...}" />
-            <marker date="1515170855237" expanded="false" signature="8178:8390" ph="{...}" />
-            <marker date="1515170855237" expanded="false" signature="8425:8712" ph="{...}" />
-            <marker date="1515170855237" expanded="false" signature="10057:10269" ph="{...}" />
-            <marker date="1515170855237" expanded="false" signature="10628:10865" ph="{...}" />
+            <element signature="e#12784#13170#0" expanded="false" />
+            <marker date="1515180606234" expanded="false" signature="2613:2717" ph="{...}" />
+            <marker date="1515180606234" expanded="false" signature="4511:4724" ph="{...}" />
+            <marker date="1515180606234" expanded="false" signature="8583:8795" ph="{...}" />
+            <marker date="1515180606234" expanded="false" signature="8830:9117" ph="{...}" />
+            <marker date="1515180606234" expanded="false" signature="10462:10674" ph="{...}" />
+            <marker date="1515180606234" expanded="false" signature="11033:11270" ph="{...}" />
           </folding>
         </state>
       </provider>

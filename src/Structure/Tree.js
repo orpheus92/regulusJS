@@ -60,7 +60,7 @@ export class Tree{
             .size([670,400]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
-            .range(["blue", 'red']);
+            .range(["yellow", 'purple']);
         //console.log(this);
     }
 
@@ -157,9 +157,13 @@ export class Tree{
         */
         t.selectAll('.node')
             .attr("r",100/Math.sqrt(this._circlesize))
-            .attr('fill',  (d)=> {//console.log(d);
-                //console.log(this);
-                if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
+            .attr('fill',  (d)=> {//console.log(d.children);
+                //This part decides the intermediate layer
+
+                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.children!=null)&&(d.children.length ==1))
+                    return "transparent"
+
+                else if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
                     return this._color(d.data._size);
 
                 else
@@ -188,11 +192,13 @@ export class Tree{
             })
             .html((d)=>{
                 let tooltip_data = d.data;
-
-                return this.tooltip_render(tooltip_data);
+                //console.log(d);
+                if (!((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.children!=null)&&(d.children.length ==1)))
+                    return this.tooltip_render(tooltip_data);
 
                 return ;
             });
+        //console.log(this._node);
         this._node.call(tip);
         this._node.on('mouseover', tip.show)
             .on('mouseout', tip.hide);
