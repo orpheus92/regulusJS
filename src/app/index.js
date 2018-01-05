@@ -28,7 +28,7 @@ let partition;
 let loaddata;
 let treenode;
 d3.csv('../data/Pu_TOT.csv', rawdata=> {
-
+    //console.log("Raw data loaded");
     //if (error) throw error;
     //console.log(rawdata);
     for (let i = 0; i< rawdata.columns.length; i++)
@@ -106,7 +106,9 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                 let DELAY = 500;
                 //Separate clicking from double clicking
 
-                d3.select(".node").on("click", (nodeinfo)=>{
+                document.getElementById("tree").onmouseover = function(event) {
+
+                    d3.selectAll(".node").on("click", (nodeinfo)=>{
                     let timer;
                     clicks++;  //count clicks
 
@@ -128,6 +130,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
 
                 });
 
+                };
 
                 d3.select("#dataset").on('change',printPlots);
                 //document.getElementById("dataset").addEventListener("change", printPlots);

@@ -208,8 +208,8 @@ if __name__ == '__main__':
     #new_MSC.loadData('../data/Pu_TOT.csv')
 
     # Compute MSC
-    new_MSC.compute(graph,gradient,knn,beta,normalization)
-    #new_MSC.compute('relaxed beta skeleton', 'steepest', 50, 1.0, 'feature')
+    #new_MSC.compute(graph,gradient,knn,beta,normalization)
+    new_MSC.compute('relaxed beta skeleton', 'steepest', 100, 1.0, 'feature')
 
     # Save
     new_MSC.save(hierarchy,base)
