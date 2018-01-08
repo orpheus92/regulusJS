@@ -40,7 +40,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
     }
 
     let plots = new Crystal(rawdata, 600, 200);
-    window.plots = plots;
+    //window.plots = plots;
     //Load data in JS
     pInter = 0.6;
     sizeInter = 20;
@@ -115,7 +115,9 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                     if(clicks === 1) {
 
                         timer = setTimeout(function() {
-                            window.plots.update(nodeinfo);
+                            //window.plots.update(nodeinfo);
+                            plots.update(nodeinfo);
+
                             loaddata.select(nodeinfo);
                             clicks = 0;             //after action performed, reset counter
 
@@ -132,10 +134,10 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
 
                 };
 
-                d3.select("#dataset").on('change',printPlots);
+                d3.select("#dataset").on('change',()=>{plots.printPlots();});
                 //document.getElementById("dataset").addEventListener("change", printPlots);
                 //document.getElementById("y_attr").addEventListener("change", updateAttribute);
-                d3.select("#y_attr").on('change',updateAttribute);
+                d3.select("#y_attr").on('change',()=>{plots.updateAttribute();});
             });
         });
 

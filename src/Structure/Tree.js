@@ -167,7 +167,7 @@ export class Tree{
                     return this._color(d.data._size);
 
                 else
-                    return "transparent"
+                    return "grey"
                 /*
                 else
                 { if (option === 'update')

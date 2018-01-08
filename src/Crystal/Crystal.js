@@ -580,10 +580,13 @@ export class Crystal {
     updateAttribute(){
         this._y_attr = document.getElementById('y_attr').value;
         this.printPlots();
+        console.log("Update Attribute Executed");
+
     }
 }
 
 
+/*
 export function printPlots() {
     window.plots.printPlots()
     //console.log("PrintPlots");
@@ -593,5 +596,5 @@ export function updateAttribute(){
     window.plots.updateAttribute()
     //console.log("updateAttribute");
 }
-
+*/
 
