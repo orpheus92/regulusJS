@@ -3,3 +3,31 @@
     margin-up: 5px;
     margin-left: 20px;
 }
+
+
+.ticks{
+    color: #1B2733;
+    font: 16px sans-serif;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+    stroke-linecap: round;
+}
+
+.track-inset {
+// stroke: #ddd;
+// stroke-width: 10px;
+}
+
+.track-overlay {
+    pointer-events: stroke;
+    stroke-width: 50px;
+    stroke: transparent;
+    cursor: crosshair;
+}
+
+.handle {
+    fill: #006de3;
+}

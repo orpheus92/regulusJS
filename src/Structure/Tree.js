@@ -60,7 +60,7 @@ export class Tree{
             .size([670,400]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
-            .range(["yellow", 'purple']);
+            .range(["purple", 'orange']);
         //console.log(this);
     }
 

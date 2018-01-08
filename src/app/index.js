@@ -1,7 +1,7 @@
 
 import './style.css';
 import * as d3 from 'd3';
-//import {event as currentEvent} from 'd3-selection';
+import {event as currentEvent} from 'd3-selection';
 //import {event as currentEvent} from 'd3-selection';
 //import {drag} from 'd3-drag';
 //import * as d3Tip from 'd3-tip';
