@@ -5,15 +5,31 @@ import './style.css';
 
 export class Crystal {
 
-    constructor(data, widht, height) {
+    constructor(data, width, height) {
         this._rawdata = data;
         this._data = data;
         this._margin = {top: 20, right: 30, bottom: 50, left: 60};
-        this._width = widht;
+        this._width = width;
         this._height = height;
         this._plot = d3.select("#hdPlot");
         this._y_attr = document.getElementById('y_attr').value;
-        console.log(this._y_attr);
+
+        // This part is necessary when people try to call update attribute before selecting partition
+        let attr = data.columns;
+
+        let datacol = attr.length;
+        let datarow = this._data.length;
+        let obj = {};
+        for (let j = 0; j < datacol; j++)
+            obj[attr[j]] = [];
+        for (let i = 0; i < datarow; i++) {
+            for (let j = 0; j < datacol; j++) {
+                obj[attr[j]].push(parseFloat(this._data[i][attr[j]]));
+            }
+        }
+        this._obj = obj;
+        this._attr = attr;
+        //console.log(this._y_attr);
     }
 
     //printPlots
@@ -580,7 +596,7 @@ export class Crystal {
     updateAttribute(){
         this._y_attr = document.getElementById('y_attr').value;
         this.printPlots();
-        console.log("Update Attribute Executed");
+        //console.log("Update Attribute Executed");
 
     }
 }

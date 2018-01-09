@@ -57,7 +57,7 @@ export class Tree{
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
         this._treefunc = d3.tree()
-            .size([670,400]);
+            .size([670,380]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
             .range(["purple", 'orange']);
@@ -75,26 +75,35 @@ export class Tree{
     updateTree(ppp,sss) {
         this.pInter = ppp;
         this.sizeInter = sss;
+        //console.log(this.pInter);
+
         this.updatemodel();
+        //console.log(this.pInter);
         this.layout();
         this.render('update');
     };
     updatemodel(){
-        newupdate(this._root, this.pInter,this.sizeInter);
+        //console.log("pInter:",this.pInter);
+        //console.log("pShow:",this.pShow);
+        if (this.pShow != undefined)
+            newupdate(this._root, this.pShow,this.sizeInter);
+        else
+            newupdate(this._root, this.pInter,this.sizeInter);
+
+        //console.log("After:",this.pInter);
+
+
         this._circlesize = this._root.descendants().length;
     };
-    layout(){
-        /*
-        this._root.descendants().forEach(function(d){
-            if(d.x!=null)
-            {d.oldx = d.x;
-            d.oldy = d.y;
-            }
-        }
+    layout(option){
+        //Use option to decide whether to use tree level or persistence level
+        if (option == undefined)
+            this._treefunc(this._root);
+        else
+        {
+            this._treefunc(this._root).size([2,1]);
 
-        )*/
-        //console.log(this._root.children);
-        this._treefunc(this._root);
+        }
         //console.log(this._root);
     };
     render(option){
@@ -157,15 +166,17 @@ export class Tree{
         */
         t.selectAll('.node')
             .attr("r",100/Math.sqrt(this._circlesize))
-            .attr('fill',  (d)=> {//console.log(d.children);
-                //This part decides the intermediate layer
-
-                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.children!=null)&&(d.children.length ==1))
+            .attr('fill',  (d)=> {
+                //Intermediate Nodes
+                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.parent.data._size== d.data._size)&&(d.children!=null)&&(d.children.length ==1))
                     return "transparent"
-
+                //Color based on partition size
                 else if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
                     return this._color(d.data._size);
-
+                //Nodes opened by users
+                else if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                    return this._color(d.data._size);
+                //Nodes that did not meet threshold
                 else
                     return "grey"
                 /*
@@ -178,6 +189,14 @@ export class Tree{
                 */
 
             })
+            /*
+            .attr("stroke", (d)=>{
+                if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                return "black";
+                else
+                    return "none";
+            })
+            */
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
@@ -235,10 +254,15 @@ export class Tree{
 
     }
     setPersistence(option){
+        //let pShow;
         if(option === "increase"){
             for (let i=this.pers.length-1; i>=0; i--) {
                 if(this.pers[i]>this.pInter){
                     this.pInter = this.pers[i];
+
+                    //console.log(this.pInter);
+
+                    this.pShow = (i+2>1) ?this.pers[i+2]:this.pers[1];
                     break;
                 }
             }
@@ -249,11 +273,16 @@ export class Tree{
             for (let i=1; i<this.pers.length; i++) {
                 if(this.pers[i]<this.pInter){
                     this.pInter = this.pers[i];
+                    //console.log(this.pInter);
+                    this.pShow = (i+2<this.pers.length-1) ?this.pers[i+2]:this.pers[this.pers.length-1]//this.pers[i];
                     break;
                 }
             }
             this.updateTree(this.pInter,this.sizeInter);
         }
+        //console.log(this.pInter);
+        //console.log(pShow);
+
         return this.pInter;
 
     }
@@ -332,10 +361,33 @@ export class Tree{
 
     reshapemodel(curnode){
         //expand
-        if(curnode.children===undefined)
-        {
-           curnode.children = curnode._children;
-           delete curnode._children;
+        if(curnode.children===undefined) {//  console.log(curnode);
+            curnode.children = curnode._children;
+            delete curnode._children;
+
+            //Expand the collapsed nodes
+            if ((curnode.data._persistence < this.pInter)||(curnode.data._size < this.sizeInter)) {
+                curnode.viz = true;
+
+                if (curnode.children != undefined) {
+                    curnode.children.forEach(d => {
+                        //console.log(d);
+                        if (d._children === undefined) {
+                            d._children = d.children;
+                            delete d.children;
+                        }
+                        else if (d.children != undefined) {
+                            d._children = [d._children, d.children];
+                            delete d.children;
+
+                        }
+                    });
+                }
+                else
+                    console.log("Coundn't Expand Anymore, Need to Decrease Persistence Level");
+            }
+            else
+                delete curnode.viz;
         }//console.log("Expand");
 
         /*
@@ -359,6 +411,7 @@ export class Tree{
                 curnode._children = [curnode.children,curnode];
 
             delete curnode.children;
+            delete curnode.viz;
             /*
             curnode.descendants().forEach(d=>{
                 if(d.id!=curnode.id) {
