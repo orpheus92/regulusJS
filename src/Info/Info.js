@@ -53,22 +53,25 @@ export class Info {
     }
 
     select(snode){
-        //console.log("Update P");
-        //this.cper.text("Current Persistence: "+ pInter).remove();
-        //console.log(snode);
-        this.sMSC.selectAll(".sMSC").remove();
-        //this.csize.selectAll(".cslabel").remove();
+        if (snode!=undefined) {
+            //console.log("Update P");
+            //this.cper.text("Current Persistence: "+ pInter).remove();
+            //console.log(snode);
+            this.sMSC.selectAll(".sMSC").remove();
+            //this.csize.selectAll(".cslabel").remove();
 
-        //.data(ppInter);
-        //console.log(Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]);
-        this.sMSC
-            .append("li").text("Total Points in Selected Partition: "+snode.data._total.size).classed("sMSC", true)
-            .append("li").text("Minimum Index: "+snode.data.C1).classed("sMSC", true)
-            .append("li").text("Minimum Value: "+Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]).classed("sMSC", true)
-            .append("li").text("Maximum Index: "+snode.data.C2).classed("sMSC", true)
-            .append("li").text("Maximum Value: "+Object.values(this.rawdata[snode.data.C2]).slice(-1)[0]).classed("sMSC", true);
-        //this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
-
+            //.data(ppInter);
+            //console.log(Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]);
+            //console.log(snode);
+            this.sMSC
+                .append("li").text("Total Points in Selected Partition: " + snode.data._total.size).classed("sMSC", true)
+                .append("li").text("Minimum Index: " + snode.data.C1).classed("sMSC", true)
+                .append("li").text("Minimum Value: " + Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]).classed("sMSC", true)
+                .append("li").text("Maximum Index: " + snode.data.C2).classed("sMSC", true)
+                .append("li").text("Maximum Value: " + Object.values(this.rawdata[snode.data.C2]).slice(-1)[0]).classed("sMSC", true)
+                .append("li").text("Partition Persistence: " + snode.data._persistence).classed("sMSC", true);
+            //this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
+        }
 
     }
 }

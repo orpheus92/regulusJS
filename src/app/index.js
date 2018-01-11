@@ -26,8 +26,15 @@ let sizeInter;
 let tree;
 let partition;
 let loaddata;
-let treenode;
-d3.csv('../data/Pu_TOT.csv', rawdata=> {
+let cnode;
+
+d3.select('#LoadFile')
+    .on('click', () =>  {
+        load();
+    });
+
+function load(){
+    d3.csv('../data/Pu_TOT.csv', rawdata=> {
     //console.log("Raw data loaded");
     //if (error) throw error;
     //console.log(rawdata);
@@ -59,7 +66,7 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                 tree = new Tree(treedata,partition,basedata);
                 //tree.create(pInter,sizeInter);
                 tree.updateTree(pInter,sizeInter);
-                pInter = tree.setPersistence("increase");
+                //pInter = tree.setPersistence("increase");
                 //slider.handle.attr("cx", x(pInter));
                 loaddata.update(pInter,sizeInter);
                 //console.log(tree);
@@ -110,8 +117,8 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                 //Separate clicking from double clicking
 
                 document.getElementById("tree").onmouseover = function(event) {
-
-                    d3.selectAll(".node").on("click", (nodeinfo)=>{
+                    //console.log(event);
+                    d3.selectAll(".node.viz").on("click", (nodeinfo)=>{
                     let timer;
                     clicks++;  //count clicks
 
@@ -121,8 +128,8 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                             //window.plots.update(nodeinfo);
                             plots.update(nodeinfo);
                             //console.log(nodeinfo);
-
-                            loaddata.select(nodeinfo);
+                            cnode = nodeinfo;
+                            loaddata.select(cnode);
                             clicks = 0;             //after action performed, reset counter
 
                         }, DELAY);
@@ -134,7 +141,10 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
                         clicks = 0;             //after action performed, reset counter
                     }
 
-                });
+                }).on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo);
+                                                //console.log(nodeinfo);
+                    }).on("mouseout", ()=>{loaddata.select(cnode);
+                    });
 
                 };
 
@@ -148,6 +158,8 @@ d3.csv('../data/Pu_TOT.csv', rawdata=> {
     })
 
 });
+}
 
-
+/*
 function updateDataInfo(){}
+*/

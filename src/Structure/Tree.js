@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 //import * as aaaa from 'd3-transition';
 //let transition = d3.transition();
 //console.log(transition.sel);
-import * as d3Tip from 'd3-tip';
+//import * as d3Tip from 'd3-tip';
 
 import './style.css';
 
@@ -32,6 +32,7 @@ export class Tree{
             .id(d => d.id)
             .parentId(d => d.par === ", , 0" ? '' : d.par)
             (treeCSV);
+        //console.log(this._root);
         let accum;
         this._root.descendants().forEach(d=>{
             accum = [];
@@ -60,7 +61,7 @@ export class Tree{
             .size([670,380]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
-            .range(["purple", 'orange']);
+            .range(["#bae4b3", '#006d2c']);
         //console.log(this);
     }
 
@@ -78,7 +79,7 @@ export class Tree{
         //console.log(this.pInter);
 
         this.updatemodel();
-        //console.log(this.pInter);
+        //console.log('root = ',this._root);
         this.layout();
         this.render('update');
     };
@@ -86,16 +87,15 @@ export class Tree{
         //console.log("pInter:",this.pInter);
         //console.log("pShow:",this.pShow);
         if (this.pShow != undefined)
-            newupdate(this._root, this.pShow,this.sizeInter);
+            nodeupdate(this._root, this.pShow,this.sizeInter);
         else
-            newupdate(this._root, this.pInter,this.sizeInter);
-
-        //console.log("After:",this.pInter);
+            nodeupdate(this._root, this.pInter,this.sizeInter);
 
 
         this._circlesize = this._root.descendants().length;
     };
     layout(option){
+        //onsole.log(this._root);
         //Use option to decide whether to use tree level or persistence level
         if (option == undefined)
             this._treefunc(this._root);
@@ -109,8 +109,8 @@ export class Tree{
     render(option){
         let g = d3.select("#tree").attr("transform", "translate(20,60)");
 
-        if(d3.select('#treetip')!=undefined)
-            d3.selectAll('#treetip').remove();
+        //if(d3.select('#treetip')!=undefined)
+        //    d3.selectAll('#treetip').remove();
 
         let t = d3.transition()
             .duration(300);
@@ -149,12 +149,6 @@ export class Tree{
             })
             .merge(curnode);
 
-        //console.log(this._node);
-
-
-            //.ease(easeLinear);
-        //let t2 = d3.transition()
-            //.delay(500);
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
         /*
         d3.selectAll('#newnode').attr("transform", function (d) {//console.log(d)
@@ -168,17 +162,18 @@ export class Tree{
             .attr("r",100/Math.sqrt(this._circlesize))
             .attr('fill',  (d)=> {
                 //Intermediate Nodes
-                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.parent.data._size== d.data._size)&&(d.children!=null)&&(d.children.length ==1))
-                    return "transparent"
+                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)/*&&(d.parent.data._size== d.data._size)*/&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                    return "transparent";
                 //Color based on partition size
                 else if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
                     return this._color(d.data._size);
                 //Nodes opened by users
                 else if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
                     return this._color(d.data._size);
-                //Nodes that did not meet threshold
                 else
-                    return "grey"
+                    //return "#969696";
+                    return "#cccccc";
+
                 /*
                 else
                 { if (option === 'update')
@@ -187,6 +182,14 @@ export class Tree{
                     return this._color(d.data._size);
                 }
                 */
+
+            })
+            .attr('class',  (d)=> {
+                //Intermediate Nodes
+                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)/*&&(d.parent.data._size== d.data._size)*/&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                    return "node";
+                else
+                    return "node viz";
 
             })
             /*
@@ -203,7 +206,7 @@ export class Tree{
 
 
         //console.log(this._node);
-
+        /*
         let tip = d3Tip().attr('class', 'd3-tip').attr('id','treetip')
             .direction('se')
             .offset(function() {
@@ -221,8 +224,9 @@ export class Tree{
         this._node.call(tip);
         this._node.on('mouseover', tip.show)
             .on('mouseout', tip.hide);
+        */
     };
-
+    /*
     tooltip_render(tooltip_data) {
 
 
@@ -234,7 +238,7 @@ export class Tree{
 
         return text;
     }
-
+    */
     /**
      * Updates the highlighting in the tree based on the selected team.
      * Highlights the appropriate team nodes and labels.
@@ -448,6 +452,7 @@ export function getbaselevelInd(node, accum) {
     return accum;
 }
 
+/*
 export function pfilter(mydata,ppp){
     return (mydata.data.persistence<=ppp && mydata.data.persistence != 1)? true : false;
 }
@@ -466,17 +471,23 @@ export function checknode(curnode){
     else
         return true;
 }
-export function newupdate(node, p, s){
+*/
+
+export function nodeupdate(node, p, s){
     //Check current node, if meets the contraint, then check its children recursively
     //console.log(node.data._persistence);
     //console.log(node.data._size);
-    //console.log(p);
+    //console.log("Enter Recursion");
     //console.log(s);
-    if ((node.data._persistence<p)||node.data._size<s)
-    {   //node.parent._children = node.parent.children;
-        //delete node.parent.children;
-        node._children = (node.children!=undefined)?node.children:node._children;
+    //console.log(node);
+    if (node.data._persistence<p)
+    {   if (node._children === undefined)
+        //node._children = (node.children!=undefined)?node.children:node._children;
+            node._children = node.children;
+        else if (node.children!=undefined)
+            node._children.concat(node.children);
         delete node.children;
+        return true;
         /*
         if (node.parent._children === undefined)
         {
@@ -491,19 +502,102 @@ export function newupdate(node, p, s){
         */
 
         return }
-    else
+    /*
+        else if (node.data._size<s)
     {
-        node.children = (node.children!=undefined)?node.children:node._children;
+
+    }
+    */
+    else {
+        //console.log(node);
+        //console.log('children start',node.children);
+        //console.log('_children start',node._children);
+        //console.log(node.children.concat(node._children));
+        //node.__children =  node.children.concat(node._children);
+        if(node.children===undefined)
+            node.__children = node._children;
+        else if(node._children===undefined)
+            node.__children = node.children;
+        else
+            node.__children = node.children.concat(node._children);//[node.children,node._children];
+        //Object.assign( node.children, node._children);//(node.children != undefined) ? node.children : node._children;
         delete node._children;
+        delete node.children;
+        //console.log('__children',node.__children);
         node.oldx = node.x;
         node.oldy = node.y;
         //console.log(node);
-        if (node.children!=undefined)
-        node.children.forEach(d=>{
+        //if (node.children != undefined)
+        //let list = {};
+        //console.log(node);
+        node.__children.forEach((d, i) => {
+            //console.log(d);
             //d.parent._children='ddd';
-            newupdate(d,p,s);
-        });
+            //if size smaller than size threshold
+            //console.log("type1", node.__children);
+            //console.log("type2", node.__children[i]);
+            //console.log(d,i);
+            if (node.__children[i].data._size < s) {
+                /*
+                if (node._children === undefined) {
+                    node._children = node.children[i];
+                    delete node.children[i];
+                }
+                else
+                    node._children = [node.children[i], node._children];
+                */
+                //console.log("if", node.__children[i].data._size);
+                //console.log("_child before", node._children);
 
+                //node._children = (node._children!=undefined)?Object.assign(node._children, node.__children[i]):Object.assign({},node.__children[i]);
+                if (node._children!=undefined)
+                    //Object.assign(node._children, node.__children[i])
+                    {node._children.push(node.__children[i]);}
+                else
+                    {//console.log(node._children);
+                        node._children = [];
+                        //Array.from(node.__children[i]);//node.__children[i];
+                        //Object.keys(node._children).map(key => node._children[key])
+                        node._children[0] = node.__children[i];
+
+                        //Object.assign(Array.from(node.__children[i]));
+                        //Array.prototype.push(node._children, node.__children[i]);
+                    }
+                //console.log("_child after", node._children);
+
+            }
+            else
+            {
+                //console.log("else", node.__children[i].data._size);
+                //console.log("child before",node.children);
+                //node.children =(node.children!=undefined)?Object.assign(node.children, node.__children[i]):Object.assign({},node.__children[i]);
+                if (node.children!=undefined)
+                    {   //console.log(node.__children[i]);
+                        node.children.push(node.__children[i]);
+                    }
+
+                    //Object.assign(node.children, node.__children[i]);
+                    //node.children.push(node.__children[i]);
+
+                else
+                    {   //console.log(node.__children[i]);
+                        //console.log( Array.from(node.__children[i]));
+                        //node.children = Array.from(node.__children[i]);
+                        //ode.children = node.__children[i];
+                        //Object.assign(node.children);
+                        //Array.prototype.push(node.children, node.__children[i]);
+                        node.children = [];
+                        //Array.from(node.__children[i]);//node.__children[i];
+                        //Object.keys(node._children).map(key => node._children[key])
+                        node.children[0] = node.__children[i];
+
+
+                    }
+                //console.log("child after", node.children);
+
+                nodeupdate(d, p, s);}
+        });
+        delete node.__children;
     }
 
 
