@@ -154,7 +154,9 @@ function load(){
                     });
 
                 };
-                d3.select("#level").on('change',()=>{treelevel.switchLevel();});
+                d3.select("#level").on('change',()=>{treelevel.switchLevel();
+                                                    tree.layout();
+                                                    tree.render();});
 
                 d3.select("#dataset").on('change',()=>{plots.printPlots();});
                 //document.getElementById("dataset").addEventListener("change", printPlots);

@@ -98,14 +98,75 @@ export class Tree{
 
         this._circlesize = this._root.descendants().length;
     };
-    layout(option){
+    layout(){
+        let option = document.getElementById('level').value;
+
+        this._treefunc(this._root);
+
+        switch (option) {
+            case "tLevel": {
+                break;
+            }
+            case "pLevel": {
+                let scale = d3.scaleLinear().nice();
+                scale.range([this.treelength, 0]);
+                if (this.pShow === undefined)
+                {
+                    for (let i = 0; i < this.pers.length; i++) {
+                        if (this.pInter > this.pers[i]) {
+                            scale.domain([this.pers[i], 1]);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    scale.domain([this.pShow, 1]);
+                }
+                this._root.descendants().forEach(d=>{
+                    d.y = scale(d.data._persistence);
+                });
+                break;
+                //this._root._y = 0;
+                /*this._root.descendants().forEach(d=>{
+                    if (d.parent!=null){
+                        d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
+                        d.y = this.treelength*d._y;
+                    }
+                });
+                break;*/
+            }
+            case "pLevelexp": {
+                let scaleexp = d3.scalePow().nice();
+                scaleexp.exponent(0.1);
+                scaleexp.range([this.treelength, 0]);
+                if (this.pShow === undefined)
+                {
+                        for (let i = 0; i < this.pers.length; i++) {
+                            if (this.pInter > this.pers[i]) {
+                                scaleexp.domain([this.pers[i], 1]);
+                                break;
+                            }
+                        }
+                }
+                else
+                {
+                    scaleexp.domain([this.pShow, 1]);
+                }
+                this._root.descendants().forEach(d=>{
+                        d.y = scaleexp(d.data._persistence);
+                });
+                break;
+            }
+            default:
+        }
+        /*
         //onsole.log(this._root);
         //Use option to decide whether to use tree level or persistence level
-        if (option === undefined)
-            this._treefunc(this._root);
-        else
+        if (option === "tLevel")
+            return;
+        else if (option === "pLevelexp")
         {
-            this._treefunc(this._root);
             //console.log(this._root.descendants());
             this._root._y = 0;
             this._root.descendants().forEach((d,i)=>{
@@ -116,14 +177,27 @@ export class Tree{
                     //console.log(this.treelength*(Math.sqrt((this.pers[d.parent.depth]-this.pers[d.depth]))));
                     //console.log(this.treelength*(((this.pers[d.parent.depth]-this.pers[d.depth]))));
                     d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
-                    d.y = this.treelength*(1+Math.log10(d._y));
+                    d.y = this.treelength*(Math.pow(d._y,10));
                     //d.y = Math.log(d.y);
                     //console.log(d._y);
                 }
             });
 
         }
-        //console.log(this._root);
+        else{
+            this._root.descendants().forEach((d,i)=>{
+                //console.log(d);
+                if (d.parent!=null){
+                    d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
+                    d.y = this.treelength*d._y;
+
+                }
+            });
+
+
+
+
+        }*/
     };
     render(option){
         let g = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
@@ -140,7 +214,7 @@ export class Tree{
         this._link = curlink.data(this._root.descendants().slice(1))
             .enter().insert("path")
             .attr("class", "link")
-            .merge(curlink);;
+            .merge(curlink);
 
         d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
 
