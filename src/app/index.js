@@ -12,7 +12,7 @@ import {event as currentEvent} from 'd3-selection';
 
 import {Crystal} from '../Crystal';
 import {Info} from '../Info';
-import {Tree} from '../Structure';
+import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
 import {updateAttribute} from "../Crystal";
 import {printPlots} from "../Crystal";
@@ -27,7 +27,7 @@ let tree;
 let partition;
 let loaddata;
 let cnode;
-
+let treelevel;
 d3.select('#LoadFile')
     .on('click', () =>  {
         load();
@@ -49,7 +49,7 @@ function load(){
     let plots = new Crystal(rawdata, 600, 200);
     //window.plots = plots;
     //Load data in JS
-    pInter = 0.9;
+    pInter = 0.2;
     sizeInter = 20;
     d3.json('../data/P_Partition.json', function (error, data) {
         if (error) throw error;
@@ -64,8 +64,10 @@ function load(){
             d3.json('../data/Base_Partition.json', function (error, basedata) {
                 //console.log(rawdata);
                 tree = new Tree(treedata,partition,basedata);
+                treelevel = new TreeLevel();
                 //tree.create(pInter,sizeInter);
                 tree.updateTree(pInter,sizeInter);
+                treelevel.plotLevel(tree);
                 //pInter = tree.setPersistence("increase");
                 //slider.handle.attr("cx", x(pInter));
                 loaddata.update(pInter,sizeInter);
@@ -92,12 +94,14 @@ function load(){
                 d3.select('#increase')
                     .on('click', () => {
                         pInter = tree.setPersistence("increase");
+                        treelevel.plotLevel(tree);
                         slider.handle.attr("cx", x(pInter));
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#decrease')
                     .on('click', () =>  {
                         pInter = tree.setPersistence("decrease");
+                        treelevel.plotLevel(tree);
                         slider.handle.attr("cx", x( pInter));
                         loaddata.update(pInter,sizeInter);
                     });
@@ -119,6 +123,7 @@ function load(){
                 document.getElementById("tree").onmouseover = function(event) {
                     //console.log(event);
                     d3.selectAll(".node.viz").on("click", (nodeinfo)=>{
+                        //console.log(nodeinfo);
                     let timer;
                     clicks++;  //count clicks
 
@@ -138,6 +143,8 @@ function load(){
 
                         clearTimeout(timer);    //prevent Process-click action
                         tree.reshapeTree(nodeinfo);
+                        treelevel.plotLevel(tree);
+
                         clicks = 0;             //after action performed, reset counter
                     }
 
@@ -147,6 +154,7 @@ function load(){
                     });
 
                 };
+                d3.select("#level").on('change',()=>{treelevel.switchLevel();});
 
                 d3.select("#dataset").on('change',()=>{plots.printPlots();});
                 //document.getElementById("dataset").addEventListener("change", printPlots);

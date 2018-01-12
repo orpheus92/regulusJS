@@ -13,7 +13,10 @@ export class Tree{
      */
     constructor(treeCSV,partition,basedata) {
         this._maxsize = 0;
-
+        this.treewidth = 670;
+        this.treelength =380;
+        this.translatex = 50;
+        this.translatey = 100;
         let totalpers = [];
         partition.pers.map(function(item) {
             totalpers.push(parseFloat(item));
@@ -58,11 +61,12 @@ export class Tree{
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
         this._treefunc = d3.tree()
-            .size([670,380]);
+            .size([this.treewidth,this.treelength]);
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
             .range(["#bae4b3", '#006d2c']);
         //console.log(this);
+        console.log(this);
     }
 
     /**
@@ -80,7 +84,7 @@ export class Tree{
 
         this.updatemodel();
         //console.log('root = ',this._root);
-        this.layout();
+        this.layout("P");
         this.render('update');
     };
     updatemodel(){
@@ -97,17 +101,32 @@ export class Tree{
     layout(option){
         //onsole.log(this._root);
         //Use option to decide whether to use tree level or persistence level
-        if (option == undefined)
+        if (option === undefined)
             this._treefunc(this._root);
         else
         {
-            this._treefunc(this._root).size([2,1]);
+            this._treefunc(this._root);
+            //console.log(this._root.descendants());
+            this._root._y = 0;
+            this._root.descendants().forEach((d,i)=>{
+                //console.log(d);
+                if (d.parent!=null){
+                    //console.log(d);
+                    //console.log((Math.sqrt(this.pers[d.parent.depth]-this.pers[d.depth])));
+                    //console.log(this.treelength*(Math.sqrt((this.pers[d.parent.depth]-this.pers[d.depth]))));
+                    //console.log(this.treelength*(((this.pers[d.parent.depth]-this.pers[d.depth]))));
+                    d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
+                    d.y = this.treelength*(1+Math.log10(d._y));
+                    //d.y = Math.log(d.y);
+                    //console.log(d._y);
+                }
+            });
 
         }
         //console.log(this._root);
     };
     render(option){
-        let g = d3.select("#tree").attr("transform", "translate(20,60)");
+        let g = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
 
         //if(d3.select('#treetip')!=undefined)
         //    d3.selectAll('#treetip').remove();
@@ -514,9 +533,9 @@ export function nodeupdate(node, p, s){
         //console.log('_children start',node._children);
         //console.log(node.children.concat(node._children));
         //node.__children =  node.children.concat(node._children);
-        if(node.children===undefined)
+        if (node.children === undefined)
             node.__children = node._children;
-        else if(node._children===undefined)
+        else if (node._children === undefined)
             node.__children = node.children;
         else
             node.__children = node.children.concat(node._children);//[node.children,node._children];
@@ -530,31 +549,33 @@ export function nodeupdate(node, p, s){
         //if (node.children != undefined)
         //let list = {};
         //console.log(node);
-        node.__children.forEach((d, i) => {
-            //console.log(d);
-            //d.parent._children='ddd';
-            //if size smaller than size threshold
-            //console.log("type1", node.__children);
-            //console.log("type2", node.__children[i]);
-            //console.log(d,i);
-            if (node.__children[i].data._size < s) {
-                /*
-                if (node._children === undefined) {
-                    node._children = node.children[i];
-                    delete node.children[i];
-                }
-                else
-                    node._children = [node.children[i], node._children];
-                */
-                //console.log("if", node.__children[i].data._size);
-                //console.log("_child before", node._children);
+        if (node.__children != undefined) {
+            node.__children.forEach((d, i) => {
+                //console.log(d);
+                //d.parent._children='ddd';
+                //if size smaller than size threshold
+                //console.log("type1", node.__children);
+                //console.log("type2", node.__children[i]);
+                //console.log(d,i);
+                if (node.__children[i].data._size < s) {
+                    /*
+                    if (node._children === undefined) {
+                        node._children = node.children[i];
+                        delete node.children[i];
+                    }
+                    else
+                        node._children = [node.children[i], node._children];
+                    */
+                    //console.log("if", node.__children[i].data._size);
+                    //console.log("_child before", node._children);
 
-                //node._children = (node._children!=undefined)?Object.assign(node._children, node.__children[i]):Object.assign({},node.__children[i]);
-                if (node._children!=undefined)
+                    //node._children = (node._children!=undefined)?Object.assign(node._children, node.__children[i]):Object.assign({},node.__children[i]);
+                    if (node._children != undefined)
                     //Object.assign(node._children, node.__children[i])
-                    {node._children.push(node.__children[i]);}
-                else
-                    {//console.log(node._children);
+                    {
+                        node._children.push(node.__children[i]);
+                    }
+                    else {//console.log(node._children);
                         node._children = [];
                         //Array.from(node.__children[i]);//node.__children[i];
                         //Object.keys(node._children).map(key => node._children[key])
@@ -563,24 +584,21 @@ export function nodeupdate(node, p, s){
                         //Object.assign(Array.from(node.__children[i]));
                         //Array.prototype.push(node._children, node.__children[i]);
                     }
-                //console.log("_child after", node._children);
+                    //console.log("_child after", node._children);
 
-            }
-            else
-            {
-                //console.log("else", node.__children[i].data._size);
-                //console.log("child before",node.children);
-                //node.children =(node.children!=undefined)?Object.assign(node.children, node.__children[i]):Object.assign({},node.__children[i]);
-                if (node.children!=undefined)
-                    {   //console.log(node.__children[i]);
+                }
+                else {
+                    //console.log("else", node.__children[i].data._size);
+                    //console.log("child before",node.children);
+                    //node.children =(node.children!=undefined)?Object.assign(node.children, node.__children[i]):Object.assign({},node.__children[i]);
+                    if (node.children != undefined) {   //console.log(node.__children[i]);
                         node.children.push(node.__children[i]);
                     }
 
                     //Object.assign(node.children, node.__children[i]);
                     //node.children.push(node.__children[i]);
 
-                else
-                    {   //console.log(node.__children[i]);
+                    else {   //console.log(node.__children[i]);
                         //console.log( Array.from(node.__children[i]));
                         //node.children = Array.from(node.__children[i]);
                         //ode.children = node.__children[i];
@@ -593,13 +611,16 @@ export function nodeupdate(node, p, s){
 
 
                     }
-                //console.log("child after", node.children);
+                    //console.log("child after", node.children);
 
-                nodeupdate(d, p, s);}
-        });
-        delete node.__children;
+                    nodeupdate(d, p, s);
+                }
+            });
+
+            delete node.__children;
+
+        }
     }
-
 
 
 }

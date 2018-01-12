@@ -27,13 +27,22 @@
   </div>
   <div id="treePlot" class="view">
     <h2>Tree View</h2>
+    <div id="TreeLevel">
+      <label>Level:</label>
+      <select id="level">
+        <option selected value="tLevel">Tree Level</option>
+        <option value="pLevel">Persistence Level</option>
+      </select>
+    </div>
+
     <button id="decrease">Decrease Persistence</button>
     <button id="increase">Increase Persistence</button>
     <button id="decreaseS">Decrease Partition Size</button>
     <button id="increaseS">Increase Partition Size</button>
-    <svg id = "treesvg" width="700" height="500">
+    <svg id = "treesvg" width="750" height="550">
       <g id="tree"></g>
       <g id="slider"></g>
+      <g id="treelevel"></g>
     </svg>
   </div>
   <div id="hdPlot" class="view">
