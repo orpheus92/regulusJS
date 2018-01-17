@@ -103,6 +103,7 @@ export class Tree{
     };
     layout(){
         let option = document.getElementById('level').value;
+        let option2 = document.getElementById('scale').value;
 
         this._treefunc(this._root);
 
@@ -111,55 +112,63 @@ export class Tree{
                 break;
             }
             case "pLevel": {
-                let scale = d3.scaleLinear().nice();
-                scale.range([this.treelength, 0]);
-                if (this.pShow === undefined)
-                {
-                    for (let i = 0; i < this.pers.length; i++) {
-                        if (this.pInter > this.pers[i]) {
-                            scale.domain([this.pers[i], 1]);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    scale.domain([this.pShow, 1]);
-                }
-                this._root.descendants().forEach(d=>{
-                    d.y = scale(d.data._persistence);
-                });
-                break;
-                //this._root._y = 0;
-                /*this._root.descendants().forEach(d=>{
-                    if (d.parent!=null){
-                        d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
-                        d.y = this.treelength*d._y;
-                    }
-                });
-                break;*/
-            }
-            case "pLevelexp": {
-                let scaleexp = d3.scalePow().nice();
-                scaleexp.exponent(0.1);
-                scaleexp.range([this.treelength, 0]);
-                if (this.pShow === undefined)
-                {
+                switch (option2){
+                    case "linear": {
+                    let scale = d3.scaleLinear().nice();
+                    scale.range([this.treelength, 0]);
+                    if (this.pShow === undefined) {
                         for (let i = 0; i < this.pers.length; i++) {
                             if (this.pInter > this.pers[i]) {
-                                scaleexp.domain([this.pers[i], 1]);
+                                scale.domain([this.pers[i], 1]);
                                 break;
                             }
                         }
+                    }
+                    else {
+                        scale.domain([this.pShow, 1]);
+                    }
+                    this._root.descendants().forEach(d => {
+                        d.y = scale(d.data._persistence);
+                    });
+                    break;
+                    //this._root._y = 0;
+                    /*this._root.descendants().forEach(d=>{
+                        if (d.parent!=null){
+                            d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
+                            d.y = this.treelength*d._y;
+                        }
+                    });
+                    break;*/
                 }
-                else
-                {
-                    scaleexp.domain([this.pShow, 1]);
+                    case "log": {
+                        let scaleexp = d3.scaleLog().nice();
+                        //scaleexp.exponent(0.1);
+                        scaleexp.range([this.treelength, 0]);
+                        if (this.pShow === undefined) {
+                            for (let i = 0; i < this.pers.length; i++) {
+                                if (this.pInter > this.pers[i]) {
+                                    scaleexp.domain([this.pers[i], 1]);
+                                    break;
+                                }
+                            }
+
+                        }
+                        else {
+                            let plow =(this.pers[parseInt(getKeyByValue(this.pers, this.pShow))+1]!=undefined)?this.pers[parseInt(getKeyByValue(this.pers, this.pShow))+1]:this.pers[this.pers.length-1];
+                            scaleexp.domain([plow, 1]);
+                            //scaleexp.domain([this.pShow, 1]);
+                            //console.log("pshow:", this.pShow);
+                            //console.log(scaleexp(this.pShow));
+                            //console.log(scaleexp(Number.MIN_VALUE));
+                        }
+                        this._root.descendants().forEach(d => {
+                            //console.log(d.data._persistence);
+                            d.y = (d.data._persistence!=0)?scaleexp(d.data._persistence):scaleexp(this.pers[this.pers.length-1]);
+                        });
+                        break;
+                    }
+                    default:
                 }
-                this._root.descendants().forEach(d=>{
-                        d.y = scaleexp(d.data._persistence);
-                });
-                break;
             }
             default:
         }
@@ -242,9 +251,20 @@ export class Tree{
             .attr("r",100/Math.sqrt(this._circlesize))
             .attr('fill',  (d)=> {
                 //Intermediate Nodes
-                //console.log(d.children[0].data.index);
-                //console.log(d.data.index);
-                //console.log(d.children!=undefined);
+                /* May be updated later
+
+                if(d.children === undefined)
+                    return "#cccccc";
+                else if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                    return this._color(d.data._size);
+                else if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                    return "transparent";
+                //Color based on partition size
+                else //if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
+                    return this._color(d.data._size);
+                */
+
+               //old implementation
                 if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
                     return "transparent";
                 //Color based on partition size
@@ -257,14 +277,6 @@ export class Tree{
                     //return "#969696";
                     return "#cccccc";
 
-                /*
-                else
-                { if (option === 'update')
-                    return  "transparent";
-                  else
-                    return this._color(d.data._size);
-                }
-                */
 
             })
             .attr('class',  (d)=> {
@@ -277,14 +289,11 @@ export class Tree{
                     return "node viz";
 
             })
-            /*
             .attr("stroke", (d)=>{
-                if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
-                return "black";
-                else
-                    return "none";
+                if(d.children==undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                return "red";
+
             })
-            */
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
@@ -766,8 +775,8 @@ export function checklowestchild(d){
     if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
 
     {
-            //console.log(d);
-        return false;}
+        return false;
+    }
     else
         return true;
 
