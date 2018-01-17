@@ -27,8 +27,7 @@ export class Tree{
             d.id = d.C1+ ", "+d.C2+", "+d.Ci;
             d.index = d.C1+ ", "+d.C2;
             d.par = d.P1+ ", "+d.P2+", "+d.Pi;
-            d._persistence = this.pers[d.Ci];
-
+            d._persistence = (this.pers[d.Ci]!=undefined)?this.pers[d.Ci]:0;
         });
         //Children relations
         this._root = d3.stratify()
@@ -91,12 +90,16 @@ export class Tree{
         //console.log("pInter:",this.pInter);
         //console.log("pShow:",this.pShow);
         if (this.pShow != undefined)
-            nodeupdate(this._root, this.pShow,this.sizeInter);
+            {   //console.log("root", this._root.descendants());
+                nodeupdate(this._root, this.pShow,this.sizeInter);
+
+            }
         else
             nodeupdate(this._root, this.pInter,this.sizeInter);
 
 
         this._circlesize = this._root.descendants().length;
+        //console.log(this._root.descendants());
     };
     layout(){
         let option = document.getElementById('level').value;
@@ -207,23 +210,7 @@ export class Tree{
 
         let t = d3.transition()
             .duration(300);
-        //Update Link
 
-        let curlink = g.selectAll(".link");
-
-        this._link = curlink.data(this._root.descendants().slice(1))
-            .enter().insert("path")
-            .attr("class", "link")
-            .merge(curlink);
-
-        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
-
-        t.selectAll('.link')
-            .attr("d", d=>{
-                return "M" + d.x + "," + d.y
-
-                    +"L" + d.parent.x + "," + d.parent.y;
-            });
 
         // Update Node
         let curnode = g.selectAll(".node");
@@ -255,7 +242,10 @@ export class Tree{
             .attr("r",100/Math.sqrt(this._circlesize))
             .attr('fill',  (d)=> {
                 //Intermediate Nodes
-                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)/*&&(d.parent.data._size== d.data._size)*/&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                //console.log(d.children[0].data.index);
+                //console.log(d.data.index);
+                //console.log(d.children!=undefined);
+                if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
                     return "transparent";
                 //Color based on partition size
                 else if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
@@ -279,7 +269,9 @@ export class Tree{
             })
             .attr('class',  (d)=> {
                 //Intermediate Nodes
-                if ((d.parent!=null)&&(d.parent.data.index === d.data.index)/*&&(d.parent.data._size== d.data._size)*/&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                //if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+
                     return "node";
                 else
                     return "node viz";
@@ -295,6 +287,31 @@ export class Tree{
             */
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
+            });
+
+        //Update Link
+
+        let curlink = g.selectAll(".link");
+
+        this._link = curlink.data(this._root.descendants().slice(1))
+            .enter().insert("path")
+            .attr("class", "link")
+            .merge(curlink);
+
+        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+
+        t.selectAll('.link')
+            .attr("d", d=> {
+
+                if (checklowestchild(d)) {
+                    let parentd = findparent(d);
+                    //console.log("d",d);
+                    //console.log("Parent",findparent(d));
+                    return diagonal(d,parentd);//"M" + d.x + "," + d.y
+
+                    //+"L" + d.parent.x + "," + d.parent.y;
+                    //+ "L" + findparent(d).x + "," + findparent(d).y;
+                }
             });
 
 
@@ -375,8 +392,11 @@ export class Tree{
                     break;
                 }
             }
+
             this.updateTree(this.pInter,this.sizeInter);
         }
+        //console.log('pinter',this.pInter, 'pshow',this.pShow);
+
         //console.log(this.pInter);
         //console.log(pShow);
 
@@ -568,17 +588,20 @@ export function checknode(curnode){
 
 export function nodeupdate(node, p, s){
     //Check current node, if meets the contraint, then check its children recursively
-    //console.log(node.data._persistence);
-    //console.log(node.data._size);
-    //console.log("Enter Recursion");
-    //console.log(s);
-    //console.log(node);
+    //console.log(node.data._persistence, p, s);
     if (node.data._persistence<p)
-    {   if (node._children === undefined)
-        //node._children = (node.children!=undefined)?node.children:node._children;
-            node._children = node.children;
+    {   //console.log(node.children);
+        //console.log(node._children);
+        if (node._children === undefined)
+            {   node._children = node.children;
+                //console.log("_children1", node._children);
+            }
         else if (node.children!=undefined)
-            node._children.concat(node.children);
+            {
+                node._children = node._children.concat(node.children);
+                //console.log("_children2", node._children);
+
+            }
         delete node.children;
         return true;
         /*
@@ -701,4 +724,63 @@ export function nodeupdate(node, p, s){
 
 export function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
+}
+export function findparent(node){
+    //console.log("node: ", node)
+    //if(node.parent === null){
+    //    console.log("aaa");
+    //    return node;
+    //}
+    if (node.parent != null)
+        {
+            let d = node.parent;
+            //console.log("d:",d);
+            if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                //findparent(node.parent);
+                {   //console.log("In If",d.parent!=null, d.children!=undefined )
+                    return findparent(d);
+                }
+            else if (d.parent === null)
+                return d;
+            else
+               return d;
+        }
+    /*else if ((node.data.index === node.parent.data.index)&&(node.parent.children.length ===1))//(node.data._size === node.parent.data._size))
+        {
+            console.log("bbb");
+
+            return findparent(node.parent);}
+    else
+        {
+            console.log("ccc");
+
+            return node;}
+       */
+    else
+        return node;
+}
+
+export function checklowestchild(d){
+    //if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index)&&(d.children[0].data._size === d.data._size))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+    //if((d.children!=undefined)&&(d.children.length===1)&&(d.children[0].data.index===d.data.index))
+    if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+
+    {
+            //console.log(d);
+        return false;}
+    else
+        return true;
+
+}
+
+export function diagonal(source, target) {
+
+    return "M" + source.x + "," + source.y
+        //+ "C" + (source.x + target.x) / 2 + "," + source.y
+        //+ " " + (source.x + target.x) / 2 + "," + target.y
+        + "C" + (source.x*9/10+target.x/10)  + "," + target.y
+        + " " + (source.x + target.x) / 2 + "," + target.y
+        //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
+        //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
+        + " " + target.x + "," + target.y;
 }

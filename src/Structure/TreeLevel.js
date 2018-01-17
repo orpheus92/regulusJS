@@ -69,6 +69,8 @@ export class TreeLevel {
 
             }
             else if (this.Level === "pLevel"){
+
+
                 // Define Scale Function
                 if (ctree.pShow == undefined)
                     this.yScale.domain([ctree.pInter, 1]);

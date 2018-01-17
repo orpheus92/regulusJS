@@ -9,7 +9,7 @@ import {event as currentEvent} from 'd3-selection';
 //import {drag} from 'd3-drag'
 //console.log(d3drag);
 //import {event as currentEvent} from 'd3-selection';
-
+import {pBar} from '../Slider'
 import {Crystal} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
@@ -30,6 +30,7 @@ let cnode;
 let treelevel;
 d3.select('#LoadFile')
     .on('click', () =>  {
+        //clear();
         load();
     });
 
@@ -77,8 +78,9 @@ function load(){
                     .domain([minp, maxp])
                     .range([0, 150])//size of slider and range of output, put persistence here
                     .clamp(true);
-                let newslider= new Slider(d3.select("#treesvg"));
-                let slider = newslider.createslider([minp, maxp]);
+                //let newslider= new Slider(d3.select("#treesvg"));
+                //let slider = newslider.createslider([minp, maxp]);
+                /*
                 slider.curslide.call(d3.drag()//d3.drag()
                     //.on("start.interrupt", function() {
                     //    console.log("AAA");
@@ -90,19 +92,21 @@ function load(){
                         tree.updateTree(pInter,sizeInter);
 
                     }));
-
+                */
+                let pb = new pBar(tree,data);
+                pb.updateBar(pInter);
                 d3.select('#increase')
                     .on('click', () => {
                         pInter = tree.setPersistence("increase");
                         treelevel.plotLevel(tree);
-                        slider.handle.attr("cx", x(pInter));
+                        //slider.handle.attr("cx", x(pInter));
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#decrease')
                     .on('click', () =>  {
                         pInter = tree.setPersistence("decrease");
                         treelevel.plotLevel(tree);
-                        slider.handle.attr("cx", x( pInter));
+                        //slider.handle.attr("cx", x( pInter));
                         loaddata.update(pInter,sizeInter);
                     });
                 d3.select('#increaseS')
@@ -123,6 +127,7 @@ function load(){
                 document.getElementById("tree").onmouseover = function(event) {
                     //console.log(event);
                     d3.selectAll(".node.viz").on("click", (nodeinfo)=>{
+                        console.log(nodeinfo);
                         //console.log(nodeinfo);
                     let timer;
                     clicks++;  //count clicks
@@ -162,6 +167,17 @@ function load(){
                 //document.getElementById("dataset").addEventListener("change", printPlots);
                 //document.getElementById("y_attr").addEventListener("change", updateAttribute);
                 d3.select("#y_attr").on('change',()=>{plots.updateAttribute();});
+
+                d3.selectAll(".wb-button").on('click',()=>{
+                    let option = pb.mycb();
+                    //console.log(option);
+
+                    pInter = tree.setPersistence(option);
+                    pb.updateBar(pInter);
+                    treelevel.plotLevel(tree);
+                    //slider.handle.attr("cx", x(pInter));
+                    loaddata.update(pInter,sizeInter);});
+
             });
         });
 
@@ -170,6 +186,12 @@ function load(){
 });
 }
 
+function clear(){
+    let myNode = document.getElementById("foo");
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+}
 /*
 function updateDataInfo(){}
 */
