@@ -84,6 +84,7 @@ export class Tree{
         this.updatemodel();
         //console.log('root = ',this._root);
         this.layout("P");
+        //console.log(this.activelength);
         this.render('update');
     };
     updatemodel(){
@@ -106,15 +107,21 @@ export class Tree{
         let option2 = document.getElementById('scale').value;
 
         this._treefunc(this._root);
+        //this.activelength = 0;
 
         switch (option) {
             case "tLevel": {
+                //this._root.descendants().forEach(d => {
+                //    if(d.children==undefined)
+                //        this.activelength++;
+                //});
                 break;
             }
             case "pLevel": {
                 switch (option2){
                     case "linear": {
-                    let scale = d3.scaleLinear().nice();
+
+                        let scale = d3.scaleLinear().nice();
                     scale.range([this.treelength, 0]);
                     if (this.pShow === undefined) {
                         for (let i = 0; i < this.pers.length; i++) {
@@ -129,6 +136,8 @@ export class Tree{
                     }
                     this._root.descendants().forEach(d => {
                         d.y = scale(d.data._persistence);
+                        //if(d.children==undefined)
+                            //this.activelength++;
                     });
                     break;
                     //this._root._y = 0;
@@ -164,6 +173,9 @@ export class Tree{
                         this._root.descendants().forEach(d => {
                             //console.log(d.data._persistence);
                             d.y = (d.data._persistence!=0)?scaleexp(d.data._persistence):scaleexp(this.pers[this.pers.length-1]);
+                            //if(d.children==undefined)
+                                //this.activelength++;
+
                         });
                         break;
                     }
@@ -376,7 +388,7 @@ export class Tree{
         //d3.selectAll(".node").selectAll("text").classed("selectedLabel",false);
 
     }
-    setPersistence(option){
+    setParameter(option){
         //let pShow;
         if(option === "increase"){
             for (let i=this.pers.length-1; i>=0; i--) {
@@ -390,6 +402,7 @@ export class Tree{
                 }
             }
             this.updateTree(this.pInter,this.sizeInter);
+            //return this.pInter;
 
         }
         else if(option === "decrease"){
@@ -403,15 +416,26 @@ export class Tree{
             }
 
             this.updateTree(this.pInter,this.sizeInter);
+            //return this.pInter;
+
         }
-        //console.log('pinter',this.pInter, 'pshow',this.pShow);
+        else if(option === "increaseS"){
+            this.sizeInter = this.sizeInter + 1;
+            this.updateTree(this.pInter,this.sizeInter);
+            //return this.sizeInter;
 
-        //console.log(this.pInter);
-        //console.log(pShow);
+        }
+        else if(option === "decreaseS"){
+            if (this.sizeInter >= 1){
+                this.sizeInter = this.sizeInter - 1;
+                this.updateTree(this.pInter, this.sizeInter);
+            }
 
-        return this.pInter;
+        }
+        return [this.pInter, this.sizeInter];
 
     }
+    /*
     setSize(option){
         if(option === "increase"){
             this.sizeInter = this.sizeInter + 1;
@@ -427,7 +451,7 @@ export class Tree{
         return this.sizeInter;
 
     }
-
+    */
     /*
     reshape(curnode){
 

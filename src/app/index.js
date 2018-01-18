@@ -93,8 +93,9 @@ function load(){
 
                     }));
                 */
-                let pb = new pBar(tree,data);
-                pb.updateBar(pInter);
+                let pb = new pBar(tree,data,basedata);
+                pb.updateBar(pInter,sizeInter);
+                /*
                 d3.select('#increase')
                     .on('click', () => {
                         pInter = tree.setPersistence("increase");
@@ -119,7 +120,7 @@ function load(){
                         sizeInter = tree.setSize("decrease");
                         loaddata.update(pInter,sizeInter);
                     });
-
+                */
                 let clicks = 0;
                 let DELAY = 500;
                 //Separate clicking from double clicking
@@ -175,12 +176,12 @@ function load(){
                     let option = pb.mycb();
                     //console.log(option);
 
-                    pInter = tree.setPersistence(option);
-                    pb.updateBar(pInter);
+                    [pInter,sizeInter] = tree.setParameter(option);
+                    //console.log(sizeInter);
+                    pb.updateBar(pInter,sizeInter);
                     treelevel.plotLevel(tree);
                     //slider.handle.attr("cx", x(pInter));
                     loaddata.update(pInter,sizeInter);});
-
             });
         });
 

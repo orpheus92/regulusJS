@@ -4,13 +4,10 @@ import './style.css';
 //Persistence Barcode
 
 export class pBar{
-   constructor(tree,data){
-       d3.select("#pBarcode").append("rect").attr("class", "pbar");
-
-       //console.log(tree);
-       //console.log(data);
+   constructor(tree,data,basedata){
+       this.totalsize = tree._maxsize;
+       this.basedata = basedata;
        let plist = tree.pers;
-       //console.log(plist);
        let psize = [];
        for(let p in plist) {
 
@@ -26,13 +23,16 @@ export class pBar{
            psize.push([plist[p + 1], data[plist[p]].length]);
            }
        }
-       //console.log(plist);
-       //console.log(psize);
+
        // 2. Use the margin convention practice 
        let margin = {top: 10, right: 10, bottom: 10, left: 10},
            width = 300,//window.innerWidth - margin.left - margin.right, // Use the window's width
            height = 200;//window.innerHeight - margin.top - margin.bottom; // Use the window's height
        let padding = 40;
+       this.padding = padding;
+       this.width = width;
+       this.height = height;
+       this.margin = margin;
 // The number of datapoints
        //let n = 21;
 
@@ -54,15 +54,17 @@ export class pBar{
            //.curve(d3.curveMonotoneX) // apply smoothing to the line
 
 // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-       let dataset = psize;//= d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
+       this.dataset = psize;//= d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
 
 // 1. Add the SVG to the page and employ #2
        let svg = d3.select("#pBarcode").append("svg")
            .attr("width", width + margin.left + margin.right)
-           .attr("height", height + margin.top + margin.bottom);
-           //.append("g")
-           //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+           .attr("height", height + margin.top + margin.bottom)//;
+           .attr("class", "pchart");
 
+       //.append("g")
+           //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+       //this.svg = svg;
 // 3. Call the x axis in a group tag
        svg.append("g")
            .attr("class", "x axis")
@@ -77,14 +79,14 @@ export class pBar{
 
 // 9. Append the path, bind the data, and call the line generator 
        svg.append("path")
-           .datum(dataset) // 10. Binds data to the line 
+           .datum(this.dataset) // 10. Binds data to the line
            .attr("class", "line")
            .attr("transform", "translate("+(padding)+","+margin.top+")")// + height + ")")
            .attr("d", line); // 11. Calls the line generator 
 
 // 12. Appends a circle for each datapoint 
        svg.selectAll(".dot")
-           .data(dataset)
+           .data(this.dataset)
            .enter().append("circle") // Uses the enter().append() method
            .attr("class", "dot") // Assign a class for styling
            .attr("cx", d=> { return this.xScale(d[0])})
@@ -135,6 +137,10 @@ export class pBar{
            .fillHighlight("cyan") // Button fill when highlighted
            .opacity(0.8) // Opacity
        svg.call(btn2)
+
+       //add persistence bar
+        svg.append("rect").attr("class", "ppbar");
+       this.reshape();
    }
 
    mycb(){
@@ -142,22 +148,159 @@ export class pBar{
    }
    reshape(){
 
+       //console.log(this.basedata)
+       //console.log(Object.keys(this.basedata).length);
+       let maxsize = parseInt(this.totalsize/100);
+
+       //let plist = this.basedata;
+       let psize = new Array(maxsize);
+       psize.fill(0);
+       for(let key in this.basedata){
+           if(this.basedata[key].length<maxsize)
+               psize[this.basedata[key].length]++;
+           else
+               psize[maxsize-1]++;
+           //p = parseInt(p);
+       }
+       //console.log(psize);
+       for(let i=psize.length-1;i>0;i--){
+           psize[i-1]=psize[i-1]+psize[i];
+       }
+       //console.log(psize);
+       this.dataset2 = psize;
+       this.xScale2 = d3.scaleLinear()
+           .domain([0, maxsize-1]) // input
+           .range([0, this.width-this.padding]); // output
+
+// 6. Y scale will use the randomly generate number
+       //console.log(plist[plist.length-1]);
+       this.yScale2 = d3.scaleLinear()
+           .domain([psize[maxsize-1],psize[0]]) // input
+           .range([this.height-this.padding, 0]); // output
+
+       let line = d3.line()
+           .x((d,i)=> { return this.xScale2(i); }) // set the x values for the line generator
+           .y(d=> { return this.yScale2(d); });
+
+       let svg = d3.select("#pBarcode").append("svg")
+       .attr("width", this.width + this.margin.left + this.margin.right)
+       .attr("height", this.height + this.margin.top + this.margin.bottom)
+           .attr("class", "sizechart");
+
+       svg.append("g")
+           .attr("class", "x axis")
+           .attr("transform", "translate("+(this.padding)+"," + (this.height-this.padding+ this.margin.top) + ")")
+           .call(d3.axisBottom(this.xScale2)); // Create an axis component with d3.axisBottom
+       //d3.select(".x axis").append("rect").attr("class", "pbar");
+// 4. Call the y axis in a group tag
+       svg.append("g")
+           .attr("class", "y axis")
+           .attr("transform", "translate("+(this.padding)+","+(this.margin.top)+")")// + height + ")")
+           .call(d3.axisLeft(this.yScale2)); // Create an axis component with d3.axisLeft
+
+// 9. Append the path, bind the data, and call the line generator
+       svg.append("path")
+           .datum(psize) // 10. Binds data to the line
+           .attr("class", "line")
+           .attr("transform", "translate("+(this.padding)+","+this.margin.top+")")// + height + ")")
+           .attr("d", line); // 11. Calls the line generator
+
+// 12. Appends a circle for each datapoint
+       svg.selectAll(".dot")
+           .data(psize)
+           .enter().append("circle") // Uses the enter().append() method
+           .attr("class", "dot") // Assign a class for styling
+           .attr("cx", (d,i)=> { return this.xScale2(i)})
+           .attr("cy", d=> { return this.yScale2(d)})//d.y) })
+           .attr("r", 1)
+           .attr("transform", "translate("+(this.padding)+","+this.margin.top+")");// + height + ")")
+
+       svg.append("text")
+           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+           .attr("transform", "translate("+ (this.padding/3) +","+(this.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+           .text("Partitions");
+
+       svg.append("text")
+           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+           .attr("transform", "translate("+ (this.width/2) +","+(this.height+this.margin.top)+")")  // centre below axis
+           .text("Size");
+
+       // Add Buttons
+       let callback = ()=> {
+           this.option = "decreaseS";
+       }
+
+       let btn = mybutton()
+           .x(this.width-this.padding) // X Location
+           .y(this.height) // Y Location
+           .labels(["-"]) // Array of round-robin labels
+           .callback(callback) // User callback on click
+           .fontSize(15) // Font Size
+           .color("black") // Button text color
+           .fill("steelblue") // Button fill
+           .fillHighlight("cyan") // Button fill when highlighted
+           .opacity(0.8) // Opacity
+
+       svg.call(btn)
+
+       let callback2 = ()=>{
+           this.option = "increaseS";
+       }
+
+       let btn2 = mybutton()
+           .x(this.width) // X Location
+           .y(this.height) // Y Location
+           .labels(["+"]) // Array of round-robin labels
+           .callback(callback2) // User callback on click
+           .fontSize(15) // Font Size
+           .color("black") // Button text color
+           .fill("steelblue") // Button fill
+           .fillHighlight("cyan") // Button fill when highlighted
+           .opacity(0.8) // Opacity
+       svg.call(btn2)
+
+       //add persistence bar
+       svg.append("rect").attr("class", "pbar");
 
    }
-   updateBar(clevel){
-       //clevel = ctree.pInter;
-       //console.log(clevel);
-       let cx = this.xScale(clevel);
-       //console.log(cx);
+   updateBar(clevel,slevel){
+        //clevel = ctree.pInter;
+        //console.log(this.dataset);
+        let cx = this.xScale(clevel);
+        let cy;
+        for(let i = 0;i<this.dataset.length;i++){
+            if(clevel<=this.dataset[i][0]){
+                cy = this.yScale(this.dataset[i][1]);
+            }
+        }
+        //let t = d3.transition().duration(100);
+        d3.select(".ppbar")//.data([cx])
+            .attr("x", cx+this.padding-2)
+            .attr("y", cy+this.margin.top-2)
+            .attr("width", 4)
+            .attr("height", 4)
+            .attr("class", "ppbar")
+            .attr("fill","blue");
+        //console.log(slevel);
+       let cx2 = this.xScale2(slevel);
+       let cy2 = this.yScale2(this.dataset2[slevel]);
+       /*
+       for(let i = 0;i<this.dataset.length;i++){
+           if(clevel<=this.dataset[i][0]){
+               cy2 = this.yScale(this.dataset[i][1]);
+           }
+       }
+       */
        //let t = d3.transition().duration(100);
-       d3.select(".pbar")//.data([clevel])
-           .attr("x", cx)
-           .attr("y", 200)
-           .attr("width", 5)
-           .attr("height", 5)
-           //.attr("class", "pbar")
+       d3.select(".pbar")//.data([cx])
+           .attr("x", cx2+this.padding-2)
+           .attr("y", cy2+this.margin.top-2)
+           .attr("width", 4)
+           .attr("height", 4)
+           .attr("class", "pbar")
            .attr("fill","blue");
-   }
+    }
+
 
 }
 export function mybutton() {

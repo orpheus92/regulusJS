@@ -48,6 +48,7 @@ export class TreeLevel {
                             }
 
                         }
+                        }
 
                     }
                     // Draw Axis
@@ -70,7 +71,7 @@ export class TreeLevel {
                         .attr("class", "bar")
                         .attr("fill","blue");
                     break;
-                }
+
                 case "pLevel": {
                     //console.log(this.Scale);
                     switch (this.Scale){

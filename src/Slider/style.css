@@ -12,9 +12,23 @@
 
 #pBarcode{
     float: right;
+    position:relative;
     margin-up: 5px;
     margin-left: 20px;
+
 }
+
+.pchart{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sizechart{
+    top: 50%;
+    transform: translateY(100%);
+;}
+
 .ticks{
     color: #1B2733;
     font: 16px sans-serif;
