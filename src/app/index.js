@@ -11,11 +11,12 @@ import {event as currentEvent} from 'd3-selection';
 //import {event as currentEvent} from 'd3-selection';
 import {pBar} from '../Slider'
 import {Crystal} from '../Crystal';
+import {Selected} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
-import {updateAttribute} from "../Crystal";
-import {printPlots} from "../Crystal";
+//import {updateAttribute} from "../Crystal";
+//import {printPlots} from "../Crystal";
 import {Partition} from '../Process';
 
 //let updateAttribute = updateAttribute();
@@ -47,7 +48,8 @@ function load(){
             .text(rawdata.columns[i]);
     }
 
-    let plots = new Crystal(rawdata, 300, 100);
+    let plots = new Selected(rawdata, 300, 100);
+    //let plots = new Crystal(rawdata, 300, 100);
     //window.plots = plots;
     //Load data in JS
     pInter = 0.2;
@@ -126,8 +128,19 @@ function load(){
                 //Separate clicking from double clicking
 
                 document.getElementById("tree").onmouseover = function(event) {
-                    //console.log(event);
-                    d3.selectAll(".node.viz").on("click", (nodeinfo)=>{
+                    let totalnode = [];
+                    d3.selectAll(".node.viz")
+                        .on("click", (nodeinfo)=>{
+                        if (d3.event.ctrlKey)
+                        {//alert("Mouse+Ctrl pressed");
+                        plots.storedata(nodeinfo);
+                        totalnode.push(nodeinfo);
+                        }
+                        else
+                        {plots.removedata();
+                        plots.storedata(nodeinfo);
+
+                        }
                         console.log(nodeinfo);
                         //console.log(nodeinfo);
                     let timer;
@@ -137,7 +150,11 @@ function load(){
 
                         timer = setTimeout(function() {
                             //window.plots.update(nodeinfo);
-                            plots.update(nodeinfo);
+                            //if (totalnode!=[])
+                                plots.updatediv();
+                            //else
+                            //plots.updatediv(nodeinfo);
+
                             //console.log(nodeinfo);
                             cnode = nodeinfo;
                             loaddata.select(cnode);
@@ -145,7 +162,9 @@ function load(){
 
                         }, DELAY);
 
-                    } else {
+                    }
+                    else
+                        {
 
                         clearTimeout(timer);    //prevent Process-click action
                         tree.reshapeTree(nodeinfo);
@@ -154,9 +173,9 @@ function load(){
                         clicks = 0;             //after action performed, reset counter
                     }
 
-                }).on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo);
-                                                //console.log(nodeinfo);
-                    }).on("mouseout", ()=>{loaddata.select(cnode);
+                })
+                        .on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo);})
+                        .on("mouseout", ()=>{loaddata.select(cnode);
                     });
 
                 };
@@ -167,10 +186,10 @@ function load(){
                     tree.layout();
                     tree.render();});
 
-                d3.select("#dataset").on('change',()=>{plots.printPlots();});
+                d3.select("#dataset").on('change',()=>{plots.updateplot()});//printPlots();});
                 //document.getElementById("dataset").addEventListener("change", printPlots);
                 //document.getElementById("y_attr").addEventListener("change", updateAttribute);
-                d3.select("#y_attr").on('change',()=>{plots.updateAttribute();});
+                d3.select("#y_attr").on('change',()=>{plots.updateattr()});//updateAttribute();});
 
                 d3.selectAll(".wb-button").on('click',()=>{
                     let option = pb.mycb();

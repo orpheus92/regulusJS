@@ -33,6 +33,8 @@ export class Crystal {
         //console.log(this._y_attr);
     }
 
+    //
+
     //printPlots
     printPlots() {
         let dataFile = document.getElementById('dataset').value;
@@ -636,6 +638,7 @@ export class Crystal {
         this.printPlots();
 
     }
+
 
     updateAttribute(){
         this._y_attr = document.getElementById('y_attr').value;
