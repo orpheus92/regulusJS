@@ -53,6 +53,7 @@ h3 {
   margin-bottom: 5px;
 
 }
+/*
 #increase {
   float: right;
   margin-bottom: 5px;
@@ -72,18 +73,18 @@ h3 {
   float: right;
   margin-bottom: 5px;
 }
-
+*/
 .view {
   padding: 0.5em;
 
 }
-
+/*
 #slider{
   float: right;
   margin-up: 5px;
   margin-left: 20px;
 }
-
+*/
 .track-inset {
   stroke: #ddd;
   stroke-width: 8px;

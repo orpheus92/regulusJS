@@ -47,7 +47,7 @@ function load(){
             .text(rawdata.columns[i]);
     }
 
-    let plots = new Crystal(rawdata, 600, 200);
+    let plots = new Crystal(rawdata, 300, 100);
     //window.plots = plots;
     //Load data in JS
     pInter = 0.2;

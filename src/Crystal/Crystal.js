@@ -8,12 +8,13 @@ export class Crystal {
     constructor(data, width, height) {
         this._rawdata = data;
         this._data = data;
-        this._margin = {top: 20, right: 30, bottom: 50, left: 60};
+        this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
         this._width = width;
         this._height = height;
         this._plot = d3.select("#hdPlot");
         this._y_attr = document.getElementById('y_attr').value;
-
+        this._barWidth = width/20;
+        this._textsize = height/20;
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
 
@@ -69,9 +70,12 @@ export class Crystal {
         d3.selectAll('#plottip').remove();
         let data = this._data;
         let margin = this._margin;
-        let height = this._height - margin.top - margin.bottom;
-        let width = this._width - margin.left - margin.right;
+        //let height = this._height - margin.top - margin.bottom;
+        //let width = this._width - margin.left - margin.right;
+        let height = this._height;
+        let width = this._width;
         let newplot = this._plot;
+        let textsize = this._textsize;
 
         //load data as array
         let attr = data.columns;
@@ -113,11 +117,13 @@ export class Crystal {
 
                     let x = d3.scaleLinear()
                         .domain([x_minVal, x_maxVal])
-                        .range([0, width])
+                        //.range([0, width])
+                        .range([0, width - margin.left - margin.right])
                         .nice();
                     let y = d3.scaleLinear()
                         .domain([y_minVal, y_maxVal])
-                        .range([0, height])
+                        //.range([0, height])
+                        .range([height - margin.top - margin.bottom, 0])
                         .nice();
 
                     let colorScale = d3.scaleLinear()
@@ -125,12 +131,11 @@ export class Crystal {
                         .domain([z_minVal, z_maxVal]);
 
                     let svg = newplot.append("svg")
-                        .attr("height", this._height)
-                        .attr("width", this._width);
+                        .attr("height", height)
+                        .attr("width", width);
                     let g = svg
                         .append('g')
-                        .attr('id', "pairwisePlot" + i)
-                        .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+                        .attr('id', "pairwisePlot" + i);
 
                     g.selectAll("circle")
                         .data(curData)
@@ -143,6 +148,7 @@ export class Crystal {
                         .attr("cy", function (d) {
                             return y(d.y);
                         })
+                        .attr("transform", "translate(" + [margin.left, margin.top] + ")")
                         .attr('fill', function (d) {
                             return colorScale(d.z);
                         }).attr("class", "scattercolor");
@@ -166,21 +172,31 @@ export class Crystal {
                         .append('g')
                         .attr('id', "xAxis" + i)
                         .call( d3.axisBottom(x).scale(x))
-                        .attr("transform", "translate(" + [0, height] + ")");//.attr("class","label");;
+                        .attr("font-size", textsize+"px")
+                        //.attr("transform", "translate(" + [0, height] + ")");//.attr("class","label");;
+                        .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
+
                     g
                         .append('g')
                         .attr('id', "yAxis" + i)
-                        .call(d3.axisLeft(y).scale(y));
+                        .call(d3.axisLeft(y).scale(y))//;
+                        .attr("font-size", textsize+"px")
+                        .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+
 
                     svg
                         .append("text")
                         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                        .attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                        .attr("font-size", textsize+"px")
+                        //.attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                        .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
                         .text(attr[i]);
                     svg
                         .append("text")
                         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                        .attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
+                        .attr("font-size", textsize+"px")
+                        //.attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
+                        .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
                         .text(attr[i_2]);
                 }
 
@@ -206,7 +222,7 @@ export class Crystal {
         let height = this._height;
         let width = this._width;
         let newplot = this._plot;
-
+        let textsize = this._textsize;
         //load data as array
         let attr = data.columns;
         let datacol = attr.length;
@@ -269,7 +285,7 @@ export class Crystal {
                     .attr("r", 2)
                     .attr("cx", function(d) { return xScale(d[0]); })
                     .attr("cy", function(d) { return yScale(d[1]); })
-                    .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")")
+                    //.attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")")
                     .attr("transform", "translate(" + [margin.left, margin.top] + ")")
                     .attr('fill', function (d) {
                         return colorScale(d[0]);
@@ -304,21 +320,25 @@ export class Crystal {
 
                 curplot.select("#xAxis" + i)
                     .call(xAxis)
+                    .attr("font-size", textsize+"px")
                     .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
                 //Translate for y_val will be modified later
                 curplot.select("#yAxis" + i)
                     .call(yAxis)
+                    .attr("font-size", textsize+"px")
                     .attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
                 curplot
                     .append("text")
                     .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate("+ (width/2) +","+(height-margin.bottom/3)+")")  // centre below axis
+                    .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
+                    .attr("font-size", textsize+"px")
                     .text(this._y_attr);
                 curplot
                     .append("text")
                     .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate("+ (margin.left/2) +","+(height/2)+")rotate(-90)")
+                    .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
+                    .attr("font-size", textsize+"px")
                     .text(attr[i]);
 
 
@@ -350,10 +370,13 @@ export class Crystal {
     boxPlot() {
         let data = this._data;
         let margin = this._margin;
-        let height = this._height - margin.top - margin.bottom;
-        let width = this._width - margin.left - margin.right;
+        //let height = this._height - margin.top - margin.bottom;
+        //let width = this._width - margin.left - margin.right;
+        let height = this._height;
+        let width = this._width;
         let newplot = this._plot;
-        let barWidth = 30;
+        let barWidth = this._barWidth;
+        let textsize = this._textsize;
 
         //load data as array
         let attr = data.columns;
@@ -383,11 +406,11 @@ export class Crystal {
 
             let xScale = d3.scaleLinear()
                 .domain([localMin, localMax])
-                .range([0, width]);
+                .range([0, width-margin.left-margin.right]);
 
             let svg = newplot.append("svg")
-                .attr("height", this._height)
-                .attr("width", this._width);
+                .attr("height", height)
+                .attr("width", width);
             let g = svg
                 .append('g')
                 .attr('id', "boxPlot" + i)
@@ -425,32 +448,38 @@ export class Crystal {
                 .attr("x", xScale(record.quartile[0]))
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[0].toFixed(2))
-                .attr("style", "text-anchor: middle;");
+                .attr("style", "text-anchor: middle;")
+                .attr("font-size", textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.quartile[1]))
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[1].toFixed(2))
-                .attr("style", "text-anchor: middle;");
+                .attr("style", "text-anchor: middle;")
+                .attr("font-size", textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.quartile[2]))
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[2].toFixed(2))
-                .attr("style", "text-anchor: middle;");
+                .attr("style", "text-anchor: middle;")
+                .attr("font-size", textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.whiskers[1]))
                 .attr("y", height / 2 + 15)
                 .text(record.whiskers[1].toFixed(2))
-                .attr("style", "text-anchor: middle;");
+                .attr("style", "text-anchor: middle;")
+                .attr("font-size", textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.whiskers[0]))
                 .attr("y", height / 2 + 15)
                 .text(record.whiskers[0].toFixed(2))
-                .attr("style", "text-anchor: middle;");
+                .attr("style", "text-anchor: middle;")
+                .attr("font-size", textsize+"px");
 
             svg
                 .append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                .attr("font-size", textsize+"px")
                 .text(attr[i]);
 
 
@@ -469,17 +498,20 @@ export class Crystal {
     histogramPlot() {
         let data = this._data;
         let margin = this._margin;
-        let height = this._height - margin.top - margin.bottom;
-        let width = this._width - margin.left - margin.right;
+        //let height = this._height - margin.top - margin.bottom;
+        //let width = this._width - margin.left - margin.right;
+        let height = this._height;
+        let width = this._width;
         let newplot = this._plot;
-        let barWidth = 30;
+        let barWidth = this._barWidth;
+        let textsize = this._textsize;
 
         //load data as array
         let attr = data.columns;
         let datacol = attr.length;
         let datarow = data.length;
 
-        let numOfBins = 10;
+        //let numOfBins = 10;
 
         for (let i = 0; i < datacol; i++) {
             let curData = [];
@@ -495,9 +527,9 @@ export class Crystal {
 
             let x = d3.scaleLinear()
                 .domain([minVal, maxVal])
-                .rangeRound([0, width])
+                .rangeRound([0, width-margin.left-margin.right])
             let y = d3.scaleLinear()
-                .range([height, 0]);
+                .range([height-margin.top-margin.bottom, 0]);
 
             let tickrange = d3.range(minVal, maxVal, (maxVal - minVal) / 10);
 
@@ -515,19 +547,22 @@ export class Crystal {
             })]);
 
             let svg = newplot.append("svg")
-                .attr("height", this._height)
-                .attr("width", this._width);
+                //.attr("height", this._height)
+                //.attr("width", this._width);
+                .attr("height", height)
+                .attr("width", width);
 
             let g = svg.append('g')
-                .attr('id', "boxPlot" + i)
-                .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+                .attr('id', "boxPlot" + i);
+                //.attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
             g.selectAll("rect")
                 .data(bins)
                 .enter()
                 .append("rect")
                 .attr("class", "bar")
-                .attr("x", 0)
+                .attr("x", margin.left)
+                .attr("y", margin.top)
                 .attr("transform", function (d) {
                     return "translate(" + x(d.x0) + "," + y(d.length) + ")";
                 })
@@ -535,7 +570,7 @@ export class Crystal {
                     return x(d.x1) - x(d.x0);
                 })
                 .attr("height", function (d) {
-                    return height - y(d.length);
+                    return height-margin.top-margin.bottom - y(d.length);
                 })
                 .style("fill", "blue")
                 .style("stroke", "white")
@@ -545,17 +580,26 @@ export class Crystal {
                 .append('g')
                 .attr('id', "xAxis" + i)
                 .call(d3.axisBottom(x).tickValues(tickrange))
-                .attr("transform", "translate(" + [0, height] + ")");
+                .attr("font-size", textsize+"px")
+                //.attr("transform", "translate(" + [0, height] + ")");
+                .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
 
             g
                 .append('g')
                 .attr('id', "yAxis" + i)
                 .call(d3.axisLeft(y))
+                .attr("font-size", textsize+"px")
+                .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+
+
+
 
             svg
                 .append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                .attr("font-size", textsize+"px")
+                //.attr("transform", "translate("+ (width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
                 .text(attr[i]);
             // svg
             //     .append("text")
