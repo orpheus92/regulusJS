@@ -9,7 +9,7 @@ import csv
 import time
 import os.path
 
-from Topolib.MSC.connect.method import MSC
+from topopy.MorseSmaleComplex import MorseSmaleComplex
 
 class Post_MSC():
     def load(self, hierarchy = None, base=None):
@@ -201,36 +201,36 @@ if __name__ == '__main__':
             # Whether wait for user's input for file names
 
     # Create MSC Object
-    new_MSC = MSC(X, Y, debug=True)
-
+    #new_MSC = MSC(X, Y, debug=True)
+    new_MSC = MorseSmaleComplex('relaxed beta skeleton', 'steepest', 100, 1.0, 'feature', debug = True)
     # Load Raw Data
-    new_MSC.loadData(data)
+    new_MSC.LoadData(data)
     #new_MSC.loadData('../data/Pu_TOT.csv')
 
     # Compute MSC
     #new_MSC.compute(graph,gradient,knn,beta,normalization)
-    new_MSC.compute('relaxed beta skeleton', 'steepest', 100, 1.0, 'feature')
+    #new_MSC.compute('relaxed beta skeleton', 'steepest', 100, 1.0, 'feature')
 
     # Save
-    #new_MSC.save(hierarchy,base)
-    new_MSC.save('../data/Hierarchy.csv', '../data/Base_Partition2.json')
-
-
+    #new_MSC.Save(hierarchy,base)
+    new_MSC.Save('../data/Hierarchy.csv', '../data/Base_Partition.json')
+	
+   
     # Create Post-Processing Object
     Post = Post_MSC()
 
     # Load MSC results
     #Post.load(hierarchy, base)
-    Post.load('../data/Hierarchy.csv','../data/Base_Partition2.json')
+    Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
 
     # Post Processing
     Post.compute()
 
     # Save
     #Post.save(p_par,tree)
-    Post.save('../data/P_Partition2.json', '../data/Final_Tree2.csv')
+    Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
 
-    #os.remove(hierarchy)
+    os.remove(hierarchy)
 
 
 

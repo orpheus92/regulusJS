@@ -54,7 +54,7 @@ function load(){
     //Load data in JS
     pInter = 0.2;
     sizeInter = 20;
-    d3.json('../data/P_Partition.json', function (error, data) {
+    d3.json('../data/P_Partition2.json', function (error, data) {
         if (error) throw error;
         //will be updated later
 
@@ -63,8 +63,8 @@ function load(){
         partition = new Partition();
         partition.initialPartition(data);
 
-        d3.csv('../data/Final_Tree.csv', function (error, treedata){
-            d3.json('../data/Base_Partition.json', function (error, basedata) {
+        d3.csv('../data/Final_Tree2.csv', function (error, treedata){
+            d3.json('../data/Base_Partition2.json', function (error, basedata) {
                 //console.log(rawdata);
                 tree = new Tree(treedata,partition,basedata);
                 treelevel = new TreeLevel();
@@ -76,10 +76,12 @@ function load(){
                 loaddata.update(pInter,sizeInter);
                 //console.log(tree);
                 //Slider Event
+                /*
                 let x = d3.scaleLinear()
                     .domain([minp, maxp])
                     .range([0, 150])//size of slider and range of output, put persistence here
                     .clamp(true);
+                */
                 //let newslider= new Slider(d3.select("#treesvg"));
                 //let slider = newslider.createslider([minp, maxp]);
                 /*
