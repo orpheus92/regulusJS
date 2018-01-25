@@ -183,6 +183,30 @@ export class Tree{
 
         let t = d3.transition()
             .duration(300);
+        //Update Link
+
+        let curlink = g.selectAll(".link");
+
+        this._link = curlink.data(this._root.descendants().slice(1))
+            .enter().insert("path")
+            .attr("class", "link")
+            .merge(curlink);
+
+        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
+
+        t.selectAll('.link')
+            .attr("d", d=> {
+
+                if (checklowestchild(d)) {
+                    let parentd = findparent(d);
+                    return diagonal(d,parentd);//"M" + d.x + "," + d.y
+
+                    //+"L" + d.parent.x + "," + d.parent.y;
+                    //+ "L" + findparent(d).x + "," + findparent(d).y;
+                }
+            });
+
+
 
 
         // Update Node
@@ -255,28 +279,7 @@ export class Tree{
                 return "translate(" + d.x + "," + d.y + ")";
             });
 
-        //Update Link
 
-        let curlink = g.selectAll(".link");
-
-        this._link = curlink.data(this._root.descendants().slice(1))
-            .enter().insert("path")
-            .attr("class", "link")
-            .merge(curlink);
-
-        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
-
-        t.selectAll('.link')
-            .attr("d", d=> {
-
-                if (checklowestchild(d)) {
-                    let parentd = findparent(d);
-                    return diagonal(d,parentd);//"M" + d.x + "," + d.y
-
-                    //+"L" + d.parent.x + "," + d.parent.y;
-                    //+ "L" + findparent(d).x + "," + findparent(d).y;
-                }
-            });
 
 
         //console.log(this._node);

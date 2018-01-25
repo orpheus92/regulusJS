@@ -3,6 +3,8 @@
   stroke: #555;
   stroke-opacity: 0.4;
   stroke-width: 2px;
+  z-index: 1;
+
 }
 
 .partitiontip{
@@ -11,11 +13,13 @@
   text-anchor:end;
 }
 
-
+/*
 .node circle {
   fill: #be2714;
-}
+  z-index: 100;
 
+}
+*/
 
 .d3-tip {
   /*line-height: 5;*/
