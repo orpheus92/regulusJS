@@ -1,72 +1,226 @@
 
 import './style.css';
 import * as d3 from 'd3';
+import {event as currentEvent} from 'd3-selection';
+//import {event as currentEvent} from 'd3-selection';
+//import {drag} from 'd3-drag';
+//import * as d3Tip from 'd3-tip';
+//console.log(d3.dispatch);
+//import {drag} from 'd3-drag'
+//console.log(d3drag);
+//import {event as currentEvent} from 'd3-selection';
+import {pBar} from '../Slider'
+import {Crystal} from '../Crystal';
+import {Selected} from '../Crystal';
+import {Info} from '../Info';
+import {Tree,TreeLevel} from '../Structure';
+import {Slider} from '../Slider';
+//import {updateAttribute} from "../Crystal";
+//import {printPlots} from "../Crystal";
+import {Partition} from '../Process';
 
-//import {editor} from '../editor';
-import {single} from '../single';
-import {loader,setValue} from '../loader';
+//let updateAttribute = updateAttribute();
+//import {loader,setValue} from '../loader';
 
-//import {tree} from '../tree';
+let pInter;
+let sizeInter;
+let tree;
+let partition;
+let loaddata;
+let cnode;
+let treelevel;
+d3.select('#LoadFile')
+    .on('click', () =>  {
+        //clear();
+        load();
+    });
 
-import simple from '../../data/test.csv';
-import simple2 from '../../data/test.csv';
-1
-//console.log(simple);
-let _loader;
-let _loader2;
-let _single;
-let _data;
-let _data2;
-//let _tree;
+function load(){
+    d3.csv('../data/Pu_TOT.csv', rawdata=> {
+    //console.log("Raw data loaded");
+    //if (error) throw error;
+    //console.log(rawdata);
+    for (let i = 0; i< rawdata.columns.length; i++)
+    {
+        d3.selectAll("#y_attr")
+            .append("option")
+            .attr("value", rawdata.columns[i])
+            .text(rawdata.columns[i]);
+    }
 
-console.log('Skeleton started');
-setup();
+    let plots = new Selected(rawdata, 300, 100);
+    //let plots = new Crystal(rawdata, 300, 100);
+    //window.plots = plots;
+    //Load data in JS
+    pInter = 0.2;
+    sizeInter = 20;
+    d3.json('../data/P_Partition2.json', function (error, data) {
+        if (error) throw error;
+        //will be updated later
 
+        loaddata = new Info();
+        let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
+        partition = new Partition();
+        partition.initialPartition(data);
 
-function setup() {
-  // setup file loader
-  d3.select('#csvload')
-    .on('click', () =>  document.getElementById('csvLoader').click());
+        d3.csv('../data/Final_Tree2.csv', function (error, treedata){
+            d3.json('../data/Base_Partition2.json', function (error, basedata) {
+                //console.log(rawdata);
+                tree = new Tree(treedata,partition,basedata);
+                treelevel = new TreeLevel();
+                //tree.create(pInter,sizeInter);
+                tree.updateTree(pInter,sizeInter);
+                treelevel.plotLevel(tree);
+                //pInter = tree.setPersistence("increase");
+                //slider.handle.attr("cx", x(pInter));
+                loaddata.update(pInter,sizeInter);
+                //console.log(tree);
+                //Slider Event
+                /*
+                let x = d3.scaleLinear()
+                    .domain([minp, maxp])
+                    .range([0, 150])//size of slider and range of output, put persistence here
+                    .clamp(true);
+                */
+                //let newslider= new Slider(d3.select("#treesvg"));
+                //let slider = newslider.createslider([minp, maxp]);
+                /*
+                slider.curslide.call(d3.drag()//d3.drag()
+                    //.on("start.interrupt", function() {
+                    //    console.log("AAA");
+                    //    slider.interrupt(); })
+                    .on("start drag", function() {console.log("BBB");
+                        slider.handle.attr("cx", x(x.invert(d3.event.x))); //initial position for the slider
+                        pInter = x.invert(d3.event.x);
+                        loaddata.update(pInter,sizeInter);
+                        tree.updateTree(pInter,sizeInter);
 
-  d3.select('#csvLoader')
-    .on('change', function () { selectFile(this.files.length && this.files[0]); });
+                    }));
+                */
+                let pb = new pBar(tree,data,basedata);
+                pb.updateBar(pInter,sizeInter);
+                /*
+                d3.select('#increase')
+                    .on('click', () => {
+                        pInter = tree.setPersistence("increase");
+                        treelevel.plotLevel(tree);
+                        //slider.handle.attr("cx", x(pInter));
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#decrease')
+                    .on('click', () =>  {
+                        pInter = tree.setPersistence("decrease");
+                        treelevel.plotLevel(tree);
+                        //slider.handle.attr("cx", x( pInter));
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#increaseS')
+                    .on('click', () =>  {
+                        sizeInter = tree.setSize("increase");
+                        loaddata.update(pInter,sizeInter);
+                    });
+                d3.select('#decreaseS')
+                    .on('click', () =>  {
+                        sizeInter = tree.setSize("decrease");
+                        loaddata.update(pInter,sizeInter);
+                    });
+                */
+                let clicks = 0;
+                let DELAY = 500;
+                //Separate clicking from double clicking
+                document.getElementById("tree").onmouseover = function(event) {
+                    let totalnode = [];
+                    d3.selectAll(".node.viz")
+                        .on("click", (nodeinfo)=>{
+                        if (d3.event.ctrlKey)
+                        {
+                        plots.storedata(nodeinfo);
+                        totalnode.push(nodeinfo);
+                        }
+                        else
+                        {d3.selectAll(".Clicked").classed("Clicked",false);
+                            plots.removedata();
+                        plots.storedata(nodeinfo);
+                        }
+                        //console.log(nodeinfo);
+                        //console.log(nodeinfo);
+                    let timer;
+                    clicks++;  //count clicks
 
-    d3.select('#jsonload')
-        .on('click', () =>  document.getElementById('jsonLoader').click());
+                    if(clicks === 1) {
 
-    d3.select('#jsonLoader')
-        .on('change', function () { selectFile2(this.files.length && this.files[0]); });
+                        timer = setTimeout(function() {
+                            let clicked = plots.getdata();
+                            tree.mark(clicked);
+                            //console.log(clicked);
+                            //window.plots.update(nodeinfo);
+                            //if (totalnode!=[])
+                            //console.log(plots);
+                            plots.updatediv();
+                            //else
+                            //plots.updatediv(nodeinfo);
+                            //console.log(nodeinfo);
+                            cnode = nodeinfo;
+                            loaddata.select(cnode);
+                            clicks = 0;             //after action performed, reset counter
 
+                        }, DELAY);
 
-    // setup the editor
-  _loader= loader(document.getElementById('csvloader'), {});
-  _loader2= loader(document.getElementById('jsonloader'), {});
+                    }
+                    else
+                        {
 
-    //console.log(_loader);
-  _data = setValue(simple,_data);
-  _data2 = setValue(simple2,_data2);
+                        clearTimeout(timer);    //prevent Process-click action
+                        tree.reshapeTree(nodeinfo);
+                        treelevel.plotLevel(tree);
 
-    //_tree = tree('#tree');
-  _single = single('#single');
+                        clicks = 0;             //after action performed, reset counter
+                    }
+
+                })
+                        .on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo);})
+                        .on("mouseout", ()=>{loaddata.select(cnode);
+                    });
+
+                };
+
+                d3.select("#level").on('change',()=>{treelevel.switchLevel();
+                                                    tree.layout();
+                                                    tree.render();});
+
+                d3.select("#scale").on('change',()=>{treelevel.switchLevel();
+                                                    tree.layout();
+                                                    tree.render();});
+
+                d3.select("#dataset").on('change',()=>{plots.updateplot()});//printPlots();});
+                //document.getElementById("dataset").addEventListener("change", printPlots);
+                //document.getElementById("y_attr").addEventListener("change", updateAttribute);
+                d3.select("#y_attr").on('change',()=>{plots.updateattr()});//updateAttribute();});
+
+                d3.selectAll(".wb-button").on('click',()=>{
+                    let option = pb.mycb();
+                    // update tree plot
+                    [pInter,sizeInter] = tree.setParameter(option);
+                    // update persistence chart and size chart
+                    pb.updateBar(pInter,sizeInter);
+                    // update plot level
+                    treelevel.plotLevel(tree);
+                    // update data
+                    loaddata.update(pInter,sizeInter);});
+            });
+        });
+
+    })
+
+});
 }
 
-
-function selectFile(path) {
-  d3.select('#csvname').text(path.name);
-  if (path) load(path);
+function clear(){
+    let myNode = document.getElementById("foo");
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
 }
-
-function selectFile2(path) {
-    d3.select('#jsonname').text(path.name);
-    if (path) load(path);
-}
-
-function load(path) {
-  let reader = new FileReader();
-  reader.onloadend = (event) => {
-    d3.text(event.target.result)
-      .get( data => setValue(data));
-  };
-  //console.log(_data);
-  reader.readAsDataURL(path);
-}
+/*
+function updateDataInfo(){}
+*/

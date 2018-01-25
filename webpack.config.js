@@ -7,12 +7,13 @@ module.exports = {
   entry: {
     main: './src/app/index.js',
     vendor: [
-      'd3', 'codemirror'
+      'd3','d3-tip','d3-shape'//,'d3-selection'
     ]
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[chunkhash].js',
+    libraryTarget: "amd"
   },
   devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
   devServer: {
