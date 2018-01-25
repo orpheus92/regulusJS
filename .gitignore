@@ -14,3 +14,4 @@ pids
 *.pid
 
 .DS_Store
+.idea
