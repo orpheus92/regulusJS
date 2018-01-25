@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[chunkhash].js',
-    libraryTarget: "amd"
+    //libraryTarget: "amd"
   },
   devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
   devServer: {
