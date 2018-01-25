@@ -12,4 +12,5 @@ npm-debug.log*
 pids
 *.pid
 
+.idea
 .DS_Store
