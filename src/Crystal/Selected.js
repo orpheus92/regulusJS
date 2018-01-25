@@ -1,7 +1,9 @@
 import * as d3 from 'd3';
 import * as d3Tip from 'd3-tip';
 import './style.css';
-
+//import {event as currentEvent} from 'd3-selection';
+import {myBrush} from '../customd3';
+//console.log('.');
 export class Selected{
     // Assign a parentnode for all divs
     constructor(data, width, height){
@@ -47,7 +49,9 @@ export class Selected{
             selected.push(inputnode);
         }
         this._totaldata = [];
+        //this._ind = [];
         for (let i = 0;i<selected.length;i++){
+            //this._ind.push(i);
             let nodeinfo = selected[i];
             let selectdata = [];
             nodeinfo.data._total.forEach(d => {
@@ -112,6 +116,16 @@ export class Selected{
                 this.PairwisePlot(option);
                 break;
             }
+            case "ScatterMat": {
+                //this.clearPlots();
+                this.scatterMat(option);
+                break;
+            }
+            case "AllScatter": {
+                //this.clearPlots();
+                this.multiscatter(option);
+                break;
+            }
             case "Stats": {
                 break;
             }
@@ -134,7 +148,7 @@ export class Selected{
         //let width = this._width - margin.left - margin.right;
         let height = this._height;
         let width = this._width;
-        let newplot = this._plot.append("div").attr("id","div"+i);
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
         let textsize = this._textsize;
 
         //load data as array
@@ -283,7 +297,7 @@ export class Selected{
         let height = this._height;
         let width = this._width;
         //let newplot = this._plot;
-        let newplot = this._plot.append("div").attr("id","div"+i);
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
         let textsize = this._textsize;
         //load data as array
         let attr = data.columns;
@@ -420,6 +434,537 @@ export class Selected{
         }
     }}
 
+    scatterMat(){
+        d3.selectAll('#plottip').remove();
+
+        for(let i = 0;i<this._totaldata.length;i++) {
+            let data = this._totaldata[i];
+            let margin = this._margin;
+            let height = this._height;
+            //let width = this._width;
+            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            let textsize = this._textsize;
+
+            //load data as array
+            //let attr = data.columns;
+            //let datacol = attr.length;
+            //let datarow = data.length;
+            {
+                //width = 960;
+                let size = height,
+                    padding = (margin.left+margin.right)/2;
+
+                let x = d3.scaleLinear()
+                    .range([padding / 2, size - padding / 2]);
+
+                let y = d3.scaleLinear()
+                    .range([size - padding / 2, padding / 2]);
+
+                let xAxis = d3.axisBottom()
+                    .scale(x)
+                    .ticks(4);
+
+                let yAxis = d3.axisLeft()
+                    .scale(y)
+                    .ticks(4);
+
+                //console.log(data);
+                let domainByTrait = {},
+                    rangeByTrait = [],
+                    traits = d3.keys(data[0]).filter(d=> {
+                        return d != this._y_attr;
+                        //return d;
+                    }),
+                    ztrait = this._y_attr,
+                    n = traits.length;
+
+                traits.forEach(function (trait) {
+                    //console.log(trait);
+                    domainByTrait[trait] = d3.extent(data, function (d) {
+                        return parseFloat(d[trait]);
+                    });
+                });
+                rangeByTrait = d3.extent(data, function (d) {
+                    return parseFloat(d[ztrait]);
+                });
+                let colorScale = d3.scaleLinear()
+                    .range(['blue', 'red'])
+                    .domain(rangeByTrait);
+            //console.log(domainByTrait);
+            xAxis.tickSize(size * n);
+            yAxis.tickSize(-size * n);
+            //console.log(currentEvent);
+            let brush = myBrush()//currentEvent)
+                .on("start", brushstart)
+                .on("brush", brushmove)
+                .on("end", brushend)
+                .extent([[0, 0], [size, size]]);
+
+            // Size of SVG declared here
+
+            let svg = newplot.append("svg")
+                .attr("width", size * n + padding)
+                .attr("height", size * n + padding)
+                .append("g")
+                .attr("transform", "translate(" + padding + "," + padding + ")");
+
+            svg.selectAll(".x.axis")
+                .data(traits)
+                .enter().append("g")
+                .attr("class", "x axis")
+                .attr("font-size", textsize+"px")
+                .attr("transform", function (d, i) {
+                    return "translate(" + (n - i - 1) * size + ",0)";
+                })
+                .each(function (d) {
+                    x.domain(domainByTrait[d]);
+                    d3.select(this).call(xAxis);
+                });
+
+            svg.selectAll(".y.axis")
+                .data(traits)
+                .enter().append("g")
+                .attr("class", "y axis")
+                .attr("font-size", textsize+"px")
+                .attr("transform", function (d, i) {
+                    return "translate(0," + i * size + ")";
+                })
+                .each(function (d) {
+                    y.domain(domainByTrait[d]);
+                    d3.select(this).call(yAxis);
+                });
+
+            var cell = svg.selectAll(".cell")
+                .data(cross(traits, traits))
+                .enter().append("g")
+                .attr("class", "cell")
+                .attr("transform", function (d) {
+                    return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+                })
+                .each(plot);
+                //console.log(cross(traits, traits));
+            // Titles for the diagonal.
+            cell.filter(function (d) {
+                return d.i === d.j;
+            }).append("text")
+                .attr("x", padding)
+                .attr("y", padding)
+                .attr("dy", ".71em")
+                .text(function (d) {
+                    return d.x;
+                })
+                .attr("font-size", 2*textsize+"px");
+
+            cell.call(brush);
+
+            function plot(p) {
+                var cell = d3.select(this);
+                //console.log(p);
+                //console.log(domainByTrait[p.x]);
+                //console.log(domainByTrait[p.y]);
+                x.domain(domainByTrait[p.x]);
+                y.domain(domainByTrait[p.y]);
+
+                cell.append("rect")
+                    .attr("class", "frame")
+                    .attr("x", padding / 2)
+                    .attr("y", padding / 2)
+                    .attr("width", size - padding)
+                    .attr("height", size - padding);
+
+                cell.selectAll("circle")
+                    .data(data)
+                    .enter().append("circle")
+                    .attr("cx", function (d) { //console.log(d);
+                        return x(d[p.x]);
+                    })
+                    .attr("cy", function (d) {
+                        return y(d[p.y]);
+                    })
+                    .attr("r", 2)
+                    .style("fill", function (d) {
+
+                        return colorScale(d[ztrait]);
+                    });
+            }
+
+            var brushCell;
+
+            // Clear the previously-active brush, if any.
+            function brushstart(p) {
+                if (brushCell !== this) {
+                    d3.select(brushCell).call(brush.move, null);
+                    brushCell = this;
+                    x.domain(domainByTrait[p.x]);
+                    y.domain(domainByTrait[p.y]);
+                }
+            }
+
+            // Highlight the selected circles.
+            function brushmove(p) {
+                var e = d3.brushSelection(this);
+                svg.selectAll("circle").classed("hidden", function (d) {
+                    return !e
+                        ? false
+                        : (
+                            e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                            || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                        );
+                });
+            }
+
+            // If the brush is empty, select all circles.
+            function brushend() {
+                var e = d3.brushSelection(this);
+                if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+            }
+
+            /*
+            for (let i = 0; i < datacol; i++) {
+                for (let i_2 = i + 1; i_2 < datacol; i_2++) {
+                    if(attr[i] != this._y_attr && attr[i_2] != this._y_attr){
+                        let curData = [];
+                        for (let j = 0; j < datarow; j++) {
+                            let curPoint = {};
+                            curPoint.x = parseFloat(data[j][attr[i]]);
+                            curPoint.y = parseFloat(data[j][attr[i_2]]);
+                            curPoint.z = parseFloat(data[j][this._y_attr]);
+                            curData.push(curPoint);
+                        }
+
+                        let x_minVal = d3.min(curData, function (d) {
+                            return d.x;
+                        });
+                        let x_maxVal = d3.max(curData, function (d) {
+                            return d.x;
+                        });
+                        let y_minVal = d3.min(curData, function (d) {
+                            return d.y;
+                        });
+                        let y_maxVal = d3.max(curData, function (d) {
+                            return d.y;
+                        });
+                        let z_minVal = d3.min(curData, function (d) {
+                            return d.z;
+                        });
+                        let z_maxVal = d3.max(curData, function (d) {
+                            return d.z;
+                        });
+
+
+                        let x = d3.scaleLinear()
+                            .domain([x_minVal, x_maxVal])
+                            //.range([0, width])
+                            .range([0, width - margin.left - margin.right])
+                            .nice();
+                        let y = d3.scaleLinear()
+                            .domain([y_minVal, y_maxVal])
+                            //.range([0, height])
+                            .range([height - margin.top - margin.bottom, 0])
+                            .nice();
+
+                        let colorScale = d3.scaleLinear()
+                            .range(['blue', 'red'])
+                            .domain([z_minVal, z_maxVal]);
+
+                        let svg = newplot.append("svg")
+                            .attr("height", height)
+                            .attr("width", width);
+                        let g = svg
+                            .append('g')
+                            .attr('id', "pairwisePlot" + i);
+
+                        g.selectAll("circle")
+                            .data(curData)
+                            .enter()
+                            .append("circle")
+                            .attr("r",2)
+                            .attr("cx", function (d) {
+                                return x(d.x);
+                            })
+                            .attr("cy", function (d) {
+                                return y(d.y);
+                            })
+                            .attr("transform", "translate(" + [margin.left, margin.top] + ")")
+                            .attr('fill', function (d) {
+                                return colorScale(d.z);
+                            }).attr("class", "scattercolor");
+
+                        let tip = d3Tip().attr('class', 'd3-tip').attr('id','plottip')
+                            .direction('se')
+                            .offset(function() {
+                                return [0,0];
+                            })
+                            .html((d,ind)=>{
+                                return this.tooltip_render(d,ind);
+
+                            });
+
+                        g.selectAll("circle").call(tip)
+                            .on('mouseover', tip.show)
+                            .on('mouseout', tip.hide);
+
+                        g
+                            .append('g')
+                            .attr('id', "xAxis" + i)
+                            .call( d3.axisBottom(x).scale(x))
+                            .attr("font-size", textsize+"px")
+                            //.attr("transform", "translate(" + [0, height] + ")");//.attr("class","label");;
+                            .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
+
+                        g
+                            .append('g')
+                            .attr('id', "yAxis" + i)
+                            .call(d3.axisLeft(y).scale(y))//;
+                            .attr("font-size", textsize+"px")
+                            .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+
+
+                        svg
+                            .append("text")
+                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                            .attr("font-size", textsize+"px")
+                            //.attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                            .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
+                            .text(attr[i]);
+                        svg
+                            .append("text")
+                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                            .attr("font-size", textsize+"px")
+                            //.attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
+                            .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
+                            .text(attr[i_2]);
+                    }
+
+
+
+                }
+            }
+            */
+            }
+        }
+
+    }
+
+    multiscatter(){
+        d3.selectAll('#plottip').remove();
+
+        for(let i = 0;i<this._totaldata.length;i++) {
+            let data = this._totaldata[i];
+            let margin = this._margin;
+            let height = this._height;
+            let width = this._width;
+            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            let textsize = this._textsize;
+
+            //load data as array
+            //let attr = data.columns;
+            //let datacol = attr.length;
+            //let datarow = data.length;
+            {
+                //width = 960;
+                let size = height,
+                    padding = (margin.left+margin.right)/2;
+
+                let x = d3.scaleLinear()
+                    .range([padding / 2, width - padding / 2]);
+
+                let y = d3.scaleLinear()
+                    .range([size - padding / 2, padding / 2]);
+
+                let xAxis = d3.axisBottom()
+                    .scale(x)
+                    .ticks(5);
+
+                let yAxis = d3.axisLeft()
+                    .scale(y)
+                    .ticks(4);
+
+                //console.log(data);
+                let domainByTrait = {},
+                    rangeByTrait = [],
+                    traits = d3.keys(data[0]).filter(d=> {
+                        return d != this._y_attr;
+                        //return d;
+                    }),
+                    ztrait = this._y_attr,
+                    n = traits.length;
+
+                traits.forEach(function (trait) {
+                    //console.log(trait);
+                    domainByTrait[trait] = d3.extent(data, function (d) {
+                        return parseFloat(d[trait]);
+                    });
+                });
+                rangeByTrait = d3.extent(data, function (d) {
+                    return parseFloat(d[ztrait]);
+                });
+                let colorScale = d3.scaleLinear()
+                    .range(['blue', 'red'])
+                    .domain(rangeByTrait);
+                xAxis.tickSize(size * n);
+                yAxis.tickSize(-size * n);
+
+                //console.log(currentEvent);
+                //console.log(brushX());
+                //console.log(myBrush());
+
+                let brush = myBrush()//d3.brush()
+                    .on("start", brushstart)
+                    .on("brush", brushmove)
+                    .on("end", brushend)
+                    .extent([[0, 0], [width, size]]);
+                //console.log(brush);
+                //console.log(d3.brushSelection());
+                // Size of SVG declared here
+
+                let svg = newplot.append("svg")
+                    .attr("width", width+padding)
+                    .attr("height", size * n + padding)
+                    .append("g")
+                    .attr("transform", "translate(" + padding + "," + padding  + ")");
+
+
+
+                x.domain(rangeByTrait);
+                svg.selectAll(".x.axis")
+                    .data(ztrait)
+                    .enter().append("g")
+                    .attr("class", "x axis")
+                    .attr("font-size", textsize+"px")
+                    .call(xAxis);
+                    //.attr("transform", function (d, i) {
+                    //    return "translate(" + (n - i - 1) * size + ",0)";
+                    //})
+                    //.each(function (d) {
+
+                    //    d3.select(this).call(xAxis);
+                    //});
+
+                svg.selectAll(".y.axis")
+                    .data(traits)
+                    .enter().append("g")
+                    .attr("class", "y axis")
+                    .attr("font-size", textsize+"px")
+                    .attr("transform", function (d, i) {
+                        return "translate(0," + i * size + ")";
+                    })
+                    .each(function (d) {
+                        y.domain(domainByTrait[d]);
+                        d3.select(this).call(yAxis);
+                    });
+                //console.log(cross(traits,[ztrait]));
+                let cell = svg.selectAll(".cell")
+                    .data(traits)//cross([ztrait],traits))
+                    .enter().append("g")
+                    .attr("class", "cell")
+                    .attr("transform", function (d,i) {
+                        //console.log(d);
+                        return "translate(0," + i * size + ")";
+                    })//.call(plot);
+                    .each(plot);
+
+                cell.append("text")
+                    .attr("x", padding/2)
+                    .attr("y", 0)
+                    .attr("dy", ".71em")
+                    .text(function (d) {
+                        return d;
+                    })
+                    .attr("font-size", 2*textsize+"px");
+
+                /*
+                cell.filter(function (d) {
+                    return d.i === d.j;
+                }).append("text")
+                    .attr("x", padding)
+                    .attr("y", padding)
+                    .attr("dy", ".71em")
+                    .text(function (d) {
+                        return d.x;
+                    })
+                    .attr("font-size", 2*textsize+"px");
+                */
+                cell.call(brush);
+                //console.log(d3.);
+                function plot(p) {
+                    //console.log(p);
+                    var cell = d3.select(this);
+                    //console.log(p);
+                    //console.log(domainByTrait[p.x]);
+                    //console.log(domainByTrait[p.y]);
+                    x.domain(rangeByTrait);
+                    y.domain(domainByTrait[p]);
+
+                    cell.append("rect")
+                        .attr("class", "frame")
+                        .attr("x", padding / 2)
+                        .attr("y", padding / 2)
+                        // Titles for the diagonal.
+                        .attr("width", width - padding)
+                        .attr("height", size - padding);
+                    //console.log(data);
+                    cell.selectAll("circle")
+                        .data(data)
+                        .enter().append("circle")
+                        .attr("cx", function (d) { //console.log(d);
+                            return x(d[ztrait]);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d[p]);
+                        })
+                        .attr("r", 2)
+                        .style("fill", function (d) {
+
+                            return colorScale(d[ztrait]);
+                        });
+                }
+
+                var brushCell;
+
+                // Clear the previously-active brush, if any.
+                function brushstart(p) {
+                    //console.log("Brush Start!");
+                    if (brushCell !== this) {
+                        d3.select(brushCell).call(brush.move, null);
+                        brushCell = this;
+                        x.domain(rangeByTrait);
+                        y.domain(domainByTrait[p]);
+
+                    }
+                }
+
+                // Highlight the selected circles.
+                function brushmove(p) {
+                    //console.log("Brush Move!")
+                    var e = d3.brushSelection(this);
+                    svg.selectAll("circle").classed("hidden", function (d) {
+                        return !e
+                            ? false
+                            : (
+                                e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
+                                || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
+                            );
+                    });
+                }
+
+                // If the brush is empty, select all circles.
+                function brushend() {
+                    var e = d3.brushSelection(this);
+                    if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+                }
+
+                svg.append("text")
+                    .attr("x", width-3*padding)
+                    .attr("y", 0)
+                    .attr("dy", ".71em")
+                    .text("Node"+i)
+                    .attr("font-size", 2*textsize+"px");
+            }
+        }
+
+    }
+
     //BoxPlot
     boxPlot() {for(let i = 0;i<this._totaldata.length;i++){
         //let data = this._data;
@@ -431,7 +976,7 @@ export class Selected{
         let height = this._height;
         let width = this._width;
         //let newplot = this._plot;
-        let newplot = this._plot.append("div").attr("id","div"+i);
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
 
         let barWidth = this._barWidth;
         let textsize = this._textsize;
@@ -562,7 +1107,7 @@ export class Selected{
         let height = this._height;
         let width = this._width;
         //let newplot = this._plot;
-        let newplot = this._plot.append("div").attr("id","div"+i);
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
         let barWidth = this._barWidth;
         let textsize = this._textsize;
 
@@ -639,7 +1184,7 @@ export class Selected{
             g
                 .append('g')
                 .attr('id', "xAxis" + i)
-                .call(d3.axisBottom(x).tickValues(tickrange))
+                .call(d3.axisBottom(x).tickValues(tickrange).nice())
                 .attr("font-size", textsize+"px")
                 //.attr("transform", "translate(" + [0, height] + ")");
                 .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
@@ -647,7 +1192,7 @@ export class Selected{
             g
                 .append('g')
                 .attr('id', "yAxis" + i)
-                .call(d3.axisLeft(y))
+                .call(d3.axisLeft(y).nice())
                 .attr("font-size", textsize+"px")
                 .attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
@@ -678,4 +1223,13 @@ export class Selected{
     removedata(){
         this._stored = [];
     }
+
+    getdata(){
+        return this._stored;
+    }
+}
+export function cross(a, b) {
+    var c = [], n = a.length, m = b.length, i, j;
+    for (i = -1; ++i < n;) for (j = -1; ++j < m;) c.push({x: a[i], i: i, y: b[j], j: j});
+    return c;
 }

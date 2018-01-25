@@ -79,28 +79,24 @@ export class Tree{
     updateTree(ppp,sss) {
         this.pInter = ppp;
         this.sizeInter = sss;
-        //console.log(this.pInter);
 
         this.updatemodel();
-        //console.log('root = ',this._root);
         this.layout("P");
-        //console.log(this.activelength);
         this.render('update');
     };
     updatemodel(){
         //console.log("pInter:",this.pInter);
         //console.log("pShow:",this.pShow);
         if (this.pShow != undefined)
-            {   //console.log("root", this._root.descendants());
+            {
                 nodeupdate(this._root, this.pShow,this.sizeInter);
-
             }
         else
-            nodeupdate(this._root, this.pInter,this.sizeInter);
-
-
+            {
+                this.setParameter();
+                nodeupdate(this._root, this.pShow, this.sizeInter);
+            }
         this._circlesize = this._root.descendants().length;
-        //console.log(this._root.descendants());
     };
     layout(){
         let option = document.getElementById('level').value;
@@ -136,8 +132,7 @@ export class Tree{
                     }
                     this._root.descendants().forEach(d => {
                         d.y = scale(d.data._persistence);
-                        //if(d.children==undefined)
-                            //this.activelength++;
+
                     });
                     break;
                     //this._root._y = 0;
@@ -165,16 +160,11 @@ export class Tree{
                         else {
                             let plow =(this.pers[parseInt(getKeyByValue(this.pers, this.pShow))+1]!=undefined)?this.pers[parseInt(getKeyByValue(this.pers, this.pShow))+1]:this.pers[this.pers.length-1];
                             scaleexp.domain([plow, 1]);
-                            //scaleexp.domain([this.pShow, 1]);
-                            //console.log("pshow:", this.pShow);
-                            //console.log(scaleexp(this.pShow));
-                            //console.log(scaleexp(Number.MIN_VALUE));
+
                         }
                         this._root.descendants().forEach(d => {
-                            //console.log(d.data._persistence);
+
                             d.y = (d.data._persistence!=0)?scaleexp(d.data._persistence):scaleexp(this.pers[this.pers.length-1]);
-                            //if(d.children==undefined)
-                                //this.activelength++;
 
                         });
                         break;
@@ -184,50 +174,12 @@ export class Tree{
             }
             default:
         }
-        /*
-        //onsole.log(this._root);
-        //Use option to decide whether to use tree level or persistence level
-        if (option === "tLevel")
-            return;
-        else if (option === "pLevelexp")
-        {
-            //console.log(this._root.descendants());
-            this._root._y = 0;
-            this._root.descendants().forEach((d,i)=>{
-                //console.log(d);
-                if (d.parent!=null){
-                    //console.log(d);
-                    //console.log((Math.sqrt(this.pers[d.parent.depth]-this.pers[d.depth])));
-                    //console.log(this.treelength*(Math.sqrt((this.pers[d.parent.depth]-this.pers[d.depth]))));
-                    //console.log(this.treelength*(((this.pers[d.parent.depth]-this.pers[d.depth]))));
-                    d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
-                    d.y = this.treelength*(Math.pow(d._y,10));
-                    //d.y = Math.log(d.y);
-                    //console.log(d._y);
-                }
-            });
 
-        }
-        else{
-            this._root.descendants().forEach((d,i)=>{
-                //console.log(d);
-                if (d.parent!=null){
-                    d._y = (d.depth<this.pers.length)?d.parent._y+this.pers[d.parent.depth]-this.pers[d.depth]:d.parent._y+this.pers[d.parent.depth];
-                    d.y = this.treelength*d._y;
-
-                }
-            });
-
-
-
-
-        }*/
     };
     render(option){
-        let g = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
+        d3.select("#tree").selectAll("text").remove();
 
-        //if(d3.select('#treetip')!=undefined)
-        //    d3.selectAll('#treetip').remove();
+        let g = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
 
         let t = d3.transition()
             .duration(300);
@@ -239,7 +191,7 @@ export class Tree{
         this._node = curnode.data(this._root.descendants())
             .enter().append("circle")
 
-            .attr("r",100/Math.sqrt(this._circlesize))
+            .attr("r",50/Math.sqrt(this._circlesize)+2)
             .attr("class", 'node')
             .attr("transform", function (d) {//console.log(d)
                 if (d.parent != null)
@@ -251,16 +203,9 @@ export class Tree{
             .merge(curnode);
 
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
-        /*
-        d3.selectAll('#newnode').attr("transform", function (d) {//console.log(d)
-            if (d.parent != null)
-                return "translate(" + d.parent.x + "," + d.parent.y + ")";
-            else
-                return "translate(" + d.x + "," + d.y + ")"
-        });
-        */
+
         t.selectAll('.node')
-            .attr("r",100/Math.sqrt(this._circlesize))
+            .attr("r",50/Math.sqrt(this._circlesize)+2)
             .attr('fill',  (d)=> {
                 //Intermediate Nodes
                 /* May be updated later
@@ -326,8 +271,6 @@ export class Tree{
 
                 if (checklowestchild(d)) {
                     let parentd = findparent(d);
-                    //console.log("d",d);
-                    //console.log("Parent",findparent(d));
                     return diagonal(d,parentd);//"M" + d.x + "," + d.y
 
                     //+"L" + d.parent.x + "," + d.parent.y;
@@ -394,23 +337,18 @@ export class Tree{
             for (let i=this.pers.length-1; i>=0; i--) {
                 if(this.pers[i]>this.pInter){
                     this.pInter = this.pers[i];
-
-                    //console.log(this.pInter);
-
-                    this.pShow = (i+2>1) ?this.pers[i+2]:this.pers[1];
+                    this.pShow = (i+1>0) ?this.pers[i+1]:this.pers[0];
                     break;
                 }
             }
             this.updateTree(this.pInter,this.sizeInter);
-            //return this.pInter;
 
         }
         else if(option === "decrease"){
             for (let i=1; i<this.pers.length; i++) {
                 if(this.pers[i]<this.pInter){
                     this.pInter = this.pers[i];
-                    //console.log(this.pInter);
-                    this.pShow = (i+2<this.pers.length-1) ?this.pers[i+2]:this.pers[this.pers.length-1]//this.pers[i];
+                    this.pShow = (i+1<this.pers.length-1) ?this.pers[i+1]:this.pers[this.pers.length-1]//this.pers[i];
                     break;
                 }
             }
@@ -429,6 +367,18 @@ export class Tree{
             if (this.sizeInter >= 1){
                 this.sizeInter = this.sizeInter - 1;
                 this.updateTree(this.pInter, this.sizeInter);
+            }
+
+        }
+        // Set pShow for initialization
+        else
+        {
+            for (let i=0; i<this.pers.length; i++) {
+                if(this.pers[i]<=this.pInter){
+                    this.pInter = this.pers[i];
+                    this.pShow = (i+1<this.pers.length-1) ?this.pers[i+1]:this.pers[this.pers.length-1]//this.pers[i];
+                    break;
+                }
             }
 
         }
@@ -581,6 +531,24 @@ export class Tree{
         this.render('reshape');
 
     }
+
+    mark(clicked){
+        //console.log("clicked:", clicked);
+        d3.select("#tree").selectAll("text").remove();
+        d3.select("#tree").selectAll("text")
+            .data(clicked)
+            .enter()
+            .append("text")
+            .attr("x", d=>{return d.x+50/Math.sqrt(this._circlesize)+2;})
+            .attr("y", d=>{return d.y;})
+            .attr("dy", ".71em")
+            .text((d,i)=> {
+            //console.log(i);
+                return "Node"+i;
+            });
+
+
+    }
 }
 export function getbaselevelInd(node, accum) {
     let i;
@@ -626,14 +594,12 @@ export function nodeupdate(node, p, s){
     {   //console.log(node.children);
         //console.log(node._children);
         if (node._children === undefined)
-            {   node._children = node.children;
-                //console.log("_children1", node._children);
+            {
+                node._children = node.children;
             }
         else if (node.children!=undefined)
             {
                 node._children = node._children.concat(node.children);
-                //console.log("_children2", node._children);
-
             }
         delete node.children;
         return true;

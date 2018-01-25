@@ -128,22 +128,21 @@ function load(){
                 let clicks = 0;
                 let DELAY = 500;
                 //Separate clicking from double clicking
-
                 document.getElementById("tree").onmouseover = function(event) {
                     let totalnode = [];
                     d3.selectAll(".node.viz")
                         .on("click", (nodeinfo)=>{
                         if (d3.event.ctrlKey)
-                        {//alert("Mouse+Ctrl pressed");
+                        {
                         plots.storedata(nodeinfo);
                         totalnode.push(nodeinfo);
                         }
                         else
-                        {plots.removedata();
+                        {d3.selectAll(".Clicked").classed("Clicked",false);
+                            plots.removedata();
                         plots.storedata(nodeinfo);
-
                         }
-                        console.log(nodeinfo);
+                        //console.log(nodeinfo);
                         //console.log(nodeinfo);
                     let timer;
                     clicks++;  //count clicks
@@ -151,12 +150,15 @@ function load(){
                     if(clicks === 1) {
 
                         timer = setTimeout(function() {
+                            let clicked = plots.getdata();
+                            tree.mark(clicked);
+                            //console.log(clicked);
                             //window.plots.update(nodeinfo);
                             //if (totalnode!=[])
-                                plots.updatediv();
+                            //console.log(plots);
+                            plots.updatediv();
                             //else
                             //plots.updatediv(nodeinfo);
-
                             //console.log(nodeinfo);
                             cnode = nodeinfo;
                             loaddata.select(cnode);
@@ -181,12 +183,14 @@ function load(){
                     });
 
                 };
+
                 d3.select("#level").on('change',()=>{treelevel.switchLevel();
                                                     tree.layout();
                                                     tree.render();});
+
                 d3.select("#scale").on('change',()=>{treelevel.switchLevel();
-                    tree.layout();
-                    tree.render();});
+                                                    tree.layout();
+                                                    tree.render();});
 
                 d3.select("#dataset").on('change',()=>{plots.updateplot()});//printPlots();});
                 //document.getElementById("dataset").addEventListener("change", printPlots);
@@ -195,13 +199,13 @@ function load(){
 
                 d3.selectAll(".wb-button").on('click',()=>{
                     let option = pb.mycb();
-                    //console.log(option);
-
+                    // update tree plot
                     [pInter,sizeInter] = tree.setParameter(option);
-                    //console.log(sizeInter);
+                    // update persistence chart and size chart
                     pb.updateBar(pInter,sizeInter);
+                    // update plot level
                     treelevel.plotLevel(tree);
-                    //slider.handle.attr("cx", x(pInter));
+                    // update data
                     loaddata.update(pInter,sizeInter);});
             });
         });

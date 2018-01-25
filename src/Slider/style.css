@@ -11,10 +11,16 @@
 }
 
 #pBarcode{
-    float: right;
-    position:relative;
+    display:inline;
+    position:absolute;
     margin-up: 5px;
     margin-left: 20px;
+
+}
+
+#treediv{
+    float: left;
+    position:relative;
 
 }
 
@@ -22,11 +28,18 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    font-weight: bold;
+    /*font: 10px sans-serif;*/
+
+
 }
 
 .sizechart{
     top: 50%;
     transform: translateY(100%);
+    font-weight: bold;
+    /*font: 10px sans-serif;*/
+
 ;}
 
 .ticks{

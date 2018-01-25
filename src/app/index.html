@@ -40,29 +40,35 @@
         <option value="log">Log</option>
       </select>
     </div>
-    <div id="pBarcode">
+    <div id = "treediv">
+      <svg id = "treesvg" width="750" height="500">
+        <g id="tree"></g>
+        <g id="slider"></g>
+        <g id="treelevel"></g>
+      </svg>
+    </div>
+    <div id = "pBarcode">
     </div>
     <!--button id="decrease">Decrease Persistence</button-->
     <!--button-- id="increase">Increase Persistence</button-->
     <!--button id="decreaseS">Decrease Partition Size</button-->
     <!--button id="increaseS">Increase Partition Size</button-->
-    <svg id = "treesvg" width="750" height="550">
-      <g id="tree"></g>
-      <g id="slider"></g>
-      <g id="treelevel"></g>
-    </svg>
+
+
   </div>
   <div id="Crystal" class="view">
     <h2 class="">Plot</h2>
     <div id="plot-selector">
       <label>Plot:</label>
       <select id="dataset">
-        <option selected value="Coordinate">Coordinate</option>
-        <option value="Pairwise">Pariwise</option>
+        <!--option selected value="Coordinate">Coordinate</option-->
+        <!--option value="Pairwise">Pariwise</option-->
         <option value="BoxPlot">BoxPlot</option>
         <option value="HDView">3DView</option>
         <option value="Stats">Statistics</option>
         <option value="Histogram">Histogram</option>
+        <option value="ScatterMat">ScatterPlot Matrix</option>
+        <option selected value="AllScatter">All ScatterPlot</option>
       </select>
     <!--/div-->
     <!--div id="attr-selector"-->
