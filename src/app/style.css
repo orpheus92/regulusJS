@@ -92,12 +92,12 @@ h3 {
 */
 .track-inset {
   stroke: #ddd;
-  stroke-width: 8px;
+  stroke-width: 2px;
 }
 
 .track-overlay {
   pointer-events: stroke;
-  stroke-width: 50px;
+  stroke-width: 10px;
   stroke: transparent;
   cursor: crosshair;
 }
@@ -106,7 +106,7 @@ h3 {
   fill: #fff;
   stroke: #000;
   stroke-opacity: 0.5;
-  stroke-width: 1.25px;
+  stroke-width: 1px;
 }
 /*Before is new
 

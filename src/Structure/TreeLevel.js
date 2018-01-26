@@ -12,6 +12,8 @@ export class TreeLevel {
         this.yScale2 = d3.scaleLog().nice();
 
         d3.select("#treelevel").append("rect").attr("class", "bar");
+        d3.select("#treelevel").append("text").attr("class", "levellabel");
+
         //.range([this.svgBounds.height - this.xAxisWidth, 0]).nice();
         //console.log(this.svgBounds.height - this.xAxisWidth);
         this.Level = document.getElementById('level').value;
@@ -52,6 +54,8 @@ export class TreeLevel {
 
                     }
                     // Draw Axis
+
+
                     let yAxis = d3.axisLeft()
                         .scale(this.yScale);
                     t.select("#treelevel")
@@ -63,7 +67,15 @@ export class TreeLevel {
 
                     let cy = this.yScale(clevel);
 
-                    t.select(".bar")//.data([clevel])
+                    d3.select(".levellabel")
+                        .attr("x", 40)
+                        .attr("y", -40)
+                        .text("Tree Level")
+                        .attr("font-size", "15px")
+                        .attr("class", "levellabel")
+                        .attr("fill","blue");
+
+                    t.select(".bar")
                         .attr("x", -5)
                         .attr("y", cy)
                         .attr("width", 10)
@@ -93,6 +105,14 @@ export class TreeLevel {
 
                     clevel = ctree.pInter;
                     let cy = this.yScale(clevel);
+
+                            d3.select(".levellabel")
+                                .attr("x", 80)
+                                .attr("y", -40)
+                                .text("Persistence Level")
+                                .attr("font-size", "15px")
+                                .attr("class", "levellabel")
+                                .attr("fill","blue");
 
                     t.select(".bar")//.data([clevel])
                         .attr("x", -5)
@@ -136,36 +156,7 @@ export class TreeLevel {
                     }
                     break;
                 }
-                /*
-                case "pLevellog": {
-                    //this.clearPlots();
-                    if (ctree.pShow == undefined)
-                        this.yScale2.domain([ctree.pInter, 1]);
-                    else
-                        this.yScale2.domain([ctree.pShow, 1]);
 
-                    // Draw Axis
-                    let yAxis = d3.axisLeft()
-                        .scale(this.yScale2);
-
-                    t.select("#treelevel")
-                        .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
-                        .call(yAxis);
-
-                    //Draw Current Level
-                    clevel = ctree.pInter;
-                    let cy = this.yScale2(clevel);
-
-                    t.select(".bar")//.data([clevel])
-                        .attr("x", -5)
-                        .attr("y", cy)
-                        .attr("width", 10)
-                        .attr("height", 5)
-                        .attr("class", "bar")
-                        .attr("fill","blue");
-                    break;
-                }
-                */
                 default:
             }
 
@@ -181,26 +172,17 @@ export class TreeLevel {
     switchLevel() {
         this.Level = document.getElementById('level').value;
         this.Scale = document.getElementById('scale').value;
-        //console.log(this.Level,this.Scale);
-        // = data
+
         switch (this.Level) {
             case "tLevel": {
-                //this.clearPlots();
                 this.plotLevel();
                 break;
             }
             case "pLevel": {
-                //this.clearPlots();
                 this.plotLevel();
                 break;
             }
-            /*
-            case "pLevellog": {
-                //this.clearPlots();
-                this.plotLevel();
-                break;
-            }
-            */
+
             default:
         }
     }

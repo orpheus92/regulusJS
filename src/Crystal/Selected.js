@@ -247,7 +247,6 @@ export class Selected{
                         .attr('id', "xAxis" + i)
                         .call( d3.axisBottom(x).scale(x))
                         .attr("font-size", textsize+"px")
-                        //.attr("transform", "translate(" + [0, height] + ")");//.attr("class","label");;
                         .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
 
                     g

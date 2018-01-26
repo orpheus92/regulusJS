@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     # Save
     #new_MSC.save(hierarchy,base)
-    new_MSC.save('../data/Hierarchy.csv', '../data/Base_Partition2.json')
+    new_MSC.save('../data/Hierarchy2.csv', '../data/Base_Partition2.json')
 
 
     # Create Post-Processing Object
@@ -221,7 +221,7 @@ if __name__ == '__main__':
 
     # Load MSC results
     #Post.load(hierarchy, base)
-    Post.load('../data/Hierarchy.csv','../data/Base_Partition2.json')
+    Post.load('../data/Hierarchy2.csv','../data/Base_Partition2.json')
 
     # Post Processing
     Post.compute()

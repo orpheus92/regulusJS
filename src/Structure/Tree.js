@@ -65,6 +65,10 @@ export class Tree{
             //.interpolate(d3.interpolateHcl)
             .range(["#bae4b3", '#006d2c']);
         //console.log(this);
+        let svg = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
+        this._linkgroup = svg.append('g');
+        this._nodegroup = svg.append('g');
+
         console.log(this);
     }
 
@@ -176,61 +180,89 @@ export class Tree{
         }
 
     };
-    render(option){
+    render(option) {
         d3.select("#tree").selectAll("text").remove();
 
-        let g = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
 
         let t = d3.transition()
-            .duration(300);
+            .duration(250).ease(d3.easeLinear);
         //Update Link
+        {
+            // A problem with animation for exit().remove(), will be fixed later
+            let curlink = this._linkgroup.selectAll(".link");
 
-        let curlink = g.selectAll(".link");
-
-        this._link = curlink.data(this._root.descendants().slice(1))
-            .enter().insert("path")
-            .attr("class", "link")
-            .merge(curlink);
-
-        d3.selectAll('.link').data(this._root.descendants().slice(1)).exit().remove();
-
-        t.selectAll('.link')
-            .attr("d", d=> {
-
+            let circle = curlink.data(this._root.descendants().slice(1));
+                circle
+                .enter().insert("path")
+                .attr("class", "link")
+                .attr("d", d => {
                 if (checklowestchild(d)) {
                     let parentd = findparent(d);
-                    return diagonal(d,parentd);//"M" + d.x + "," + d.y
-
-                    //+"L" + d.parent.x + "," + d.parent.y;
-                    //+ "L" + findparent(d).x + "," + findparent(d).y;
+                    let oldparentd = findparent(d.parent);
+                    oldparentd = (oldparentd.id===d.parent.id)?oldparentd:parentd;
+                    //return diagonal(parentd, parentd);
+                    //console.log(oldparentd.oldx != null);
+                    //console.log("source",d.parent.oldy);
+                    //console.log("target",oldparentd.oldy);
+                    //console.log('Childy:', d.y, "Parenty", parentd.y, 'Parentoldy:', parentd.oldy);
+                    return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
                 }
             });
 
+            circle.exit().remove();
+            /*
+            curlink.data(this._root.descendants().slice(1)).exit().attr("d", d => {
+                console.log("Remove!");
+                if (checklowestchild(d)) {
+                    let parentd = findparent(d);
+                    let oldparentd = findparent(d.parent);
+                    oldparentd = (oldparentd.id===d.parent.id)?oldparentd:parentd;
+                    //return diagonal(parentd, parentd);
+                    //console.log(oldparentd.oldx != null);
+                    //console.log("source",d.parent.oldy);
+                    //console.log("target",oldparentd.oldy);
+                    //console.log('Childy:', d.y, "Parenty", parentd.y, 'Parentoldy:', parentd.oldy);
+                    return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
+                }}).remove();
+            */
+            t.selectAll('.link')
+                .attr("d", d => {
 
+                    if (checklowestchild(d)) {
+                        let parentd = findparent(d);
+                        //console.log("ssss",d.y);
+                        //console.log("tttt",parentd.y);
 
+                        return diagonal(d, parentd);
 
+                    }
+                });
+
+        }
         // Update Node
-        let curnode = g.selectAll(".node");
+        {
+        let curnode = this._nodegroup.selectAll(".node");
 
-        this._node = curnode.data(this._root.descendants())
+        /*this._node =*/
+        curnode.data(this._root.descendants())
             .enter().append("circle")
 
-            .attr("r",50/Math.sqrt(this._circlesize)+2)
+            .attr("r", 50 / Math.sqrt(this._circlesize) + 2)
             .attr("class", 'node')
             .attr("transform", function (d) {//console.log(d)
                 if (d.parent != null)
-                    if(d.parent.oldx!=null)
-                    return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
+                    if (d.parent.oldx != null)
+                        return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
                 //else
-                    //return "translate(" + d.x + "," + d.y + ")"
+                //return "translate(" + d.x + "," + d.y + ")"
             })
             .merge(curnode);
 
         d3.selectAll('.node').data(this._root.descendants()).exit().remove();
 
         t.selectAll('.node')
-            .attr("r",50/Math.sqrt(this._circlesize)+2)
-            .attr('fill',  (d)=> {
+            .attr("r", 50 / Math.sqrt(this._circlesize) + 2)
+            .attr('fill', (d) => {
                 //Intermediate Nodes
                 /* May be updated later
 
@@ -245,42 +277,41 @@ export class Tree{
                     return this._color(d.data._size);
                 */
 
-               //old implementation
-                if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                //old implementation
+                if ((d.parent != null) && (d.children != undefined) && (d.children.length === 1) && (d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
                     return "transparent";
                 //Color based on partition size
-                else if(d.data._size>=this.sizeInter&&d.data._persistence>=this.pInter)
+                else if (d.data._size >= this.sizeInter && d.data._persistence >= this.pInter)
                     return this._color(d.data._size);
                 //Nodes opened by users
-                else if(d.viz!=undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                else if (d.viz != undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
                     return this._color(d.data._size);
                 else
-                    //return "#969696";
+                //return "#969696";
                     return "#cccccc";
 
 
             })
-            .attr('class',  (d)=> {
+            .attr('class', (d) => {
                 //Intermediate Nodes
                 //if ((d.parent!=null)&&(d.parent.data.index === d.data.index)&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
-                if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
+                if ((d.parent != null) && (d.children != undefined) && (d.children.length === 1) && (d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
 
                     return "node";
                 else
                     return "node viz";
 
             })
-            .attr("stroke", (d)=>{
-                if(d.children==undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
-                return "red";
+            .attr("stroke", (d) => {
+                if (d.children == undefined)//||((d.children!=undefined)&&(d.children.viz!=undefined)))
+                    return "red";
 
             })
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
 
-
-
+    }
 
         //console.log(this._node);
         /*
@@ -297,7 +328,6 @@ export class Tree{
 
                 return ;
             });
-        //console.log(this._node);
         this._node.call(tip);
         this._node.on('mouseover', tip.show)
             .on('mouseout', tip.hide);
@@ -329,8 +359,8 @@ export class Tree{
      */
     clearTree() {
         // You only need two lines of code for this! No loops!
-        this._node.classed(".node", true);
-        this._link.classed(".link", true);
+        //this._node.classed(".node", true);
+        //this._link.classed(".link", true);
         //d3.selectAll(".node").selectAll("text").classed("selectedLabel",false);
 
     }
@@ -775,14 +805,27 @@ export function checklowestchild(d){
 
 }
 
-export function diagonal(source, target) {
-
-    return "M" + source.x + "," + source.y
-        //+ "C" + (source.x + target.x) / 2 + "," + source.y
-        //+ " " + (source.x + target.x) / 2 + "," + target.y
-        + "C" + (source.x*9/10+target.x/10)  + "," + target.y
-        + " " + (source.x + target.x) / 2 + "," + target.y
-        //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
-        //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
-        + " " + target.x + "," + target.y;
+export function diagonal(source, target, arg3, arg4) {
+    // If 4 args: sx, sy, tx, ty
+    if (arg3 === undefined)
+    {
+        return "M" + source.x + "," + source.y
+            //+ "C" + (source.x + target.x) / 2 + "," + source.y
+            //+ " " + (source.x + target.x) / 2 + "," + target.y
+            + "C" + (source.x*9/10+target.x/10)  + "," + target.y
+            + " " + (source.x + target.x) / 2 + "," + target.y
+            //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
+            //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
+            + " " + target.x + "," + target.y;
+    }
+    else{
+        return "M" + source + "," + target
+            //+ "C" + (source.x + target.x) / 2 + "," + source.y
+            //+ " " + (source.x + target.x) / 2 + "," + target.y
+            + "C" + (source*9/10+arg3/10)  + "," + arg4
+            + " " + (source + arg3) / 2 + "," + arg4
+            //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
+            //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
+            + " " + arg3 + "," + arg4;
+    }
 }

@@ -138,7 +138,7 @@ export function brush(dim) {
   var extent = defaultExtent,
       filter = defaultFilter,
       listeners = dispatch(brush, "start", "brush", "end"),
-      handleSize = 6,
+      handleSize = 1,
       touchending;
 
   function brush(group) {
@@ -169,6 +169,7 @@ export function brush(dim) {
         .attr("fill", "#777")
         .attr("fill-opacity", 0.3)
         .attr("stroke", "#fff")
+        //.attr("stroke-width", "1px")
         .attr("shape-rendering", "crispEdges");
 
     var handle = group.selectAll(".handle")

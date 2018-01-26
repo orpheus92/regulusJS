@@ -230,7 +230,7 @@ if __name__ == '__main__':
     #Post.save(p_par,tree)
     Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
 
-    os.remove(hierarchy)
+    #os.remove(hierarchy)
 
 
 

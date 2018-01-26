@@ -94,4 +94,8 @@
 #treelevel path {
   fill: none;
   stroke: black;
+
+}
+.levellabel text {
+  font-size: 10px;
 }
