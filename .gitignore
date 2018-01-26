@@ -3,7 +3,6 @@ lib
 dist
 data
 
-.idea
 #logs
 logs
 *.log
