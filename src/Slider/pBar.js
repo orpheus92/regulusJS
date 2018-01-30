@@ -67,13 +67,13 @@ export class pBar{
        //this.svg = svg;
 // 3. Call the x axis in a group tag
        svg.append("g")
-           .attr("class", "x axis")
+           .attr("class", "pxaxis")
            .attr("transform", "translate("+(padding)+"," + (height-padding+ margin.top) + ")")
            .call(d3.axisBottom(this.xScale)); // Create an axis component with d3.axisBottom
        //d3.select(".x axis").append("rect").attr("class", "pbar");
 // 4. Call the y axis in a group tag
        svg.append("g")
-           .attr("class", "y axis")
+           .attr("class", "pyaxis")
            .attr("transform", "translate("+(padding)+","+(margin.top)+")")// + height + ")")
            .call(d3.axisLeft(this.yScale)); // Create an axis component with d3.axisLeft
 
@@ -188,13 +188,13 @@ export class pBar{
            .attr("class", "sizechart");
 
        svg.append("g")
-           .attr("class", "x axis")
+           .attr("class", "pxaxis")
            .attr("transform", "translate("+(this.padding)+"," + (this.height-this.padding+ this.margin.top) + ")")
            .call(d3.axisBottom(this.xScale2)); // Create an axis component with d3.axisBottom
        //d3.select(".x axis").append("rect").attr("class", "pbar");
 // 4. Call the y axis in a group tag
        svg.append("g")
-           .attr("class", "y axis")
+           .attr("class", "pyaxis")
            .attr("transform", "translate("+(this.padding)+","+(this.margin.top)+")")// + height + ")")
            .call(d3.axisLeft(this.yScale2)); // Create an axis component with d3.axisLeft
 

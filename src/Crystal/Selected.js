@@ -440,14 +440,11 @@ export class Selected{
             let data = this._totaldata[i];
             let margin = this._margin;
             let height = this._height;
-            //let width = this._width;
             let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
             //load data as array
-            //let attr = data.columns;
-            //let datacol = attr.length;
-            //let datarow = data.length;
+
             {
                 //width = 960;
                 let size = height,
@@ -467,18 +464,15 @@ export class Selected{
                     .scale(y)
                     .ticks(4);
 
-                //console.log(data);
                 let domainByTrait = {},
                     rangeByTrait = [],
                     traits = d3.keys(data[0]).filter(d=> {
                         return d != this._y_attr;
-                        //return d;
                     }),
                     ztrait = this._y_attr,
                     n = traits.length;
 
                 traits.forEach(function (trait) {
-                    //console.log(trait);
                     domainByTrait[trait] = d3.extent(data, function (d) {
                         return parseFloat(d[trait]);
                     });
@@ -489,11 +483,10 @@ export class Selected{
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
-            //console.log(domainByTrait);
+
             xAxis.tickSize(size * n);
             yAxis.tickSize(-size * n);
-            //console.log(currentEvent);
-            let brush = myBrush()//currentEvent)
+            let brush = myBrush()
                 .on("start", brushstart)
                 .on("brush", brushmove)
                 .on("end", brushend)
@@ -756,10 +749,6 @@ export class Selected{
             let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
-            //load data as array
-            //let attr = data.columns;
-            //let datacol = attr.length;
-            //let datarow = data.length;
             {
                 //width = 960;
                 let size = height,
@@ -779,18 +768,15 @@ export class Selected{
                     .scale(y)
                     .ticks(4);
 
-                //console.log(data);
                 let domainByTrait = {},
                     rangeByTrait = [],
                     traits = d3.keys(data[0]).filter(d=> {
                         return d != this._y_attr;
-                        //return d;
                     }),
                     ztrait = this._y_attr,
                     n = traits.length;
 
                 traits.forEach(function (trait) {
-                    //console.log(trait);
                     domainByTrait[trait] = d3.extent(data, function (d) {
                         return parseFloat(d[trait]);
                     });
@@ -804,17 +790,13 @@ export class Selected{
                 xAxis.tickSize(size * n);
                 yAxis.tickSize(-size * n);
 
-                //console.log(currentEvent);
-                //console.log(brushX());
-                //console.log(myBrush());
 
                 let brush = myBrush()//d3.brush()
                     .on("start", brushstart)
                     .on("brush", brushmove)
                     .on("end", brushend)
                     .extent([[0, 0], [width, size]]);
-                //console.log(brush);
-                //console.log(d3.brushSelection());
+
                 // Size of SVG declared here
 
                 let svg = newplot.append("svg")
@@ -832,13 +814,6 @@ export class Selected{
                     .attr("class", "x axis")
                     .attr("font-size", textsize+"px")
                     .call(xAxis);
-                    //.attr("transform", function (d, i) {
-                    //    return "translate(" + (n - i - 1) * size + ",0)";
-                    //})
-                    //.each(function (d) {
-
-                    //    d3.select(this).call(xAxis);
-                    //});
 
                 svg.selectAll(".y.axis")
                     .data(traits)
@@ -852,15 +827,13 @@ export class Selected{
                         y.domain(domainByTrait[d]);
                         d3.select(this).call(yAxis);
                     });
-                //console.log(cross(traits,[ztrait]));
                 let cell = svg.selectAll(".cell")
-                    .data(traits)//cross([ztrait],traits))
+                    .data(traits)
                     .enter().append("g")
                     .attr("class", "cell")
                     .attr("transform", function (d,i) {
-                        //console.log(d);
                         return "translate(0," + i * size + ")";
-                    })//.call(plot);
+                    })
                     .each(plot);
 
                 cell.append("text")

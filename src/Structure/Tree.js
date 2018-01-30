@@ -200,12 +200,7 @@ export class Tree{
                     let parentd = findparent(d);
                     let oldparentd = findparent(d.parent);
                     oldparentd = (oldparentd.id===d.parent.id)?oldparentd:parentd;
-                    //return diagonal(parentd, parentd);
-                    //console.log(oldparentd.oldx != null);
-                    //console.log("source",d.parent.oldy);
-                    //console.log("target",oldparentd.oldy);
-                    //console.log('Childy:', d.y, "Parenty", parentd.y, 'Parentoldy:', parentd.oldy);
-                    return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
+                        return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
                 }
             });
 

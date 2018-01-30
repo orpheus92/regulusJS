@@ -52,19 +52,21 @@
 .track-overlay {
     stroke-linecap: round;
 }
-
+/*
 .track-inset {
 // stroke: #ddd;
 // stroke-width: 10px;
 }
-
+*/
 .track-overlay {
     pointer-events: stroke;
     stroke-width: 50px;
     stroke: transparent;
     cursor: crosshair;
 }
-
+.domain{
+    stroke-width: 1px;
+}
 .handle {
     fill: #006de3;
 }
@@ -81,7 +83,6 @@
     fill: #ffab00;
     stroke: #ffab00;
 }
-
 
 /*Button*/
 .button rect {
@@ -119,4 +120,9 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+
+.domain{
+    stroke: 1px;
 }
