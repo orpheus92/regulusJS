@@ -54,7 +54,7 @@ function load(){
     //Load data in JS
     pInter = 0.2;
     sizeInter = 20;
-    d3.json('../data/P_Partition2.json', function (error, data) {
+    d3.json('../data/P_Partition.json', function (error, data) {
         if (error) throw error;
         //will be updated later
 
@@ -63,8 +63,8 @@ function load(){
         partition = new Partition();
         partition.initialPartition(data);
 
-        d3.csv('../data/Final_Tree2.csv', function (error, treedata){
-            d3.json('../data/Base_Partition2.json', function (error, basedata) {
+        d3.csv('../data/Final_Tree.csv', function (error, treedata){
+            d3.json('../data/Base_Partition.json', function (error, basedata) {
                 //console.log(rawdata);
                 tree = new Tree(treedata,partition,basedata);
                 treelevel = new TreeLevel();
