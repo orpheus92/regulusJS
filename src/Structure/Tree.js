@@ -11,17 +11,22 @@ export class Tree{
     /**
      * Creates a Tree Object
      */
-    constructor(treeCSV,partition,basedata) {
+    constructor(treeCSV,partition) {
+        console.log(partition);
+        let totalper = Object.keys(partition).sort(function(b,a){return a-b});
+        console.log(totalper);
         this._maxsize = 0;
         this.treewidth = 670;
         this.treelength =380;
         this.translatex = 50;
         this.translatey = 100;
+        /*
         let totalpers = [];
         partition.pers.map(function(item) {
             totalpers.push(parseFloat(item));
         });
-        this.pers = totalpers;
+        */
+        this.pers = totalper;
         treeCSV.forEach(d=> {
             d.id = d.C1+ ", "+d.C2+", "+d.Ci;
             d.index = d.C1+ ", "+d.C2;
@@ -34,9 +39,9 @@ export class Tree{
             .id(d => d.id)
             .parentId(d => d.par === ", , 0" ? '' : d.par)
             (treeCSV);
-        //console.log(this._root);
+
         let accum;
-        //console.log(this._root.descendants().length);
+        console.log("oldL",this._root.descendants().length);
         //console.log(this._root.descendants());
         this._root.descendants().forEach(d=>{
             //console.log(d);
@@ -85,12 +90,14 @@ export class Tree{
             d.data._size = d.data._total.size;
             this._maxsize = (this._maxsize>d.data._size)?this._maxsize :d.data._size;
         });
-        //console.log(this._root.descendants().length);
+        console.log("newL",this._root.descendants().length);
         //console.log(this._root.descendants());
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
-        this._treefunc = d3.tree()
-            .size([this.treewidth,this.treelength]).separation(function(a, b) { return a.parent == b.parent ? 2 : 4; });
+        this._treefunc = d3.tree()//.separation(function(a, b) { console.log("separate ");return (50); })
+            .size([this.treewidth,this.treelength]);
+
+
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
             //.interpolate(d3.interpolateHcl)
             .range(["#bae4b3", '#006d2c']);
@@ -144,10 +151,7 @@ export class Tree{
         //console.log(this._root.descendants());
         this._circlesize = this._root.descendants().length;
         //this._activenode = this._root.descendants();
-        this._activenode = this._root.descendants().sort(function(a,b){return a.depth-b.depth || a.x-b.x});// ||a.x-b.x });
-        //console.log(this._oldnode);
-        //console.log(this._root.sort(function(a,b){console.log(a.depth);console.log(b.depth);return(b.depth-a.depth)}));
-        //console.log(this._activenode);
+        this._activenode = this._root.descendants();//.sort(function(a,b){return a.depth-b.depth || a.x-b.x});// ||a.x-b.x });
     };
     layout(){
         let option = document.getElementById('level').value;
@@ -235,16 +239,16 @@ export class Tree{
 
 
         //Update Link
-        /*
+
         {
             // A problem with animation for exit().remove(), will be fixed later
             let curlink = this._linkgroup.selectAll(".link");
 
-            let circle = curlink.data(this._root.descendants().slice(1));
+            let circle = curlink.data(this._activenode.slice(1), d=>{return d.id});
                 circle
                 .enter().insert("path")
-                .attr("class", "link")
-                .attr("d", d => {
+                .attr("class", "link");
+                /*.attr("d", d => {
                 if (checklowestchild(d)) {
                     let parentd = findparent(d);
                     let oldparentd = findparent(d.parent);
@@ -252,9 +256,9 @@ export class Tree{
                         return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
                 }
             });
-
+                */
             circle.exit().remove();
-
+            /*
             curlink.data(this._root.descendants().slice(1)).exit().attr("d", d => {
                 console.log("Remove!");
                 if (checklowestchild(d)) {
@@ -268,29 +272,29 @@ export class Tree{
                     //console.log('Childy:', d.y, "Parenty", parentd.y, 'Parentoldy:', parentd.oldy);
                     return (oldparentd.oldx != null) ? diagonal(d.parent.oldx, d.parent.oldy, oldparentd.oldx, oldparentd.oldy) : diagonal(d.parent, d.parent);
                 }}).remove();
-
+            */
             t.selectAll('.link')
                 .attr("d", d => {
 
-                    if (checklowestchild(d)) {
-                        let parentd = findparent(d);
+                    //if (checklowestchild(d)) {
+                        //let parentd = findparent(d);
                         //console.log("ssss",d.y);
                         //console.log("tttt",parentd.y);
 
-                        return diagonal(d, parentd);
+                        return diagonal(d, d.parent);
 
-                    }
+                    //}
                 });
 
         }
-        */
+
         // Update Node
         {
         let curnode = this._nodegroup.selectAll(".node");
         //console.log(typeof(this._activenode));
-        curnode.data(this._root.descendants())
+        curnode.data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r", 50 / Math.sqrt(this._circlesize) + 2)
+            .attr("r", 20 / Math.sqrt(this._circlesize) + 1)
             .attr("transform", function (d) {//console.log(d);
                 if (d.parent != null)
                     if (d.parent.oldx != null) {
@@ -306,7 +310,7 @@ export class Tree{
             }).merge(curnode);
             //.merge(curnode);
 
-        d3.selectAll('.node').data(this._root.descendants()).exit().remove();
+        d3.selectAll('.node').data(this._activenode,d=>{return d.id}).exit().remove();
         t.selectAll('.node')
             .attr("r", 50 / Math.sqrt(this._circlesize) + 2)
             .attr('fill', (d) => {

@@ -54,19 +54,19 @@ function load(){
     //Load data in JS
     pInter = 0.2;
     sizeInter = 20;
-    d3.json('../data/P_Partition.json', function (error, data) {
+    d3.json('../data/Total_Partition.json', function (error, data) {
         if (error) throw error;
         //will be updated later
 
         loaddata = new Info();
         let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
-        partition = new Partition();
-        partition.initialPartition(data);
+        //partition = new Partition();
+        //partition.initialPartition(data);
 
         d3.csv('../data/Final_Tree.csv', function (error, treedata){
-            d3.json('../data/Base_Partition.json', function (error, basedata) {
+
                 //console.log(rawdata);
-                tree = new Tree(treedata,partition,basedata);
+                tree = new Tree(treedata,data);
                 treelevel = new TreeLevel();
                 //tree.create(pInter,sizeInter);
                 tree.updateTree(pInter,sizeInter);
@@ -208,7 +208,7 @@ function load(){
                     treelevel.plotLevel(tree);
                     // update data
                     loaddata.update(pInter,sizeInter);});
-            });
+
         });
 
     })

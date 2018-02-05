@@ -2,6 +2,7 @@ node_modules
 lib
 dist
 data
+.idea
 
 #logs
 logs
