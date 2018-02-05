@@ -13,8 +13,7 @@ export class Tree{
      */
     constructor(treeCSV,partition,basedata) {
         console.log(partition);
-        //let totalper = Object.keys(partition).sort(function(b,a){return a-b});
-        //console.log(totalper);
+
         this._maxsize = 0;
         this.treewidth = 670;
         this.treelength =380;
@@ -97,7 +96,7 @@ export class Tree{
         //console.log(this);
         function getlowestleaf(node)
         {   //console.log("current Node", node);
-            if(node.children!=undefined&&node.children.length===1&&node.parent.data.index===node.data.index)
+            if(node.children!=undefined&&node.children.length===1&&node._children===undefined)//node.parent.data.index===node.data.index)
             {      //console.log("In Function");
                 return(getlowestleaf(node.children[0]));
             }

@@ -48,8 +48,7 @@ function load(){
         }
 
         let plots = new Selected(rawdata, 300, 100);
-        //let plots = new Crystal(rawdata, 300, 100);
-        //window.plots = plots;
+
         //Load data in JS
         pInter = 0.2;
         sizeInter = 20;
