@@ -28,7 +28,7 @@ class Post_MSC():
     def compute(self):
         hierarchy_sorted = self.hierarchy[np.argsort(self.hierarchy[:, 0])]
         # Normalize the persistence
-        p_max = hierarchy_sorted[-2, 0]
+        p_max = hierarchy_sorted[-1, 0]
         hierarchy_sorted[:, 0] = hierarchy_sorted[:, 0] / p_max
 
         # The hierarchy_sorted has same key as self.partition_copy
@@ -50,39 +50,41 @@ class Post_MSC():
         parent = hierarchy_sorted[:, 3]
         ind = 0
         pkey = list(self.partition_copy.keys())
-        level_p = {}
+        #level_p = {}
         #total = len(pkey)
-        for key in pkey:
-            level_p[ind] = self.partition_copy[key]
-            ind = ind+1
+        #for key in pkey:
+        #    level_p[ind] = self.partition_copy[key]
+        #    ind = ind+1
 
         level_tree = {}
         # Tree level as the key
-        level_tree[0] = list(level_p[0].keys())
+        #level_tree[0] = list(level_p[0].keys())
         # Persistence as the key
         p_tree = {}
-        p_tree[1] = list(level_p[0].keys())
-
+        #p_tree[1] = list(level_p[0].keys())
+        curP = list(self.partition_copy.keys())
         #p_list = p_list[1:]
 
         #ind = 0
         #cur_partitions = []
         #total_partitions = []
         #temp = level_tree[0]
-        ab = self.str2int(level_tree[0][0])
-        total_partitions = [" , ,0", self.int2str(ab[0],ab[1],0)]
-
+        #ab = self.str2int(level_tree[0][0])
+        #total_partitions = [" , ,0", self.int2str(ab[0],ab[1],0)]
+        total_partitions = []
         # Calculate partition information based on base partition indexing for each persistence level
         for ind, i in list(enumerate(p_list)):
+            pcpair = self.merge(MinMax[ind],int(child[ind]),int(parent[ind]),pind,cind,ind)
+
             # if split
             #cur = level_p[ind]
             #if(MinMax[ind]==0):
-                # Merge Min
-            pind = self.strlist2intlist(list(level_p[ind].keys()),2)
-            cind = self.strlist2intlist(list(level_p[ind+1].keys()),2)
-            pcpair = self.pcrelation(MinMax[ind],int(child[ind]),int(parent[ind]),pind,cind,ind)
+            # Merge Min
+            #pind = self.strlist2intlist(list(level_p[ind].keys()),2)
+            #cind = self.strlist2intlist(list(level_p[ind+1].keys()),2)
+            #pcpair = self.pcrelation(MinMax[ind],int(child[ind]),int(parent[ind]),pind,cind,ind)
             #else:
-                # Merge Max
+            # Merge Max
             #curkey = list(cur.keys())
             #c = self.strlist2intlist(curkey)
             #d = list(cur_partitions)
@@ -274,7 +276,7 @@ if __name__ == '__main__':
 
     # Save
     #new_MSC.Save(hierarchy,base)
-    new_MSC.Save('../data/Tree_Hierarchy.csv', '../data/Total_Partition.json')
+    new_MSC.Save('../data/Hierarchy.csv', '../data/Base_Partition.json')
 	
 
     # Create Post-Processing Object
@@ -282,14 +284,14 @@ if __name__ == '__main__':
 
     # Load MSC results
     #Post.load(hierarchy, base)
-    Post.load('../data/Tree_Hierarchy.csv','../data/Total_Partition.json')
+    Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
 
     # Post Processing
     Post.compute()
 
     # Save
     #Post.save(p_par,tree)
-    Post.save('../data/Final_Tree.csv')
+    #Post.save('../data/Final_Tree.csv')
 
     #os.remove(hierarchy)
 

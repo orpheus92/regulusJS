@@ -40,38 +40,45 @@ class Post_MSC():
         [r, c] = hierarchy_sorted.shape
         p_map = {}
         total_partitions = []
+        p_tree = {}
+        #p_tree[1] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
         # Convert to hierarchy to a python dictionary where persistence is the key and list of parent/children index and tree levels as values
         for i in range(r):
             if hierarchy_sorted[i, 1] == 0:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemin(int(child[i]), int(parent[i]), self.base_copy, r - i)
-
+                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]])
             else:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemax(int(child[i]), int(parent[i]), self.base_copy, r - i)
-        p_list = hierarchy_sorted[:, 0]
+                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]])
 
-        level_tree = {}
+        #p_list = hierarchy_sorted[:, 0]
+
+        #level_tree = {}
         # Tree level as the key
-        level_tree[0] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
+        #level_tree[0] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
         # Persistence as the key
-        p_tree = {}
-        p_tree[1] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
+        #p_tree = {}
+        #p_tree[1] = self.strlist2intlist([p_map[hierarchy_sorted[-1, 0]][0]])
         #p_list = p_list[1:]
-        total = len(p_list)
+        #total = len(p_list)
 
-        cur_partitions = []
+        #cur_partitions = []
 
         # Calculate partition information based on base partition indexing for each persistence level
-        for ind, i in reversed(list(enumerate(p_list))):
-            cur_partitions = set(self.strlist2intlist(p_map[i]) + list(cur_partitions))
-            level_tree[total - ind] = list(cur_partitions)
-            p_tree[i] = list(cur_partitions)
-            total_partitions = total_partitions + p_map[i]
+        #for ind, i in reversed(list(enumerate(p_list))):
+        #    cur_partitions = set(self.strlist2intlist(p_map[i]) + list(cur_partitions))
+        #    level_tree[total - ind] = list(cur_partitions)
+        #    p_tree[i] = list(cur_partitions)
+        #    #total_partitions = total_partitions + p_map[i]
+        p_tree[1] = [p_tree[hierarchy_sorted[r-1, 0]][-1]]
         self.p_tree = p_tree
-
-        for i in range(len(level_tree)):
-            c_pars = level_tree[i]
-            for j in c_pars:
-                total_partitions = total_partitions + [self.appendint(j, i), self.appendint(j, i + 1)]
+        allP = list(p_map.keys())
+        for p in allP:
+            total_partitions = total_partitions + p_map[p]
+        #for i in range(len(level_tree)):
+        #c_pars = level_tree[i]
+        #    for j in c_pars:
+        #        total_partitions = total_partitions + [self.appendint(j, i), self.appendint(j, i + 1)]
 
         mlist = np.array(total_partitions)
         pc_pars = mlist.reshape(int(len(mlist) / 2), 2)
@@ -88,7 +95,7 @@ class Post_MSC():
             json.dump(self.p_tree, fp)
             fp.close()
 
-        line1 = ",,0," + self.pc_pars[0][0]
+        line1 = ",,0," + self.pc_pars[-1][0]
         ## Headers
         line0 = "P1,P2,Pi,C1,C2,Ci"
 
@@ -108,11 +115,17 @@ class Post_MSC():
             # sys.stdout is redirected to the file
             sys.stdout.write(line)
 
+    def getPartition(self, pmap):
+        pnum = self.strlist2intlist(pmap)
+        return pnum[1:][::2]
+
     def mergemin(self, c, p, d, per):
         outlist = []
         indpair = list(d.keys())
         indpair2 = np.array([self.str2int(pair) for pair in indpair])
         listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
+        listother = indpair2[indpair2[:, 0] != int(c)]
+
         for maxin in listmax:
             if self.int2str(int(p), maxin) in indpair:
 
@@ -121,12 +134,16 @@ class Post_MSC():
                 del d[self.int2str(int(c), maxin)]
                 outlist.append(self.int2str(int(p), maxin, per - 1))
                 outlist.append(self.int2str(int(c), maxin, per))
+                #outlist.append(self.int2str(int(p), maxin, per - 1))
+                #outlist.append(self.int2str(int(p), maxin, per))
 
             else:
                 d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
                 outlist.append(self.int2str(int(p), maxin, per - 1))
                 outlist.append(self.int2str(int(c), maxin, per))
-
+        for pair in listother:
+            outlist.append(self.int2str(pair[0], pair[1], per - 1))
+            outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def mergemax(self, c, p, d, per):
@@ -134,20 +151,25 @@ class Post_MSC():
         indpair = list(d.keys())
         indpair2 = np.array([self.str2int(pair) for pair in indpair])
         listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
+        listother = indpair2[indpair2[:, 1] != int(c)]
         for minin in listmin:
-            if self.int2str(minin, int(p)) in indpair:
+            if (self.int2str(minin, int(p)) in indpair):
 
                 temp = d[self.int2str(minin, int(c))]
                 d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
                 del d[self.int2str(minin, int(c))]
                 outlist.append(self.int2str(minin, int(p), per - 1))
                 outlist.append(self.int2str(minin, int(c), per))
+                #outlist.append(self.int2str(minin, int(p), per - 1))
+                #outlist.append(self.int2str(minin, int(p), per))
 
             else:
                 d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
                 outlist.append(self.int2str(minin, int(p), per - 1))
                 outlist.append(self.int2str(minin, int(c), per))
-
+        for pair in listother:
+            outlist.append(self.int2str(pair[0], pair[1], per - 1))
+            outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def str2int(self, str):
@@ -193,7 +215,7 @@ if __name__ == '__main__':
             p_par = sys.argv[8]
             tree = sys.argv[9]
     #new_MSC = MSC(X, Y, debug=True)
-    new_MSC = MorseSmaleComplex(graph, gradient, knn, beta, normalization,debug = True)
+    new_MSC = MorseSmaleComplex(graph, gradient, knn, beta, normalization)
     # Load Raw Data
     new_MSC.LoadData(data)
     #new_MSC.loadData('../data/Pu_TOT.csv')
@@ -208,18 +230,18 @@ if __name__ == '__main__':
 	
 
     # Create Post-Processing Object
-    #Post = Post_MSC()
+    Post = Post_MSC()
 
     # Load MSC results
     #Post.load(hierarchy, base)
-    #Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
+    Post.load('../data/Hierarchy.csv','../data/Base_Partition.json')
 
     # Post Processing
-    #Post.compute()
+    Post.compute()
 
     # Save
     #Post.save(p_par,tree)
-    #Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
+    Post.save('../data/P_Partition.json', '../data/Final_Tree.csv')
 
     #os.remove(hierarchy)
 
