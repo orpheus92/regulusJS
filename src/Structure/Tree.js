@@ -144,7 +144,7 @@ export class Tree{
         let option = document.getElementById('level').value;
         let option2 = document.getElementById('scale').value;
 
-        this._treefunc(this._root);
+        this._treefunc(this._root);//.sort(function(a, b) { return a._size - b._size; }));
         //this.activelength = 0;
 
         switch (option) {
