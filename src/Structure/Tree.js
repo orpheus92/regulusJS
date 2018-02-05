@@ -11,22 +11,22 @@ export class Tree{
     /**
      * Creates a Tree Object
      */
-    constructor(treeCSV,partition) {
+    constructor(treeCSV,partition,basedata) {
         console.log(partition);
-        let totalper = Object.keys(partition).sort(function(b,a){return a-b});
-        console.log(totalper);
+        //let totalper = Object.keys(partition).sort(function(b,a){return a-b});
+        //console.log(totalper);
         this._maxsize = 0;
         this.treewidth = 670;
         this.treelength =380;
         this.translatex = 50;
         this.translatey = 100;
-        /*
+
         let totalpers = [];
         partition.pers.map(function(item) {
             totalpers.push(parseFloat(item));
         });
-        */
-        this.pers = totalper;
+
+        this.pers = totalpers;
         treeCSV.forEach(d=> {
             d.id = d.C1+ ", "+d.C2+", "+d.Ci;
             d.index = d.C1+ ", "+d.C2;
@@ -43,20 +43,9 @@ export class Tree{
         let accum;
         console.log("oldL",this._root.descendants().length);
         //console.log(this._root.descendants());
+
         this._root.descendants().forEach(d=>{
             //console.log(d);
-            /*
-            if(d.children!=undefined&&d.children.length===1&&d.children[0].parent.id===d.id)
-            {   console.log("Before set children:",d);
-                d.children = getlowestleaf(d);
-                //console.log(d);
-                if(d.children!=undefined)
-                {   //console.log("changeParent",d.children[0]);
-                    console.log("Set Parent",d);
-                    d.children[0].parent =(d.children[0].parent.depth<d.depth)?d.children[0].parent:d;
-                }
-            }
-            */
             if(d.children!=undefined)
             {
                 d.children.forEach((tt,i)=>{
@@ -67,8 +56,6 @@ export class Tree{
                     }
 
                 );
-
-
 
             }
 
@@ -90,7 +77,8 @@ export class Tree{
             d.data._size = d.data._total.size;
             this._maxsize = (this._maxsize>d.data._size)?this._maxsize :d.data._size;
         });
-        console.log("newL",this._root.descendants().length);
+
+        //console.log("newL",this._root.descendants().length);
         //console.log(this._root.descendants());
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
