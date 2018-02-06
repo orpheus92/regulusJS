@@ -99,6 +99,8 @@ class Post_MSC():
         ## Headers
         line0 = "P1,P2,Pi,C1,C2,Ci"
 
+        simplify = self.simplify(self.pc_pars)
+
         df = pd.DataFrame(self.pc_pars)
         df.to_csv(finaltree, header=None, index=False)
 
@@ -114,6 +116,11 @@ class Post_MSC():
             line = line.replace(" ", "")
             # sys.stdout is redirected to the file
             sys.stdout.write(line)
+
+    def simplify(self,data):
+        out = data
+        print(out)
+        return out
 
     def getPartition(self, pmap):
         pnum = self.strlist2intlist(pmap)

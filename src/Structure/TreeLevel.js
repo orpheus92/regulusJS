@@ -34,27 +34,26 @@ export class TreeLevel {
             switch (this.Level) {
                 case "tLevel": {
                     // Define Scale Function
-                    if (ctree.pShow != undefined)
-                        this.yScale.domain([parseInt(getKeyByValue(ctree.pers, ctree.pShow))+1, 0]);
-                    else {
-                        if (getKeyByValue(ctree.pers, ctree.pInter) != undefined)
-                            this.yScale.domain([getKeyByValue(ctree.pers, ctree.pInter), 0]);
-                        else {
-                            for (let i = 0; i < ctree.pers.length; i++) {
-                                if (ctree.pInter > ctree.pers[i]) {
-                                    this.yScale.domain([i, 0]);
-                                    clevel = i;
-                                    //console.log(clevel);
-                                    break;
-                                }
-                            }
+                    //if (ctree.pShow != undefined)
+                    //this.yScale.domain([parseInt(getKeyByValue(ctree.pers, ctree.pShow))+1, 0]);
+                    //else {
+                    //if (getKeyByValue(ctree.pers, ctree.pInter) != undefined)
+                    //this.yScale.domain([getKeyByValue(ctree.pers, ctree.pInter), 0]);
+                    //else {
+                    //for (let i = 0; i < ctree.pers.length; i++) {
+                    //if (ctree.pInter > ctree.pers[i]) {
+                    this.yScale.domain([ctree._maxlevel, 0]);
+                    //clevel = i;
+                    //console.log(clevel);
+                    //break;
+                    //}
+                    //}
 
-                        }
-                        }
+                    //}
+                    //}
 
-                    }
+                    //}
                     // Draw Axis
-
 
                     let yAxis = d3.axisLeft()
                         .scale(this.yScale);
@@ -73,7 +72,7 @@ export class TreeLevel {
                         .text("Tree Level")
                         .attr("font-size", "15px")
                         .attr("class", "levellabel")
-                        .attr("fill","blue");
+                        .attr("fill", "blue");
 
                     t.select(".bar")
                         .attr("x", -5)
@@ -81,9 +80,9 @@ export class TreeLevel {
                         .attr("width", 10)
                         .attr("height", 5)
                         .attr("class", "bar")
-                        .attr("fill","blue");
+                        .attr("fill", "blue");
                     break;
-
+                }
                 case "pLevel": {
                     //console.log(this.Scale);
                     switch (this.Scale){

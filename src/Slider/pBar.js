@@ -168,6 +168,7 @@ export class pBar{
        }
        //console.log(psize);
        this.dataset2 = psize;
+      //console.log(psize);
        this.xScale2 = d3.scaleLinear()
            .domain([0, maxsize-1]) // input
            .range([0, this.width-this.padding]); // output
@@ -292,6 +293,7 @@ export class pBar{
        }
        */
        //let t = d3.transition().duration(100);
+       //console.log(slevel);
        d3.select(".pbar")//.data([cx])
            .attr("x", cx2+this.padding-2)
            .attr("y", cy2+this.margin.top-2)

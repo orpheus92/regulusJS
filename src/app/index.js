@@ -124,7 +124,7 @@ function load(){
                     //Separate clicking from double clicking
                     document.getElementById("tree").onmouseover = function(event) {
                         let totalnode = [];
-                        d3.selectAll(".node.viz")
+                        d3.selectAll(".node")
                             .on("click", (nodeinfo)=>{
                                 if (d3.event.ctrlKey)
                                 {
