@@ -46,16 +46,13 @@ function load(){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-
         let plots = new Selected(rawdata, 300, 100);
-
         //Load data in JS
         pInter = 0.2;
         sizeInter = 20;
         d3.json('../data/P_Partition.json', function (error, data) {
             if (error) throw error;
             //will be updated later
-
             loaddata = new Info();
             let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
             partition = new Partition();

@@ -38,15 +38,16 @@ export class Tree{
             .id(d => d.id)
             .parentId(d => d.par === ", , 0" ? '' : d.par)
             (treeCSV);
-
+        console.log(this._root.descendants());
         let accum;
-        console.log("oldL",this._root.descendants().length);
+        //console.log("oldL",this._root.descendants().length);
         //console.log(this._root.descendants());
 
         this._root.descendants().forEach(d=>{
             //console.log(d);
             if(d.children!=undefined)
             {
+
                 d.children.forEach((tt,i)=>{
                     //console.log(tt,i);
                     d.children[i]=getlowestleaf(tt);
@@ -57,6 +58,8 @@ export class Tree{
                 );
 
             }
+
+
 
             accum = [];
             accum = getbaselevelInd(d, accum);
@@ -82,7 +85,7 @@ export class Tree{
         this._initsize = this._root.descendants().length;
         this._alldata = treeCSV;
         this._treefunc = d3.tree()//.separation(function(a, b) { console.log("separate ");return (50); })
-            .size([this.treewidth,this.treelength]);
+            .size([this.treewidth,this.treelength]);//.children(function(d) {return d.children;});
 
 
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
@@ -92,6 +95,7 @@ export class Tree{
         let svg = d3.select("#tree").attr("transform", "translate("+this.translatex+","+this.translatey+")");
         this._linkgroup = svg.append('g');
         this._nodegroup = svg.append('g');
+        console.log(this._root.descendants());
 
         //console.log(this);
         function getlowestleaf(node)
@@ -104,8 +108,9 @@ export class Tree{
                 return node};
 
         }
+
         this._activenode = this._root.descendants();
-        //console.log(this._activenode);
+        console.log(this);
     }
 
     /**
@@ -125,7 +130,7 @@ export class Tree{
         this.render('update');
     };
     updatemodel(){
-        this._oldnode = this._root.descendants();
+        //this._oldnode = this._root.descendants();
         if (this.pShow != undefined)
             {   //console.log(this.pShow);
                 nodeupdate(this._root, this.pShow,this.sizeInter);
@@ -144,9 +149,8 @@ export class Tree{
         let option = document.getElementById('level').value;
         let option2 = document.getElementById('scale').value;
 
-        this._treefunc(this._root);//.sort(function(a, b) { return a._size - b._size; }));
+        this._treefunc(this._root);//.sort(function(a, b) { console.log(a); return a.depth - b.depth; });
         //this.activelength = 0;
-
         switch (option) {
             case "tLevel": {
                 //this._root.descendants().forEach(d => {
@@ -217,6 +221,8 @@ export class Tree{
             default:
         }
 
+        this._activenode = this._root.descendants();
+        console.log(this._activenode);
     };
     render(option) {
         d3.select("#tree").selectAll("text").remove();
@@ -227,7 +233,7 @@ export class Tree{
 
         //Update Link
 
-        {
+        {   //console.log(this._activenode);
             // A problem with animation for exit().remove(), will be fixed later
             let curlink = this._linkgroup.selectAll(".link");
 
@@ -281,7 +287,7 @@ export class Tree{
         //console.log(typeof(this._activenode));
         curnode.data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r", 20 / Math.sqrt(this._circlesize) + 1)
+            .attr("r",5)//20 / Math.sqrt(this._circlesize) + 1)
             .attr("transform", function (d) {//console.log(d);
                 if (d.parent != null)
                     if (d.parent.oldx != null) {
@@ -294,12 +300,12 @@ export class Tree{
                         return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
                 }
                     //else return  "translate(" + d.parent.x + "," + d.parent.y + ")";
-            }).merge(curnode);
+            });//.merge(curnode);
             //.merge(curnode);
 
         d3.selectAll('.node').data(this._activenode,d=>{return d.id}).exit().remove();
         t.selectAll('.node')
-            .attr("r", 50 / Math.sqrt(this._circlesize) + 2)
+            .attr("r", 5)//50 / Math.sqrt(this._circlesize) + 2)
             .attr('fill', (d) => {
                 //Intermediate Nodes
                 /* May be updated later
