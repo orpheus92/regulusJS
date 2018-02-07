@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/Selected.js" afterPath="$PROJECT_DIR$/src/Crystal/Selected.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/style.css" afterPath="$PROJECT_DIR$/src/Crystal/style.css" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -84,32 +84,33 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="812" column="45" lean-forward="false" selection-start-line="812" selection-start-column="40" selection-end-line="812" selection-end-column="45" />
+            <state relative-caret-position="202">
+              <caret line="1281" column="83" lean-forward="false" selection-start-line="1281" selection-start-column="83" selection-end-line="1281" selection-end-column="83" />
               <folding>
                 <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#updateplot#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#updateattr#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#scatterMat#0;n#Selected#0" expanded="false" />
-                <element signature="e#23161#23624#0" expanded="false" />
-                <element signature="e#32061#35559#0" expanded="false" />
-                <element signature="e#35739#36175#0" expanded="false" />
-                <element signature="e#36403#36928#0" expanded="false" />
-                <element signature="e#36953#37401#0" expanded="false" />
-                <element signature="e#38232#41374#0" expanded="false" />
-                <element signature="e#41375#45083#0" expanded="false" />
-                <element signature="e#45439#50479#0" expanded="false" />
-                <element signature="e#50546#55028#0" expanded="false" />
-                <marker date="1518044390995" expanded="false" signature="32101:34042" ph="{...}" />
-                <marker date="1518044390995" expanded="false" signature="33184:33250" ph="{...}" />
-                <marker date="1518044390995" expanded="false" signature="41950:43566" ph="{...}" />
-                <marker date="1518044390995" expanded="false" signature="42848:43548" ph="{...}" />
-                <marker date="1518044390995" expanded="false" signature="43623:45080" ph="{...}" />
+                <element signature="e#23162#23625#0" expanded="false" />
+                <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
+                <element signature="e#32010#35508#0" expanded="false" />
+                <element signature="e#35688#36124#0" expanded="false" />
+                <element signature="e#36352#36877#0" expanded="false" />
+                <element signature="e#36902#37350#0" expanded="false" />
+                <element signature="e#38181#41323#0" expanded="false" />
+                <element signature="e#41324#45032#0" expanded="false" />
+                <element signature="e#50491#54843#0" expanded="false" />
+                <marker date="1518046536579" expanded="false" signature="32050:33991" ph="{...}" />
+                <marker date="1518046536579" expanded="false" signature="33133:33199" ph="{...}" />
+                <marker date="1518046536579" expanded="false" signature="41899:43515" ph="{...}" />
+                <marker date="1518046536579" expanded="false" signature="42797:43497" ph="{...}" />
+                <marker date="1518046536579" expanded="false" signature="43572:45029" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -125,11 +126,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Crystal/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="35" column="3" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
+            <state relative-caret-position="515">
+              <caret line="35" column="8" lean-forward="true" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
               <folding>
                 <element signature="e#20#59#0" expanded="false" />
                 <element signature="e#66#143#0" expanded="false" />
@@ -180,8 +181,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>remove</find>
-      <find>_filte</find>
       <find>brushst</find>
       <find>newbrush</find>
       <find>gBrushes</find>
@@ -208,8 +207,10 @@
       <find>padding</find>
       <find>font</find>
       <find>append</find>
-      <find>frame</find>
       <find>path</find>
+      <find>frame</find>
+      <find>xAxis</find>
+      <find>d3.axisBottom(x)</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -240,8 +241,8 @@
         <option value="$PROJECT_DIR$/src/app/index.js" />
         <option value="$PROJECT_DIR$/data/brushtest/data.csv" />
         <option value="$PROJECT_DIR$/data/brushtest/plot.js" />
-        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
         <option value="$PROJECT_DIR$/src/Crystal/style.css" />
+        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
       </list>
     </option>
   </component>
@@ -450,12 +451,12 @@
       <workItem from="1517810384601" duration="3174000" />
       <workItem from="1517854775159" duration="5000" />
       <workItem from="1517864488085" duration="2802000" />
-      <workItem from="1517896086468" duration="74826000" />
+      <workItem from="1517896086468" duration="76135000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="217004000" />
+    <option name="totallyTimeSpent" value="218313000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -884,6 +885,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Crystal/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="515">
+          <caret line="35" column="8" lean-forward="true" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
+          <folding>
+            <element signature="e#20#59#0" expanded="false" />
+            <element signature="e#66#143#0" expanded="false" />
+            <element signature="e#284#363#0" expanded="false" />
+            <element signature="e#496#526#0" expanded="false" />
+            <element signature="e#543#564#0" expanded="false" />
+            <element signature="e#573#634#0" expanded="false" />
+            <element signature="e#648#668#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data/brushtest/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -894,45 +911,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="812" column="45" lean-forward="false" selection-start-line="812" selection-start-column="40" selection-end-line="812" selection-end-column="45" />
+        <state relative-caret-position="202">
+          <caret line="1281" column="83" lean-forward="false" selection-start-line="1281" selection-start-column="83" selection-end-line="1281" selection-end-column="83" />
           <folding>
             <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#updateplot#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#updateattr#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#scatterMat#0;n#Selected#0" expanded="false" />
-            <element signature="e#23161#23624#0" expanded="false" />
-            <element signature="e#32061#35559#0" expanded="false" />
-            <element signature="e#35739#36175#0" expanded="false" />
-            <element signature="e#36403#36928#0" expanded="false" />
-            <element signature="e#36953#37401#0" expanded="false" />
-            <element signature="e#38232#41374#0" expanded="false" />
-            <element signature="e#41375#45083#0" expanded="false" />
-            <element signature="e#45439#50479#0" expanded="false" />
-            <element signature="e#50546#55028#0" expanded="false" />
-            <marker date="1518044390995" expanded="false" signature="32101:34042" ph="{...}" />
-            <marker date="1518044390995" expanded="false" signature="33184:33250" ph="{...}" />
-            <marker date="1518044390995" expanded="false" signature="41950:43566" ph="{...}" />
-            <marker date="1518044390995" expanded="false" signature="42848:43548" ph="{...}" />
-            <marker date="1518044390995" expanded="false" signature="43623:45080" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Crystal/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="35" column="3" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
-          <folding>
-            <element signature="e#20#59#0" expanded="false" />
-            <element signature="e#66#143#0" expanded="false" />
-            <element signature="e#284#363#0" expanded="false" />
-            <element signature="e#496#526#0" expanded="false" />
-            <element signature="e#543#564#0" expanded="false" />
-            <element signature="e#573#634#0" expanded="false" />
-            <element signature="e#648#668#0" expanded="false" />
+            <element signature="e#23162#23625#0" expanded="false" />
+            <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
+            <element signature="e#32010#35508#0" expanded="false" />
+            <element signature="e#35688#36124#0" expanded="false" />
+            <element signature="e#36352#36877#0" expanded="false" />
+            <element signature="e#36902#37350#0" expanded="false" />
+            <element signature="e#38181#41323#0" expanded="false" />
+            <element signature="e#41324#45032#0" expanded="false" />
+            <element signature="e#50491#54843#0" expanded="false" />
+            <marker date="1518046536579" expanded="false" signature="32050:33991" ph="{...}" />
+            <marker date="1518046536579" expanded="false" signature="33133:33199" ph="{...}" />
+            <marker date="1518046536579" expanded="false" signature="41899:43515" ph="{...}" />
+            <marker date="1518046536579" expanded="false" signature="42797:43497" ph="{...}" />
+            <marker date="1518046536579" expanded="false" signature="43572:45029" ph="{...}" />
           </folding>
         </state>
       </provider>

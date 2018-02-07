@@ -1250,37 +1250,37 @@ export class Selected{
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[0].toFixed(2))
                 .attr("style", "text-anchor: middle;")
-                .attr("font-size", textsize+"px");
+                .attr("font-size", 2*textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.quartile[1]))
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[1].toFixed(2))
                 .attr("style", "text-anchor: middle;")
-                .attr("font-size", textsize+"px");
+                .attr("font-size", 2*textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.quartile[2]))
                 .attr("y", height / 2 + 15 + barWidth / 2)
                 .text(record.quartile[2].toFixed(2))
                 .attr("style", "text-anchor: middle;")
-                .attr("font-size", textsize+"px");
+                .attr("font-size", 2*textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.whiskers[1]))
                 .attr("y", height / 2 + 15)
                 .text(record.whiskers[1].toFixed(2))
                 .attr("style", "text-anchor: middle;")
-                .attr("font-size", textsize+"px");
+                .attr("font-size", 2*textsize+"px");
             g.append("text")
                 .attr("x", xScale(record.whiskers[0]))
                 .attr("y", height / 2 + 15)
                 .text(record.whiskers[0].toFixed(2))
                 .attr("style", "text-anchor: middle;")
-                .attr("font-size", textsize+"px");
+                .attr("font-size", 2*textsize+"px");
 
             svg
                 .append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
-                .attr("font-size", textsize+"px")
+                .attr("transform", "translate("+ (this._width/2) +","+(this._height)+")")  // centre below axis
+                .attr("font-size", 2*textsize+"px")
                 .text(attr[i]);
 
 
@@ -1300,8 +1300,6 @@ export class Selected{
         //let data = this._data;
         let data = this._totaldata[i];//this._data;
         let margin = this._margin;
-        //let height = this._height - margin.top - margin.bottom;
-        //let width = this._width - margin.left - margin.right;
         let height = this._height;
         let width = this._width;
         //let newplot = this._plot;
@@ -1334,7 +1332,7 @@ export class Selected{
             let y = d3.scaleLinear()
                 .range([height-margin.top-margin.bottom, 0]);
 
-            let tickrange = d3.range(minVal, maxVal, (maxVal - minVal) / 10);
+            let tickrange = d3.range(minVal, maxVal, (maxVal - minVal) / 8);
 
             let histogram = d3.histogram()
                 .value(function (d) {
@@ -1382,16 +1380,16 @@ export class Selected{
             g
                 .append('g')
                 .attr('id', "xAxis" + i)
-                .call(d3.axisBottom(x).tickValues(tickrange).nice())
-                .attr("font-size", textsize+"px")
+                .call(d3.axisBottom(x).tickValues(tickrange))
+                .attr("font-size", 2*textsize+"px")
                 //.attr("transform", "translate(" + [0, height] + ")");
                 .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
 
             g
                 .append('g')
                 .attr('id', "yAxis" + i)
-                .call(d3.axisLeft(y).nice())
-                .attr("font-size", textsize+"px")
+                .call(d3.axisLeft(y).ticks(5))
+                .attr("font-size", 2*textsize+"px")
                 .attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
 
@@ -1400,7 +1398,7 @@ export class Selected{
             svg
                 .append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("font-size", textsize+"px")
+                .attr("font-size", 2*textsize+"px")
                 //.attr("transform", "translate("+ (width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
                 .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
                 .text(attr[i]);
