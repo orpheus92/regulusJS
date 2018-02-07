@@ -455,7 +455,7 @@ export class Selected{
             {
                 //width = 960;
                 let size = height,
-                    padding = (margin.left+margin.right)/2;
+                    padding = (margin.left+margin.right)*3/5;
 
                 let x = d3.scaleLinear()
                     .range([padding / 2, size - padding / 2]);
@@ -491,8 +491,8 @@ export class Selected{
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
 
-            xAxis.tickSize(size * n);
-            yAxis.tickSize(-size * n);
+            xAxis.tickSize(-size);
+            yAxis.tickSize(-size);
             let brush = myBrush()
                 .on("start", brushstart)
                 .on("brush", brushmove)
@@ -502,47 +502,114 @@ export class Selected{
             // Size of SVG declared here
 
             let svg = newplot.append("svg")
-                .attr("width", size * n + padding)
-                .attr("height", size * n + padding)
+                .attr("width", (size+padding) * (n-1)+padding)
+                .attr("height", (size+padding) * (n-1)+padding)//size * n + padding)
                 .append("g")
                 .attr("transform", "translate(" + padding + "," + padding + ")");
 
             svg.selectAll(".x.axis")
-                .data(traits)
+                .data(halfcross(traits, traits))
                 .enter().append("g")
                 .attr("class", "x axis")
                 .attr("font-size", textsize+"px")
-                .attr("transform", function (d, i) {
-                    return "translate(" + (n - i - 1) * size + ",0)";
+                .attr("transform", function (d) {
+                    //console.log(d, ( d.i ) * (size+padding),(d.j-1) * (size+padding));
+                    //return "translate(" + (n - i - 1) * halfcross(traits, traits) + ",0)";
+                    return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
                 })
                 .each(function (d) {
-                    x.domain(domainByTrait[d]);
+                    //console.log(d, domainByTrait[d.x]);
+                    x.domain(domainByTrait[d.x]);
                     d3.select(this).call(xAxis);
                 });
 
             svg.selectAll(".y.axis")
-                .data(traits)
+                .data(halfcross(traits, traits))
                 .enter().append("g")
                 .attr("class", "y axis")
                 .attr("font-size", textsize+"px")
-                .attr("transform", function (d, i) {
-                    return "translate(0," + i * size + ")";
+                .attr("transform", function (d) {
+                    //console.log('d0',d);
+                    //return "translate(0," + i * size + ")";
+                    return "translate(" + ( d.i ) * (size+padding) + "," + (d.j-1) * (size+padding) + ")";
                 })
                 .each(function (d) {
-                    y.domain(domainByTrait[d]);
+                    y.domain(domainByTrait[d.y]);
                     d3.select(this).call(yAxis);
                 });
 
             let cell = svg.selectAll(".cell")
-                .data(cross(traits, traits))
+                .data(halfcross(traits, traits))
                 .enter().append("g")
                 .attr("class", "cell")
                 .attr("transform", function (d) {
-                    return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+                    //console.log(d);
+                    return "translate(" + ( d.i ) * (size+padding) + "," + (d.j-1) * (size+padding) + ")";
                 })
                 .each(plot);
+
+                function plot(p) {
+                    let cell = d3.select(this);
+
+                    x.domain(domainByTrait[p.x]);
+                    y.domain(domainByTrait[p.y]);
+
+                    cell.append("rect")
+                        .attr("class", "frame")
+                        .attr("x", padding / 2)
+                        .attr("y", padding / 2)
+                        .attr("width", size - padding)
+                        .attr("height", size - padding);
+
+
+                    cell.selectAll("circle")
+                        .data(data)
+                        .enter().append("circle")
+                        .attr("cx", function (d) { //console.log(d);
+                            return x(d[p.x]);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d[p.y]);
+                        })
+                        .attr("r", 2)
+                        .style("fill", function (d) {
+
+                            return colorScale(d[ztrait]);
+                        });
+                    // Xlable
+                    cell.append("text")
+                        .attr("x", size-10)
+                        .attr("y", size+10)
+                        //.attr("dy", ".71em")
+                        .text(function (d) {
+                            //console.log(d);
+                            return d.x;
+                        })
+                        .attr("font-size", 2*textsize+"px");
+
+                    // Ylable
+                    cell.append("text")
+                        .attr("x", -20)//size-15)
+                        .attr("y", 5)//size+10)
+                        //.attr("dy", ".71em")
+                        .text(function (d) {
+                            //console.log(d);
+                            return d.y;
+                        })
+                        .attr("font-size", 2*textsize+"px");
+                        /*
+                        .attr("transform", function (d) {
+                            console.log(d);
+                        //console.log(d, ( d.i ) * (size+padding),(d.j-1) * (size+padding));
+                        //return "translate(" + (n - i - 1) * halfcross(traits, traits) + ",0)";
+                        return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
+                    });
+                        */
+                }
+
                 //console.log(cross(traits, traits));
             // Titles for the diagonal.
+                /*
             cell.filter(function (d) {
                 return d.i === d.j;
             }).append("text")
@@ -553,53 +620,27 @@ export class Selected{
                     return d.x;
                 })
                 .attr("font-size", 2*textsize+"px");
-
+                */
             cell.call(brush);
+            let brushes = [];
 
-            function plot(p) {
-                let cell = d3.select(this);
-
-                x.domain(domainByTrait[p.x]);
-                y.domain(domainByTrait[p.y]);
-
-                cell.append("rect")
-                    .attr("class", "frame")
-                    .attr("x", padding / 2)
-                    .attr("y", padding / 2)
-                    .attr("width", size - padding)
-                    .attr("height", size - padding);
-
-                cell.selectAll("circle")
-                    .data(data)
-                    .enter().append("circle")
-                    .attr("cx", function (d) { //console.log(d);
-                        return x(d[p.x]);
-                    })
-                    .attr("cy", function (d) {
-                        return y(d[p.y]);
-                    })
-                    .attr("r", 2)
-                    .style("fill", function (d) {
-
-                        return colorScale(d[ztrait]);
-                    });
-            }
 
             let brushCell;
 
             // Clear the previously-active brush, if any.
             function brushstart(p) {
-                if (brushCell !== this) {
-                    d3.select(brushCell).call(brush.move, null);
-                    brushCell = this;
+                //if (brushCell !== this) {
+                //    d3.select(brushCell).call(brush.move, null);
+               //     brushCell = this;
                     x.domain(domainByTrait[p.x]);
                     y.domain(domainByTrait[p.y]);
-                }
+                //}
             }
 
             // Highlight the selected circles.
             function brushmove(p) {
                 let e = d3.brushSelection(this);
+                /*
                 svg.selectAll("circle").classed("hidden", function (d) {
                     return !e
                         ? false
@@ -608,12 +649,44 @@ export class Selected{
                             || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
                         );
                 });
+
+                */
+
+                if (brushes.length!=0) {
+                    //console.log('visible',svg.selectAll('#visible'))
+                    svg.selectAll("#visible").classed("hidden", function (d) {
+                        return !e
+                            ? false
+                            : (
+                                e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                            );
+                    });
+                }
+                else{
+                    svg.selectAll("circle").classed("hidden", function (d) {
+                        return !e
+                            ? false
+                            : (
+                                e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                            );
+                    });
+                }
+
+
             }
 
             // If the brush is empty, select all circles.
             function brushend() {
                 let e = d3.brushSelection(this);
-                if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+                brushes.push(e);
+                //console.log(brushes);
+                //console.log('hidden',svg.selectAll('.hidden'));
+                svg.selectAll("#visible").attr("id",null);
+                svg.selectAll(".hidden").attr("id", "visible");//"visible");
+                if (e === null) {svg.selectAll(".hidden").classed("hidden", false);
+                brushes = [];};
             }
 
             }
@@ -670,7 +743,7 @@ export class Selected{
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
-                xAxis.tickSize(size * n);
+                xAxis.tickSize(size *n);
                 yAxis.tickSize(-size * n);
 
 
@@ -715,7 +788,7 @@ export class Selected{
                     .each(plot);
 
                 cell.append("text")
-                    .attr("x", padding/2)
+                    .attr("x", -padding)
                     .attr("y", 0)
                     .attr("dy", ".71em")
                     .text(function (d) {
@@ -723,6 +796,13 @@ export class Selected{
                     })
                     .attr("font-size", 2*textsize+"px");
 
+                cell.append("text")
+                    .attr("x", width-2*padding)
+                    .attr("y", size)
+                    //.attr("dy", ".71em")
+                    .text(ztrait)
+
+                    .attr("font-size", 2*textsize+"px");
 
                 function plot(p) {
                     let cell = d3.select(this);
@@ -734,7 +814,6 @@ export class Selected{
                         .attr("class", "frame")
                         .attr("x", padding / 2)
                         .attr("y", padding / 2)
-                        // Titles for the diagonal.
                         .attr("width", width - padding)
                         .attr("height", size - padding);
                     //console.log(data);
@@ -760,17 +839,8 @@ export class Selected{
                     .on("end", brushend)
                     .extent([[0, 0], [width, size]]);
 
-                let gBrushes = svg.append('g')
-                    .attr("class", "brushes");
-
                 let brushes = [];
 
-                //cell.each(newBrush);//();
-
-                //cell.each(drawBrushes);//();
-
-                //cell.call(newBrush);//(cell);
-                //drawBrushes(cell);
                 let brushCell;
                 /*
                 function newBrush(p) {
@@ -917,7 +987,9 @@ export class Selected{
                     svg.selectAll("#visible").attr("id",null);
                     svg.selectAll(".hidden").attr("id", "visible");//"visible");
                     //console.log("visible",svg.selectAll("#visible"));
-                    //if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+                    if (e === null) {svg.selectAll(".hidden").classed("hidden", false)
+                    brushes = [];
+                    };
                 }
 
                 //let mySelection;
@@ -1363,7 +1435,18 @@ export class Selected{
     }
 }
 export function cross(a, b) {
-    var c = [], n = a.length, m = b.length, i, j;
+    let c = [], n = a.length, m = b.length, i, j;
     for (i = -1; ++i < n;) for (j = -1; ++j < m;) c.push({x: a[i], i: i, y: b[j], j: j});
+    return c;
+}
+
+export function halfcross(a, b) {
+    let c = [], n = a.length, m = b.length, i, j;
+    for (i = -1; ++i < n;)
+        for (j = i; ++j < m;)
+            {//console.log("i",i,"j",j);
+                c.push({x: a[i], i: i, y: b[j], j: j});
+            }
+            //console.log(c);
     return c;
 }
