@@ -12,14 +12,10 @@ export class pBar{
        for(let p in plist) {
 
            p = parseInt(p);
-           //console.log(p);
            psize.push([plist[p], data[plist[p]].length]);
            if (parseInt(p) + 1 <= plist.length - 1)
 
-           {   //console.log(p+1);
-               //console.log(plist);
-               //console.log(plist[p+1]);
-           //console.log(data[plist[p + 1]]);
+           {
            psize.push([plist[p + 1], data[plist[p]].length]);
            }
        }
@@ -265,8 +261,7 @@ export class pBar{
 
    }
    updateBar(clevel,slevel){
-        //clevel = ctree.pInter;
-        //console.log(this.dataset);
+
         let cx = this.xScale(clevel);
         let cy;
         for(let i = 0;i<this.dataset.length;i++){
@@ -274,7 +269,6 @@ export class pBar{
                 cy = this.yScale(this.dataset[i][1]);
             }
         }
-        //let t = d3.transition().duration(100);
         d3.select(".ppbar")//.data([cx])
             .attr("x", cx+this.padding-2)
             .attr("y", cy+this.margin.top-2)

@@ -14,10 +14,8 @@ export class TreeLevel {
         d3.select("#treelevel").append("rect").attr("class", "bar");
         d3.select("#treelevel").append("text").attr("class", "levellabel");
 
-        //.range([this.svgBounds.height - this.xAxisWidth, 0]).nice();
-        //console.log(this.svgBounds.height - this.xAxisWidth);
-        this.Level = document.getElementById('level').value;
-        this.Scale = document.getElementById('scale').value;
+        this.Level = "tLevel";
+        this.Scale = "linear";
 
     }
     
@@ -33,26 +31,9 @@ export class TreeLevel {
             let clevel;
             switch (this.Level) {
                 case "tLevel": {
-                    // Define Scale Function
-                    //if (ctree.pShow != undefined)
-                    //this.yScale.domain([parseInt(getKeyByValue(ctree.pers, ctree.pShow))+1, 0]);
-                    //else {
-                    //if (getKeyByValue(ctree.pers, ctree.pInter) != undefined)
-                    //this.yScale.domain([getKeyByValue(ctree.pers, ctree.pInter), 0]);
-                    //else {
-                    //for (let i = 0; i < ctree.pers.length; i++) {
-                    //if (ctree.pInter > ctree.pers[i]) {
+
                     this.yScale.domain([ctree._maxlevel, 0]);
-                    //clevel = i;
-                    //console.log(clevel);
-                    //break;
-                    //}
-                    //}
-
-                    //}
-                    //}
-
-                    //}
+                    console.log(ctree._maxlevel);
                     // Draw Axis
 
                     let yAxis = d3.axisLeft()
@@ -84,7 +65,7 @@ export class TreeLevel {
                     break;
                 }
                 case "pLevel": {
-                    //console.log(this.Scale);
+
                     switch (this.Scale){
                         case "linear":{
                     // Define Scale Function
@@ -137,9 +118,10 @@ export class TreeLevel {
                             t.select("#treelevel")
                                 .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
                                 .call(yAxis);
-
                             //Draw Current Level
                             clevel = ctree.pInter;
+                            //console.log(clevel);
+
                             let cy = this.yScale2(clevel);
 
                             t.select(".bar")//.data([clevel])
@@ -169,8 +151,6 @@ export class TreeLevel {
     }
 
     switchLevel() {
-        this.Level = document.getElementById('level').value;
-        this.Scale = document.getElementById('scale').value;
 
         switch (this.Level) {
             case "tLevel": {

@@ -17,6 +17,8 @@ export class Selected{
         this._barWidth = width/20;
         this._textsize = height/20;
         this._stored = [];
+        this._selected = [];
+        this._brushes = [];
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
 
@@ -34,14 +36,19 @@ export class Selected{
         this._attr = attr;
         //d3.select("#hdPlot");
     }
+    // Reconstruct the plot info
+    reconstruct(){
+
+
+    }
     // Update divs based on input data
     updatediv(inputnode){
 
         let selected;
-        if(inputnode===undefined){
+        if(inputnode === undefined){
             selected = this._stored;
         }
-        else if(inputnode.length!=undefined)
+        else if(inputnode.length != undefined)
             selected = inputnode;
         else
         {
@@ -434,7 +441,7 @@ export class Selected{
     }}
 
     scatterMat(){
-        d3.selectAll('#plottip').remove();
+        //d3.selectAll('#plottip').remove();
 
         for(let i = 0;i<this._totaldata.length;i++) {
             let data = this._totaldata[i];
@@ -526,7 +533,7 @@ export class Selected{
                     d3.select(this).call(yAxis);
                 });
 
-            var cell = svg.selectAll(".cell")
+            let cell = svg.selectAll(".cell")
                 .data(cross(traits, traits))
                 .enter().append("g")
                 .attr("class", "cell")
@@ -550,10 +557,8 @@ export class Selected{
             cell.call(brush);
 
             function plot(p) {
-                var cell = d3.select(this);
-                //console.log(p);
-                //console.log(domainByTrait[p.x]);
-                //console.log(domainByTrait[p.y]);
+                let cell = d3.select(this);
+
                 x.domain(domainByTrait[p.x]);
                 y.domain(domainByTrait[p.y]);
 
@@ -580,7 +585,7 @@ export class Selected{
                     });
             }
 
-            var brushCell;
+            let brushCell;
 
             // Clear the previously-active brush, if any.
             function brushstart(p) {
@@ -594,7 +599,7 @@ export class Selected{
 
             // Highlight the selected circles.
             function brushmove(p) {
-                var e = d3.brushSelection(this);
+                let e = d3.brushSelection(this);
                 svg.selectAll("circle").classed("hidden", function (d) {
                     return !e
                         ? false
@@ -607,139 +612,17 @@ export class Selected{
 
             // If the brush is empty, select all circles.
             function brushend() {
-                var e = d3.brushSelection(this);
+                let e = d3.brushSelection(this);
                 if (e === null) svg.selectAll(".hidden").classed("hidden", false);
             }
 
-            /*
-            for (let i = 0; i < datacol; i++) {
-                for (let i_2 = i + 1; i_2 < datacol; i_2++) {
-                    if(attr[i] != this._y_attr && attr[i_2] != this._y_attr){
-                        let curData = [];
-                        for (let j = 0; j < datarow; j++) {
-                            let curPoint = {};
-                            curPoint.x = parseFloat(data[j][attr[i]]);
-                            curPoint.y = parseFloat(data[j][attr[i_2]]);
-                            curPoint.z = parseFloat(data[j][this._y_attr]);
-                            curData.push(curPoint);
-                        }
-
-                        let x_minVal = d3.min(curData, function (d) {
-                            return d.x;
-                        });
-                        let x_maxVal = d3.max(curData, function (d) {
-                            return d.x;
-                        });
-                        let y_minVal = d3.min(curData, function (d) {
-                            return d.y;
-                        });
-                        let y_maxVal = d3.max(curData, function (d) {
-                            return d.y;
-                        });
-                        let z_minVal = d3.min(curData, function (d) {
-                            return d.z;
-                        });
-                        let z_maxVal = d3.max(curData, function (d) {
-                            return d.z;
-                        });
-
-
-                        let x = d3.scaleLinear()
-                            .domain([x_minVal, x_maxVal])
-                            //.range([0, width])
-                            .range([0, width - margin.left - margin.right])
-                            .nice();
-                        let y = d3.scaleLinear()
-                            .domain([y_minVal, y_maxVal])
-                            //.range([0, height])
-                            .range([height - margin.top - margin.bottom, 0])
-                            .nice();
-
-                        let colorScale = d3.scaleLinear()
-                            .range(['blue', 'red'])
-                            .domain([z_minVal, z_maxVal]);
-
-                        let svg = newplot.append("svg")
-                            .attr("height", height)
-                            .attr("width", width);
-                        let g = svg
-                            .append('g')
-                            .attr('id', "pairwisePlot" + i);
-
-                        g.selectAll("circle")
-                            .data(curData)
-                            .enter()
-                            .append("circle")
-                            .attr("r",2)
-                            .attr("cx", function (d) {
-                                return x(d.x);
-                            })
-                            .attr("cy", function (d) {
-                                return y(d.y);
-                            })
-                            .attr("transform", "translate(" + [margin.left, margin.top] + ")")
-                            .attr('fill', function (d) {
-                                return colorScale(d.z);
-                            }).attr("class", "scattercolor");
-
-                        let tip = d3Tip().attr('class', 'd3-tip').attr('id','plottip')
-                            .direction('se')
-                            .offset(function() {
-                                return [0,0];
-                            })
-                            .html((d,ind)=>{
-                                return this.tooltip_render(d,ind);
-
-                            });
-
-                        g.selectAll("circle").call(tip)
-                            .on('mouseover', tip.show)
-                            .on('mouseout', tip.hide);
-
-                        g
-                            .append('g')
-                            .attr('id', "xAxis" + i)
-                            .call( d3.axisBottom(x).scale(x))
-                            .attr("font-size", textsize+"px")
-                            //.attr("transform", "translate(" + [0, height] + ")");//.attr("class","label");;
-                            .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
-
-                        g
-                            .append('g')
-                            .attr('id', "yAxis" + i)
-                            .call(d3.axisLeft(y).scale(y))//;
-                            .attr("font-size", textsize+"px")
-                            .attr("transform", "translate(" + [margin.left, margin.top] + ")");
-
-
-                        svg
-                            .append("text")
-                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                            .attr("font-size", textsize+"px")
-                            //.attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
-                            .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
-                            .text(attr[i]);
-                        svg
-                            .append("text")
-                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                            .attr("font-size", textsize+"px")
-                            //.attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
-                            .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
-                            .text(attr[i_2]);
-                    }
-
-
-
-                }
-            }
-            */
             }
         }
 
     }
 
     multiscatter(){
-        d3.selectAll('#plottip').remove();
+        //d3.selectAll('#plottip').remove();
 
         for(let i = 0;i<this._totaldata.length;i++) {
             let data = this._totaldata[i];
@@ -791,11 +674,7 @@ export class Selected{
                 yAxis.tickSize(-size * n);
 
 
-                let brush = myBrush()//d3.brush()
-                    .on("start", brushstart)
-                    .on("brush", brushmove)
-                    .on("end", brushend)
-                    .extent([[0, 0], [width, size]]);
+
 
                 // Size of SVG declared here
 
@@ -804,8 +683,6 @@ export class Selected{
                     .attr("height", size * n + padding)
                     .append("g")
                     .attr("transform", "translate(" + padding + "," + padding  + ")");
-
-
 
                 x.domain(rangeByTrait);
                 svg.selectAll(".x.axis")
@@ -827,6 +704,7 @@ export class Selected{
                         y.domain(domainByTrait[d]);
                         d3.select(this).call(yAxis);
                     });
+
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
@@ -845,26 +723,10 @@ export class Selected{
                     })
                     .attr("font-size", 2*textsize+"px");
 
-                /*
-                cell.filter(function (d) {
-                    return d.i === d.j;
-                }).append("text")
-                    .attr("x", padding)
-                    .attr("y", padding)
-                    .attr("dy", ".71em")
-                    .text(function (d) {
-                        return d.x;
-                    })
-                    .attr("font-size", 2*textsize+"px");
-                */
-                cell.call(brush);
-                //console.log(d3.);
+
                 function plot(p) {
-                    //console.log(p);
-                    var cell = d3.select(this);
-                    //console.log(p);
-                    //console.log(domainByTrait[p.x]);
-                    //console.log(domainByTrait[p.y]);
+                    let cell = d3.select(this);
+
                     x.domain(rangeByTrait);
                     y.domain(domainByTrait[p]);
 
@@ -892,40 +754,332 @@ export class Selected{
                         });
                 }
 
-                var brushCell;
+                let brush = myBrush()
+                    .on("start", brushstart)
+                    .on("brush", brushmove)
+                    .on("end", brushend)
+                    .extent([[0, 0], [width, size]]);
+
+                let gBrushes = svg.append('g')
+                    .attr("class", "brushes");
+
+                let brushes = [];
+
+                //cell.each(newBrush);//();
+
+                //cell.each(drawBrushes);//();
+
+                //cell.call(newBrush);//(cell);
+                //drawBrushes(cell);
+                let brushCell;
+                /*
+                function newBrush(p) {
+                    console.log(p);
+                    let brush = myBrush()
+                        .on("start", brushstart)
+                        .on("brush", brushed)
+                        .on("end", brushend)
+                        .extent([[0, 0], [width, size]]);
+
+                    //if(p===undefined)
+                        brushes.push({id: brushes.length, brush: brush});
+                    //else
+                        //p.call(brush);
+                    //brushes.push({id: brushes.length, brush: brush});
+
+                    function brushstart(p) {
+                        //console.log(this);
+                        // your stuff here
+                        //console.log(p);
+                        //if (brushCell !== this) {
+                            //d3.select(brushCell).call(brush.move, null);
+                            //brushCell = this;
+                            x.domain(rangeByTrait);
+                            y.domain(domainByTrait[p]);
+                        //}
+                    };
+
+                    function brushed() {
+                        // your stuff here
+                    }
+
+                    function brushend() {
+
+                        // Figure out if our latest brush has a selection
+                        let lastBrushID = brushes[brushes.length - 1].id;
+                        let lastBrush = document.getElementById('brush-' + lastBrushID);
+                        let selection = d3.brushSelection(lastBrush);
+
+                        // If it does, that means we need another one
+
+                        if (selection && selection[0] !== selection[1]) {
+                            //newBrush();
+                            p.call(newBrush);
+                            //console.log(brushes);
+                        }
+
+                        // Always draw brushes
+                        drawBrushes(p);
+                    }
+
+                }
+
+                function drawBrushes(p) {
+
+                    let brushSelection = gBrushes
+                        .selectAll('.brush')
+                        .data(brushes, function (d){return d.id});
+
+                    // Set up new brushes
+                    brushSelection.enter()
+                        .insert("g", '.brush')
+                        .attr('class', 'brush')
+                        .attr('id', function(brush){ return "brush-" + brush.id; })
+                        .each(function(brushObject) {
+                            //call the brush
+                            brushObject.brush(d3.select(this));
+                        });
+
+
+                    brushSelection
+                        .each(function (brushObject){
+                            d3.select(this)
+                                .attr('class', 'brush')
+                                .selectAll('.overlay')
+                                .style('pointer-events', function() {
+                                    let brush = brushObject.brush;
+                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
+                                        return 'all';
+                                    } else {
+                                        return 'none';
+                                    }
+                                });
+                        })
+
+                    brushSelection.exit()
+                        .remove();
+                }
+                */
+                cell.call(brush,brushes);
+
+                //let brushCell;
 
                 // Clear the previously-active brush, if any.
+
                 function brushstart(p) {
-                    //console.log("Brush Start!");
-                    if (brushCell !== this) {
-                        d3.select(brushCell).call(brush.move, null);
-                        brushCell = this;
+                    //console.log(brushes);
+                    //console.log("Staret");
+                    //brushCell = this;
+                    //if (brushCell != this) {
+                        //d3.select(brushCell).call(brush.move, null);
+                        //brushCell = this;//
                         x.domain(rangeByTrait);
                         y.domain(domainByTrait[p]);
-
-                    }
+                    //}
                 }
 
                 // Highlight the selected circles.
                 function brushmove(p) {
-                    //console.log("Brush Move!")
-                    var e = d3.brushSelection(this);
-                    svg.selectAll("circle").classed("hidden", function (d) {
-                        return !e
-                            ? false
-                            : (
-                                e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
-                                || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
-                            );
-                    });
+                    //console.log(p);
+                    let e = d3.brushSelection(this);
+
+                    if (brushes.length!=0) {
+                        //console.log('visible',svg.selectAll('#visible'))
+                        svg.selectAll("#visible").classed("hidden", function (d) {
+                            return !e
+                                ? false
+                                : (
+                                    e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
+                                    || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
+                                );
+                        });
+                    }
+                    else{
+                        svg.selectAll("circle").classed("hidden", function (d) {
+                            return !e
+                                ? false
+                                : (
+                                    e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
+                                    || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
+                                );
+                        });
+                    }
                 }
 
                 // If the brush is empty, select all circles.
-                function brushend() {
-                    var e = d3.brushSelection(this);
-                    if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+                function brushend(p) {
+                    let e = d3.brushSelection(this);
+                    //console.log(p);
+                    //console.log(e);
+                    brushes.push(e);
+                    //console.log(brushes);
+                    //console.log('hidden',svg.selectAll('.hidden'));
+                    svg.selectAll("#visible").attr("id",null);
+                    svg.selectAll(".hidden").attr("id", "visible");//"visible");
+                    //console.log("visible",svg.selectAll("#visible"));
+                    //if (e === null) svg.selectAll(".hidden").classed("hidden", false);
                 }
 
+                //let mySelection;
+                /*
+                cell.call(newBrush);
+                let brushes;
+
+                function newBrush() {
+                    console.log("new brush");
+                    let brush = myBrush()
+                        .extent([[0, 0], [width, size]])
+                        .on("start", brushstart)
+                        .on("brush", brushed)
+                        .on("end", brushend);
+
+                    //brushes.push({id: brushes.length, brush: brush});
+
+                    function brushstart() {
+                        // Brush start here
+                    };
+
+                    function brushed() {
+                        let selection = d3.event.selection.map(i => xScale.invert(i));
+                        mySelections[this.id] = {start: selection[0], end: selection[1]};
+                        // console.log("Selections are: ", mySelections);
+                    }
+
+                    function brushend() {
+                        // Figure out if our latest brush has a selection
+                        var lastBrushID = brushes[brushes.length - 1].id;
+                        var lastBrush = document.getElementById('brush-' + lastBrushID);
+                        var selection = d3.brushSelection(lastBrush);
+
+                        // If it does, that means we need another one
+                        if (brushes.length < brushCount && selection && selection[0] !== selection[1]) {
+                            newBrush();
+                        }
+
+                        // Always draw brushes
+                        drawBrushes();
+                    }
+
+                    var brushSelection = gBrushes
+                        .selectAll('.brush')
+                        .data(brushes, function (d){return d.id});
+
+                    // console.log("Brush selection:", brushSelection);
+
+                    // Set up new brushes
+                    brushSelection.enter()
+                        .insert("g", '.brush')
+                        .attr('class', 'brush')
+                        .attr('id', function(brush){ return "brush-" + brush.id; })
+                        .each(function(brushObject) {
+                            // call the brush
+                            brushObject.brush(d3.select(this));
+                        });
+
+                    brushSelection
+                        .each(function (brushObject){
+                            d3.select(this)
+                                .attr('class', 'brush')
+                                .selectAll('.overlay')
+                                .style('pointer-events', function() {
+                                    var brush = brushObject.brush;
+                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
+                                        return 'all';
+                                    } else {
+                                        return 'none';
+                                    }
+                                });
+                        })
+
+                    brushSelection.exit()
+                        .remove();
+
+                }
+                */
+/*                let gBrushes = svg.append('g')
+                    .attr("height", height)
+                    .attr("width", size)
+                    .attr("fill", "none")
+                    //.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .attr("class", "brushes");
+
+                let brushes = [];
+                //console.log(cell);
+                newBrush(brushes,gBrushes,cell,x,y,mySelection);
+                drawBrushes(brushes,gBrushes);
+
+                function newBrush(brushes,gBrushes,cell,x,y,mySelection) {
+                    // console.log("new brush");
+                    let brush = myBrush()
+                        .extent([[0, 0], [width, size]])
+                        .on("start", brushstart)
+                        .on("brush", brushed)
+                        .on("end", brushend);
+                    cell.call(brush);
+                    brushes.push({id: brushes.length, brush: brush});
+
+                    function brushstart() {
+                        // Brush start here
+                    };
+
+                    function brushed(mySelection) {
+                        let selection = d3.event.selection.map(i => x.invert(i));
+                        mySelections[this.id] = {start: selection[0], end: selection[1]};
+                        // console.log("Selections are: ", mySelections);
+                    }
+
+                    function brushend(brushes,gBrushes,cell,x,y) {
+                        // Figure out if our latest brush has a selection
+                        var lastBrushID = brushes[brushes.length - 1].id;
+                        var lastBrush = document.getElementById('brush-' + lastBrushID);
+                        var selection = d3.brushSelection(lastBrush);
+
+                        // If it does, that means we need another one
+                        if (brushes.length < brushCount && selection && selection[0] !== selection[1]) {
+                            newBrush(brushes,gBrushes,cell,x,y);
+                        }
+
+                        // Always draw brushes
+                        drawBrushes(brushes,gBrushes);
+                    }
+                }
+
+                function drawBrushes(brushes,gBrushes) {
+
+                    var brushSelection = gBrushes
+                        .selectAll('.brush')
+                        .data(brushes, function (d){return d.id});
+
+
+                    // Set up new brushes
+                    brushSelection.enter()
+                        .insert("g", '.brush')
+                        .attr('class', 'brush')
+                        .attr('id', function(brush){ return "brush-" + brush.id; })
+                        .each(function(brushObject) {
+                            // call the brush
+                            brushObject.brush(d3.select(this));
+                        });
+
+                    brushSelection
+                        .each(function (brushObject){
+                            d3.select(this)
+                                .attr('class', 'brush')
+                                .selectAll('.overlay')
+                                .style('pointer-events', function() {
+                                    var brush = brushObject.brush;
+                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
+                                        return 'all';
+                                    } else {
+                                        return 'none';
+                                    }
+                                });
+                        })
+
+                    brushSelection.exit()
+                        .remove();
+                }
+*/
                 svg.append("text")
                     .attr("x", width-3*padding)
                     .attr("y", 0)
@@ -1198,6 +1352,14 @@ export class Selected{
 
     getdata(){
         return this._stored;
+    }
+
+    highlight(){
+        this._selected = [];
+        d3.select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
+            this._selected.push(d);
+        });
+        return this._selected;
     }
 }
 export function cross(a, b) {
