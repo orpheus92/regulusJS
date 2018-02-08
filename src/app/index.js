@@ -45,21 +45,24 @@ function load(){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-
         d3.json('../data/P_Partition.json', function (error, data) {
             if (error) throw error;
             //will be updated later
 
-
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
                     console.log(rawdata);
-
+                    let yattr = document.getElementById('y_attr').value;
+                    let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
-                    let plots = new Selected(rawdata, 300, 100);
-                    // Load data in JS
+                    // Plot SIZE
+                    let width = 300;
+                    let height = 100;
                     pInter = 0.2;
                     sizeInter = 20;
+                    let plots = new Selected(rawdata, width, height, yattr, plottype);
+                    // Load data in JS
+
 
                     // Data View Constructor
                     loaddata = new Info();
@@ -182,9 +185,9 @@ function load(){
                         tree.layout();
                         tree.render();});
 
-                    d3.select("#dataset").on('change',()=>{plots.updateplot()});//printPlots();});
+                    d3.select("#plottype").on('change',()=>{plots.updateplot(document.getElementById('plottype').value)});//printPlots();});
 
-                    d3.select("#y_attr").on('change',()=>{plots.updateattr()});//updateAttribute();});
+                    d3.select("#y_attr").on('change',()=>{plots.updateattr(document.getElementById('y_attr').value)});//updateAttribute();});
 
                     d3.selectAll(".wb-button").on('click',()=>{
                         let option = pb.mycb();

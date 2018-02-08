@@ -6,19 +6,20 @@ import {myBrush} from '../customd3';
 //console.log('.');
 export class Selected{
     // Assign a parentnode for all divs
-    constructor(data, width, height){
+    constructor(data, width, height, yattr,plottype){
         this._rawdata = data;
         this._data = data;
         this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
         this._width = width;
         this._height = height;
         this._plot = d3.select("#hdPlot");
-        this._y_attr = document.getElementById('y_attr').value;
+        this._y_attr = yattr;
         this._barWidth = width/20;
         this._textsize = height/20;
         this._stored = [];
         this._selected = [];
         this._brushes = [];
+        this._plottype = plottype;
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
 
@@ -100,9 +101,16 @@ export class Selected{
     }
     // Update all the plots based on plot selection
     updateplot(option){
+        //console.log(option);
+        let plottype;
+
+        if (option != undefined)
+            this._plottype = option;
+
+        plottype = this._plottype;
         this.removediv();
-        let dataFile = document.getElementById('dataset').value;
-        switch (dataFile) {
+        //let dataFile = option;//document.getElementById('dataset').value;
+        switch (plottype) {
             case "Coordinate": {
                 //this.clearPlots();
                 this.rawDataPlot(option);
@@ -141,8 +149,8 @@ export class Selected{
         }
     }
     // Update all the plots based on attr selection
-    updateattr(){
-        this._y_attr = document.getElementById('y_attr').value;
+    updateattr(yattr){
+        this._y_attr = yattr;
         this.updateplot();
     }
     //pairwisePlot
