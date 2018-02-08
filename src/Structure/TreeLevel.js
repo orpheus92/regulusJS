@@ -33,9 +33,7 @@ export class TreeLevel {
                 case "tLevel": {
 
                     this.yScale.domain([ctree._maxlevel, 0]);
-                    console.log(ctree._maxlevel);
                     // Draw Axis
-
                     let yAxis = d3.axisLeft()
                         .scale(this.yScale);
                     t.select("#treelevel")

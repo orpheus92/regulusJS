@@ -146,9 +146,10 @@ export class pBar{
 
        //console.log(this.basedata)
        //console.log(Object.keys(this.basedata).length);
-       let maxsize = parseInt(this.totalsize/100);
+       let maxsize = parseInt(this.totalsize/50);
 
        //let plist = this.basedata;
+       //console.log(maxsize);
        let psize = new Array(maxsize);
        psize.fill(0);
        for(let key in this.basedata){
@@ -170,7 +171,10 @@ export class pBar{
            .range([0, this.width-this.padding]); // output
 
 // 6. Y scale will use the randomly generate number
-       //console.log(plist[plist.length-1]);
+
+       //console.log(this.basedata);
+       //console.log(psize);
+       //console.log([psize[maxsize-1],psize[0]])
        this.yScale2 = d3.scaleLinear()
            .domain([psize[maxsize-1],psize[0]]) // input
            .range([this.height-this.padding, 0]); // output
@@ -277,8 +281,20 @@ export class pBar{
             .attr("class", "ppbar")
             .attr("fill","blue");
         //console.log(slevel);
-       let cx2 = this.xScale2(slevel);
-       let cy2 = this.yScale2(this.dataset2[slevel]);
+       let cx2;
+       if(slevel<this.dataset2.length)
+           cx2 = this.xScale2(slevel);
+       else
+           cx2 = this.xScale2(this.dataset2.length-1);
+
+       // Set a cap for Size Filter Chart
+       //console.log(slevel)
+       let cy2;
+       if(slevel<this.dataset2.length)
+           cy2 = this.yScale2(this.dataset2[slevel]);
+       else
+           cy2 = this.yScale2(this.dataset2[this.dataset2.length-1]);
+
        /*
        for(let i = 0;i<this.dataset.length;i++){
            if(clevel<=this.dataset[i][0]){

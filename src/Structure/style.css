@@ -40,6 +40,11 @@
 
 }
 
+#selected{
+  stroke-width: 2px;
+  stroke: purple;
+}
+
 .node:hover {
   /*fill: blue;*/
   stroke: blue;

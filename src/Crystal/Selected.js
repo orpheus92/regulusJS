@@ -18,7 +18,8 @@ export class Selected{
         this._textsize = height/20;
         this._stored = [];
         this._selected = [];
-        this._brushes = [];
+        //this._brushes = [];
+        this._brushNum = {"index":0};
         this._plottype = plottype;
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
@@ -451,11 +452,11 @@ export class Selected{
     scatterMat(){
         //d3.selectAll('#plottip').remove();
 
-        for(let i = 0;i<this._totaldata.length;i++) {
-            let data = this._totaldata[i];
+        for(let iii = 0;iii<this._totaldata.length;iii++) {
+            let data = this._totaldata[iii];
             let margin = this._margin;
             let height = this._height;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
             //load data as array
@@ -521,8 +522,7 @@ export class Selected{
                 .attr("class", "x axis")
                 .attr("font-size", textsize+"px")
                 .attr("transform", function (d) {
-                    //console.log(d, ( d.i ) * (size+padding),(d.j-1) * (size+padding));
-                    //return "translate(" + (n - i - 1) * halfcross(traits, traits) + ",0)";
+
                     return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
                 })
                 .each(function (d) {
@@ -546,6 +546,22 @@ export class Selected{
                     d3.select(this).call(yAxis);
                 });
 
+// Attach index to each data;
+                let p_arr = Array.from(this._stored[this._brushNum].data._total);
+                /*
+                data.map((obj,i) => {
+                    //console.log(obj,i);
+                    obj.index = p_arr[i];
+                    return obj;
+                });
+                */
+                let dataind = [];
+                //console.log(data);
+                data.forEach((obj,i) => {
+
+                    dataind[i]=Object.assign({},obj);
+                    dataind[i].index = p_arr[i];
+                });
             let cell = svg.selectAll(".cell")
                 .data(halfcross(traits, traits))
                 .enter().append("g")
@@ -555,6 +571,8 @@ export class Selected{
                     return "translate(" + ( d.i ) * (size+padding) + "," + (d.j-1) * (size+padding) + ")";
                 })
                 .each(plot);
+
+
 
                 function plot(p) {
                     let cell = d3.select(this);
@@ -571,7 +589,7 @@ export class Selected{
 
 
                     cell.selectAll("circle")
-                        .data(data)
+                        .data(dataind)
                         .enter().append("circle")
                         .attr("cx", function (d) { //console.log(d);
                             return x(d[p.x]);
@@ -696,8 +714,14 @@ export class Selected{
                 if (e === null) {svg.selectAll(".hidden").classed("hidden", false);
                 brushes = [];};
             }
-
+                svg.append("text")
+                    .attr("x", size*n-3*padding)
+                    .attr("y", 0)
+                    .attr("dy", ".71em")
+                    .text("Node"+iii)
+                    .attr("font-size", 2*textsize+"px");
             }
+
         }
 
     }
@@ -705,12 +729,14 @@ export class Selected{
     multiscatter(){
         //d3.selectAll('#plottip').remove();
 
-        for(let i = 0;i<this._totaldata.length;i++) {
-            let data = this._totaldata[i];
+        for(let iii = 0;iii<this._totaldata.length;iii++) {
+            let data = this._totaldata[iii];
+            //console.log(data);
+            //console.log(this);
             let margin = this._margin;
             let height = this._height;
             let width = this._width;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
             {
@@ -786,6 +812,17 @@ export class Selected{
                         d3.select(this).call(yAxis);
                     });
 
+                // Attach Index Info to each point in the partition
+                // Will be fixed later for multiple plot case
+                let p_arr = Array.from(this._stored[0].data._total);
+                let dataind = [];
+                //console.log(data);
+                data.forEach((obj,i) => {
+
+                    dataind[i]=Object.assign({},obj);
+                    dataind[i].index = p_arr[i];
+                });
+                //console.log(this);
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
@@ -812,6 +849,7 @@ export class Selected{
 
                     .attr("font-size", 2*textsize+"px");
 
+                //console.log(dataind);
                 function plot(p) {
                     let cell = d3.select(this);
 
@@ -826,7 +864,7 @@ export class Selected{
                         .attr("height", size - padding);
                     //console.log(data);
                     cell.selectAll("circle")
-                        .data(data)
+                        .data(dataind)
                         .enter().append("circle")
                         .attr("cx", function (d) { //console.log(d);
                             return x(d[ztrait]);
@@ -938,6 +976,7 @@ export class Selected{
                         .remove();
                 }
                 */
+                let brushind = this._brushNum;
                 cell.call(brush,brushes);
 
                 //let brushCell;
@@ -987,6 +1026,9 @@ export class Selected{
                 // If the brush is empty, select all circles.
                 function brushend(p) {
                     let e = d3.brushSelection(this);
+                    //console.log(p);
+                    brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    //console.log(brushind);
                     //console.log(p);
                     //console.log(e);
                     brushes.push(e);
@@ -1164,7 +1206,7 @@ export class Selected{
                     .attr("x", width-3*padding)
                     .attr("y", 0)
                     .attr("dy", ".71em")
-                    .text("Node"+i)
+                    .text("Node"+iii)
                     .attr("font-size", 2*textsize+"px");
             }
         }
@@ -1434,11 +1476,14 @@ export class Selected{
 
     highlight(){
         this._selected = [];
-        d3.select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
+        //console.log(this._brushNum.index);
+        d3.select("#div"+this._brushNum.index).select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
+            //console.log(d);
             this._selected.push(d);
         });
-        return this._selected;
+        return [this._selected, this._stored[this._brushNum.index]];
     }
+
 }
 export function cross(a, b) {
     let c = [], n = a.length, m = b.length, i, j;

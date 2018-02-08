@@ -444,6 +444,21 @@ export class Tree{
     updatefilter(filter){
         this._filter = filter;
     }
+    searchchildren(selectdata, selectnode){
+        //let size = [];
+        //console.log(selectdata);
+        //let checkset = new Set(selectdata);
+        //console.log(selectnode);
+        this._nodegroup.selectAll(".node").data(selectnode.descendants(), d=>{return d.id}).attr("id", d=>{
+            //console.log(d);
+            let intersection = new Set([...selectdata].filter(x => d.data._total.has(x)));
+
+            return (intersection.size>0)?"selected":null;
+
+        });
+
+    }
+
 }
 export function getbaselevelInd(node, accum) {
     let i;

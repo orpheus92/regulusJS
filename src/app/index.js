@@ -29,7 +29,11 @@ let loaddata;
 let cnode;
 let treelevel;
 let filterdata;
-d3.select('#LoadFile')
+let selectindex;
+let cur_node;
+let cur_selection;
+
+    d3.select('#LoadFile')
     .on('click', () =>  {
         //clear();
         load();
@@ -44,6 +48,14 @@ function load(){
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
+            d3.selectAll("#RangeAttr")
+                .append("option")
+                .attr("value", rawdata.columns[i])
+                .text(rawdata.columns[i]);
+            d3.selectAll("#CompAttr")
+                .append("option")
+                .attr("value", rawdata.columns[i])
+                .text(rawdata.columns[i]);
         }
         d3.json('../data/P_Partition.json', function (error, data) {
             if (error) throw error;
@@ -51,7 +63,7 @@ function load(){
 
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
-                    console.log(rawdata);
+                    //console.log(rawdata);
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -59,7 +71,7 @@ function load(){
                     let width = 300;
                     let height = 100;
                     pInter = 0.2;
-                    sizeInter = 20;
+                    sizeInter = 5;
                     let plots = new Selected(rawdata, width, height, yattr, plottype);
                     // Load data in JS
 
@@ -84,13 +96,7 @@ function load(){
                     // Filterindex will get updated later during interaction
 
                     // Range will result from user later.
-                    let range = [1,35];
-                    // Use attr specified by plot for now, will have its own attr later;
-                    let filterattr = document.getElementById('y_attr').value;
-                    let rfilter = new rangefilter();
-                    // Return set of index that will be used during update model to update _total, _size
-                    let filterindex = rfilter.updaterange(filterattr,range,rawdata);
-                    tree.updatefilter(filterindex);
+
                     // Everytime this gets updated, tree should get updated, plot should get updated
 
 
@@ -116,12 +122,14 @@ function load(){
 
                     //Separate clicking from double clicking
 
+
+
                     document.getElementById("tree").onmouseover = function(event) {
                         //console.log("sasasaas");
                         let totalnode = [];
                         d3.selectAll(".node")
                             .on("click", (nodeinfo)=>{
-                                console.log("node",nodeinfo);
+                                //console.log("node",nodeinfo);
                                 if (d3.event.ctrlKey)
                                 {
                                     plots.storedata(nodeinfo);
@@ -144,7 +152,7 @@ function load(){
                                         tree.mark(clicked);
                                         plots.updatediv();
                                         cnode = nodeinfo;
-                                        loaddata.select(cnode);
+                                        loaddata.select(cnode,document.getElementById('CompAttr').value );
                                         clicks = 0;             //after action performed, reset counter
 
                                     }, DELAY);
@@ -161,8 +169,8 @@ function load(){
                                 }
 
                             })
-                            .on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo);})
-                            .on("mouseout", ()=>{loaddata.select(cnode);
+                            .on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo,document.getElementById('CompAttr').value);})
+                            .on("mouseout", ()=>{loaddata.select(cnode,document.getElementById('CompAttr').value);
                             });
 
                     };
@@ -200,10 +208,62 @@ function load(){
                         // update data
                         loaddata.update(pInter,sizeInter);});
 
+                    d3.select("#SetRange").on('click',()=>{
+
+                        console.log('Clicked event');
+                        let filterattr = document.getElementById('RangeAttr').value;
+                        let min = document.getElementById("mymin").value;
+                        let max = document.getElementById("mymax").value;
+                        //console.log(filterattr, min, max)
+                        if (filterattr!=undefined&&min!=undefined&&max!=undefined&&min < max) {
+                            //console.log("Filter Set")
+                            let range = [min,max];//[1,35];
+                                // Use attr specified by plot for now, will have its own attr later;
+                            let rfilter = new rangefilter();
+                            // Return set of index that will be used during update model to update _total, _size
+                            let filterindex = rfilter.updaterange(filterattr, range, rawdata);
+                            tree.updatefilter(filterindex);
+                            tree.layout();
+                            tree.render();
+                        }
+
+
+                    });
+
+                    d3.select("#RemoveRange").on('click',()=>{
+                        console.log(plots);
+                            let filterindex = tree._root.data._totalinit;
+                            tree.updatefilter(filterindex);
+                            tree.layout();
+                            tree.render();
+
+                    });
+
+
                     d3.select('#BrushSelect')
                         .on('click', () =>  {
                             //clear();
-                            console.log(plots.highlight());
+                            [cur_selection,cur_node] = plots.highlight();
+
+                            selectindex = new Set(cur_selection.map(obj=>obj.index));
+                            console.log(cur_selection)
+
+
+                        });
+
+                    d3.select('#searchC')
+                        .on('click', () =>  {
+                            //clear();
+                            if(selectindex!= undefined)
+                            tree.searchchildren(selectindex, cur_node);
+                            else
+                            console.log("No Points Selected");
+                        });
+
+                    d3.select('#removeS')
+                        .on('click', () =>  {
+                            d3.selectAll("#selected").attr("id", null);
+
                         });
                 });
             });
@@ -212,6 +272,8 @@ function load(){
 
     });
 }
+
+
 
 function clear(){
     let myNode = document.getElementById("foo");
