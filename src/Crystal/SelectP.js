@@ -39,9 +39,7 @@ export class SelectP{
     }
     // Update divs based on input data
     updatediv(plot) {
-        console.log(plot);
         let selected = this._stored;
-
 
         this._totaldata = [];
         if(selected!=[])

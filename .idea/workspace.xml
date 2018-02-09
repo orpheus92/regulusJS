@@ -3,10 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/SelectP.js" afterPath="$PROJECT_DIR$/src/Crystal/SelectP.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/Selected.js" afterPath="$PROJECT_DIR$/src/Crystal/Selected.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/index.js" afterPath="$PROJECT_DIR$/src/Crystal/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.html" afterPath="$PROJECT_DIR$/src/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -83,11 +81,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="288" column="32" lean-forward="false" selection-start-line="288" selection-start-column="32" selection-end-line="288" selection-end-column="32" />
+            <state relative-caret-position="323">
+              <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
               <folding>
                 <element signature="e#357#387#0" expanded="true" />
                 <element signature="e#666#703#0" expanded="true" />
@@ -138,11 +136,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="1479" column="30" lean-forward="false" selection-start-line="1479" selection-start-column="30" selection-end-line="1479" selection-end-column="30" />
+            <state relative-caret-position="204">
+              <caret line="1027" column="0" lean-forward="false" selection-start-line="1027" selection-start-column="0" selection-end-line="1027" selection-end-column="0" />
               <folding>
                 <element signature="n#!!block;n#constructor#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#reconstruct#0;n#Selected#0" expanded="false" />
@@ -155,22 +153,13 @@
                 <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#scatterMat#0;n#Selected#0" expanded="false" />
                 <element signature="e#23724#24187#0" expanded="false" />
-                <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
                 <element signature="e#33418#36916#0" expanded="false" />
-                <element signature="e#37143#37579#0" expanded="false" />
-                <element signature="e#37670#38823#0" expanded="false" />
-                <element signature="e#37807#38332#0" expanded="false" />
-                <element signature="e#38357#38805#0" expanded="false" />
-                <element signature="e#39591#42733#0" expanded="false" />
-                <element signature="e#42734#46442#0" expanded="false" />
-                <element signature="e#46800#51864#0" expanded="false" />
-                <element signature="e#51931#56283#0" expanded="false" />
+                <element signature="e#39785#44849#0" expanded="false" />
+                <element signature="e#44916#49268#0" expanded="false" />
                 <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#removedata#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#getdata#0;n#Selected#0" expanded="false" />
-                <marker date="1518134010620" expanded="false" signature="43309:44925" ph="{...}" />
-                <marker date="1518134010620" expanded="false" signature="44207:44907" ph="{...}" />
-                <marker date="1518134010620" expanded="false" signature="44982:46439" ph="{...}" />
+                <element signature="n#!!block;n#highlight#0;n#Selected#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -179,18 +168,18 @@
       <file leaf-file-name="SelectP.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Crystal/SelectP.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-192">
-              <caret line="73" column="5" lean-forward="true" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
+            <state relative-caret-position="-72">
+              <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
                 <element signature="n#!!block;n#constructor#0;n#SelectP#0" expanded="false" />
-                <element signature="e#1561#2249#0" expanded="false" />
-                <element signature="e#2903#3906#0" expanded="false" />
+                <element signature="e#1533#2221#0" expanded="false" />
+                <element signature="e#2875#3878#0" expanded="false" />
                 <element signature="n#!!block;n#updateattr#0;n#SelectP#0" expanded="false" />
                 <element signature="n#!!block;n#tooltip_render#0;n#SelectP#0" expanded="false" />
                 <element signature="n#!!block;n#scatterMat#0;n#SelectP#0" expanded="false" />
                 <element signature="n#!!block;n#multiscatter#0;n#SelectP#0" expanded="false" />
-                <element signature="e#39111#42959#0" expanded="false" />
+                <element signature="e#39083#42931#0" expanded="false" />
                 <element signature="n#!!block;n#storedata#0;n#SelectP#0" expanded="false" />
                 <element signature="n#!!block;n#removedata#0;n#SelectP#0" expanded="false" />
                 <element signature="n#!!block;n#getdata#0;n#SelectP#0" expanded="false" />
@@ -230,10 +219,10 @@
       <find>updatediv</find>
       <find>_brushNum</find>
       <find>cur_node</find>
-      <find>remove</find>
-      <find>create</find>
       <find>div</find>
+      <find>create</find>
       <find>highlight</find>
+      <find>remove</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -267,9 +256,9 @@
         <option value="$PROJECT_DIR$/src/Structure/TreeLevel.js" />
         <option value="$PROJECT_DIR$/src/app/index.html" />
         <option value="$PROJECT_DIR$/src/Crystal/index.js" />
-        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
-        <option value="$PROJECT_DIR$/src/Crystal/SelectP.js" />
         <option value="$PROJECT_DIR$/src/app/index.js" />
+        <option value="$PROJECT_DIR$/src/Crystal/SelectP.js" />
+        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
       </list>
     </option>
   </component>
@@ -291,9 +280,8 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-39" />
-    <option name="y" value="-17" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="36" />
     <option name="width" value="1554" />
     <option name="height" value="860" />
   </component>
@@ -432,12 +420,12 @@
       <workItem from="1517810384601" duration="3174000" />
       <workItem from="1517854775159" duration="5000" />
       <workItem from="1517864488085" duration="2802000" />
-      <workItem from="1517896086468" duration="113999000" />
+      <workItem from="1517896086468" duration="115617000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="256177000" />
+    <option name="totallyTimeSpent" value="257795000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -449,7 +437,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1618" height="868" extended-state="6" />
+    <frame x="-9" y="-9" width="1618" height="868" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15394402" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -459,7 +448,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4141324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25931233" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25931233" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3649374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -520,7 +509,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="191" />
+      <option name="time" value="193" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -857,6 +846,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Crystal/SelectP.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-72">
+          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#SelectP#0" expanded="false" />
+            <element signature="e#1533#2221#0" expanded="false" />
+            <element signature="e#2875#3878#0" expanded="false" />
+            <element signature="n#!!block;n#updateattr#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#tooltip_render#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#scatterMat#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#multiscatter#0;n#SelectP#0" expanded="false" />
+            <element signature="e#39083#42931#0" expanded="false" />
+            <element signature="n#!!block;n#storedata#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#removedata#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#getdata#0;n#SelectP#0" expanded="false" />
+            <element signature="n#!!block;n#highlight#0;n#SelectP#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3589">
@@ -895,32 +906,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Crystal/SelectP.js">
+    <entry file="file://$PROJECT_DIR$/src/app/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-192">
-          <caret line="73" column="5" lean-forward="true" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
+        <state relative-caret-position="323">
+          <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#SelectP#0" expanded="false" />
-            <element signature="e#1561#2249#0" expanded="false" />
-            <element signature="e#2903#3906#0" expanded="false" />
-            <element signature="n#!!block;n#updateattr#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#tooltip_render#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#scatterMat#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#multiscatter#0;n#SelectP#0" expanded="false" />
-            <element signature="e#39111#42959#0" expanded="false" />
-            <element signature="n#!!block;n#storedata#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#removedata#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#getdata#0;n#SelectP#0" expanded="false" />
-            <element signature="n#!!block;n#highlight#0;n#SelectP#0" expanded="false" />
+            <element signature="e#357#387#0" expanded="true" />
+            <element signature="e#666#703#0" expanded="true" />
+            <element signature="e#7170#7469#0" expanded="false" />
+            <element signature="e#7529#7828#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="1479" column="30" lean-forward="false" selection-start-line="1479" selection-start-column="30" selection-end-line="1479" selection-end-column="30" />
+        <state relative-caret-position="204">
+          <caret line="1027" column="0" lean-forward="false" selection-start-line="1027" selection-start-column="0" selection-end-line="1027" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#constructor#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#reconstruct#0;n#Selected#0" expanded="false" />
@@ -933,35 +935,13 @@
             <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#scatterMat#0;n#Selected#0" expanded="false" />
             <element signature="e#23724#24187#0" expanded="false" />
-            <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
             <element signature="e#33418#36916#0" expanded="false" />
-            <element signature="e#37143#37579#0" expanded="false" />
-            <element signature="e#37670#38823#0" expanded="false" />
-            <element signature="e#37807#38332#0" expanded="false" />
-            <element signature="e#38357#38805#0" expanded="false" />
-            <element signature="e#39591#42733#0" expanded="false" />
-            <element signature="e#42734#46442#0" expanded="false" />
-            <element signature="e#46800#51864#0" expanded="false" />
-            <element signature="e#51931#56283#0" expanded="false" />
+            <element signature="e#39785#44849#0" expanded="false" />
+            <element signature="e#44916#49268#0" expanded="false" />
             <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#removedata#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#getdata#0;n#Selected#0" expanded="false" />
-            <marker date="1518134010620" expanded="false" signature="43309:44925" ph="{...}" />
-            <marker date="1518134010620" expanded="false" signature="44207:44907" ph="{...}" />
-            <marker date="1518134010620" expanded="false" signature="44982:46439" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="288" column="32" lean-forward="false" selection-start-line="288" selection-start-column="32" selection-end-line="288" selection-end-column="32" />
-          <folding>
-            <element signature="e#357#387#0" expanded="true" />
-            <element signature="e#666#703#0" expanded="true" />
-            <element signature="e#7170#7469#0" expanded="false" />
-            <element signature="e#7529#7828#0" expanded="false" />
+            <element signature="n#!!block;n#highlight#0;n#Selected#0" expanded="false" />
           </folding>
         </state>
       </provider>

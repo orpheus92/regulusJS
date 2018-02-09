@@ -1025,179 +1025,15 @@ export class Selected{
                 // If the brush is empty, select all circles.
                 function brushend(p) {
                     let e = d3.brushSelection(this);
-                    //console.log(p);
                     brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
-
                     brushes.push(e);
-
                     svg.selectAll("#visible").attr("id",null);
                     svg.selectAll(".hidden").attr("id", "visible");//"visible");
-                    //console.log("visible",svg.selectAll("#visible"));
                     if (e === null) {svg.selectAll(".hidden").classed("hidden", false)
                     brushes = [];
                     };
                 }
 
-                //let mySelection;
-                /*
-                cell.call(newBrush);
-                let brushes;
-
-                function newBrush() {
-                    console.log("new brush");
-                    let brush = myBrush()
-                        .extent([[0, 0], [width, size]])
-                        .on("start", brushstart)
-                        .on("brush", brushed)
-                        .on("end", brushend);
-
-                    //brushes.push({id: brushes.length, brush: brush});
-
-                    function brushstart() {
-                        // Brush start here
-                    };
-
-                    function brushed() {
-                        let selection = d3.event.selection.map(i => xScale.invert(i));
-                        mySelections[this.id] = {start: selection[0], end: selection[1]};
-                        // console.log("Selections are: ", mySelections);
-                    }
-
-                    function brushend() {
-                        // Figure out if our latest brush has a selection
-                        var lastBrushID = brushes[brushes.length - 1].id;
-                        var lastBrush = document.getElementById('brush-' + lastBrushID);
-                        var selection = d3.brushSelection(lastBrush);
-
-                        // If it does, that means we need another one
-                        if (brushes.length < brushCount && selection && selection[0] !== selection[1]) {
-                            newBrush();
-                        }
-
-                        // Always draw brushes
-                        drawBrushes();
-                    }
-
-                    var brushSelection = gBrushes
-                        .selectAll('.brush')
-                        .data(brushes, function (d){return d.id});
-
-                    // console.log("Brush selection:", brushSelection);
-
-                    // Set up new brushes
-                    brushSelection.enter()
-                        .insert("g", '.brush')
-                        .attr('class', 'brush')
-                        .attr('id', function(brush){ return "brush-" + brush.id; })
-                        .each(function(brushObject) {
-                            // call the brush
-                            brushObject.brush(d3.select(this));
-                        });
-
-                    brushSelection
-                        .each(function (brushObject){
-                            d3.select(this)
-                                .attr('class', 'brush')
-                                .selectAll('.overlay')
-                                .style('pointer-events', function() {
-                                    var brush = brushObject.brush;
-                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
-                                        return 'all';
-                                    } else {
-                                        return 'none';
-                                    }
-                                });
-                        })
-
-                    brushSelection.exit()
-                        .remove();
-
-                }
-                */
-/*                let gBrushes = svg.append('g')
-                    .attr("height", height)
-                    .attr("width", size)
-                    .attr("fill", "none")
-                    //.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                    .attr("class", "brushes");
-
-                let brushes = [];
-                //console.log(cell);
-                newBrush(brushes,gBrushes,cell,x,y,mySelection);
-                drawBrushes(brushes,gBrushes);
-
-                function newBrush(brushes,gBrushes,cell,x,y,mySelection) {
-                    // console.log("new brush");
-                    let brush = myBrush()
-                        .extent([[0, 0], [width, size]])
-                        .on("start", brushstart)
-                        .on("brush", brushed)
-                        .on("end", brushend);
-                    cell.call(brush);
-                    brushes.push({id: brushes.length, brush: brush});
-
-                    function brushstart() {
-                        // Brush start here
-                    };
-
-                    function brushed(mySelection) {
-                        let selection = d3.event.selection.map(i => x.invert(i));
-                        mySelections[this.id] = {start: selection[0], end: selection[1]};
-                        // console.log("Selections are: ", mySelections);
-                    }
-
-                    function brushend(brushes,gBrushes,cell,x,y) {
-                        // Figure out if our latest brush has a selection
-                        var lastBrushID = brushes[brushes.length - 1].id;
-                        var lastBrush = document.getElementById('brush-' + lastBrushID);
-                        var selection = d3.brushSelection(lastBrush);
-
-                        // If it does, that means we need another one
-                        if (brushes.length < brushCount && selection && selection[0] !== selection[1]) {
-                            newBrush(brushes,gBrushes,cell,x,y);
-                        }
-
-                        // Always draw brushes
-                        drawBrushes(brushes,gBrushes);
-                    }
-                }
-
-                function drawBrushes(brushes,gBrushes) {
-
-                    var brushSelection = gBrushes
-                        .selectAll('.brush')
-                        .data(brushes, function (d){return d.id});
-
-
-                    // Set up new brushes
-                    brushSelection.enter()
-                        .insert("g", '.brush')
-                        .attr('class', 'brush')
-                        .attr('id', function(brush){ return "brush-" + brush.id; })
-                        .each(function(brushObject) {
-                            // call the brush
-                            brushObject.brush(d3.select(this));
-                        });
-
-                    brushSelection
-                        .each(function (brushObject){
-                            d3.select(this)
-                                .attr('class', 'brush')
-                                .selectAll('.overlay')
-                                .style('pointer-events', function() {
-                                    var brush = brushObject.brush;
-                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
-                                        return 'all';
-                                    } else {
-                                        return 'none';
-                                    }
-                                });
-                        })
-
-                    brushSelection.exit()
-                        .remove();
-                }
-*/
                 svg.append("text")
                     .attr("x", width-3*padding)
                     .attr("y", 0)
@@ -1472,12 +1308,10 @@ export class Selected{
 
     highlight(){
         this._selected = [];
-        //console.log(this._brushNum.index);
         d3.select("#div"+this._brushNum.index).select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
-            //console.log(d);
             this._selected.push(d);
         });
-        console.log("highlight")
+        //console.log("highlight")
         return [this._selected, this._stored[this._brushNum.index]];
 
     }
