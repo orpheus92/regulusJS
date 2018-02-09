@@ -20,9 +20,13 @@ export class Tree{
         this.translatey = 100;
 
         let totalpers = [];
+        let allsaddle = [];
         partition.pers.map(function(item) {
             totalpers.push(parseFloat(item));
+            allsaddle.push(parseInt(partition.data[item][partition.data[item].length-1]));
         });
+        this.saddle = allsaddle;
+
 
         this.pers = totalpers;
 
@@ -32,6 +36,7 @@ export class Tree{
             d.level = parseInt(d.Ci);
             d.par = d.P1+ ", "+d.P2+", "+d.Pi;
             d._persistence = (this.pers[d.Ci]!=undefined)?this.pers[d.Ci]:0;
+            d._saddleind = this.saddle[d.Ci];
         });
 
         //Children relations

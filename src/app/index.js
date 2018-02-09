@@ -71,10 +71,9 @@ function load(){
                     let width = 300;
                     let height = 100;
                     pInter = 0.2;
-                    sizeInter = 5;
+                    sizeInter = 25;
                     let plots = new Selected(rawdata, width, height, yattr, plottype);
                     // Load data in JS
-
 
                     let selectplot = new SelectP(rawdata, width, height);
 

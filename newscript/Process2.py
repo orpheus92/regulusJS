@@ -36,6 +36,7 @@ class Post_MSC():
 
         child = hierarchy_sorted[:, 2]
         parent = hierarchy_sorted[:, 3]
+        saddle = hierarchy_sorted[:, 4]
 
         [r, c] = hierarchy_sorted.shape
         p_map = {}
@@ -46,10 +47,12 @@ class Post_MSC():
         for i in range(r):
             if hierarchy_sorted[i, 1] == 0:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemin(int(child[i]), int(parent[i]), self.base_copy, r - i)
-                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]])
+                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]],saddle[i])
+                #p_tree[hierarchy_sorted[i, 0]] = p_tree[hierarchy_sorted[i, 0]].append(saddle[i])
             else:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemax(int(child[i]), int(parent[i]), self.base_copy, r - i)
-                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]])
+                p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]],saddle[i])
+                #p_tree[hierarchy_sorted[i, 0]] = p_tree[hierarchy_sorted[i, 0]].append(saddle[i])
 
         #p_list = hierarchy_sorted[:, 0]
 
@@ -70,7 +73,12 @@ class Post_MSC():
         #    level_tree[total - ind] = list(cur_partitions)
         #    p_tree[i] = list(cur_partitions)
         #    #total_partitions = total_partitions + p_map[i]
-        p_tree[1] = [p_tree[hierarchy_sorted[r-1, 0]][-1]]
+        maxmin = self.hierarchy[np.argsort(self.hierarchy[:, 0])][-2:, :]
+        if(maxmin[0,1]==0):
+            p_tree[1]=[str(int(maxmin[0,2]))+', '+str(int(maxmin[1,2]))]+[str(-1)]
+        else:
+            p_tree[1]=[str(int(maxmin[1,2]))+', '+str(int(maxmin[0,2]))]+[str(-1)]
+        #p_tree[1] = [p_tree[hierarchy_sorted[r-1, 0]][-1]]
         self.p_tree = p_tree
         allP = list(p_map.keys())
         for p in allP:
@@ -119,12 +127,13 @@ class Post_MSC():
 
     def simplify(self,data):
         out = data
-        print(out)
+        #print(out)
         return out
 
-    def getPartition(self, pmap):
+    def getPartition(self, pmap,saddle):
         pnum = self.strlist2intlist(pmap)
-        return pnum[1:][::2]
+        #print(pnum)
+        return pnum[1:][::2]+[str(int(saddle))]
 
     def mergemin(self, c, p, d, per):
         outlist = []

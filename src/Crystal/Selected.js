@@ -49,12 +49,17 @@ export class Selected{
         if(inputnode === undefined){
             selected = this._stored;
         }
-        else if(inputnode.length != undefined)
+        else if(inputnode.length != undefined) {
             selected = inputnode;
-        else
+            if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
+            inputnode.data._saddleinfo =  this._rawdata[inputnode.data._saddleind];
+        }
+    else
         {
             selected = [];
             selected.push(inputnode);
+            if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
+                inputnode.data._saddleinfo =  this._rawdata[inputnode.data._saddleind];
         }
         this._totaldata = [];
         //this._ind = [];
@@ -1296,7 +1301,10 @@ export class Selected{
     }}
 
     storedata(data){
+        //console.log(data);
         this._stored.push(data);
+        if (data.data._saddleind != undefined && data.data._saddleind != -1)
+            data.data._saddleinfo =  this._rawdata[data.data._saddleind];
     }
     removedata(){
         this._stored = [];

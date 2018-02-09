@@ -18,7 +18,7 @@ export class Info {
         this.rawdata = rawdata;
         this.raw.append("li").text("Total Number of Points: "+ rawdata.length);//.classed("cplabel", true);
         this.raw.append("li").text("All Attributes: "+ rawdata.columns);
-        let totalper = Object.keys(data).sort(function(b,a){return b-a});
+        let totalper = Object.keys(data).sort(function(b,a){return parseFloat(b)-parseFloat(a)});
         this.maxP = totalper[totalper.length-1];
         this.minP = totalper[0];
 
