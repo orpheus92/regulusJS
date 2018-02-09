@@ -10,7 +10,7 @@ import {event as currentEvent} from 'd3-selection';
 //import {event as currentEvent} from 'd3-selection';
 import {pBar} from '../Slider'
 import {Crystal} from '../Crystal';
-import {Selected} from '../Crystal';
+import {Selected, SelectP} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
@@ -74,6 +74,9 @@ function load(){
                     sizeInter = 5;
                     let plots = new Selected(rawdata, width, height, yattr, plottype);
                     // Load data in JS
+
+
+                    let selectplot = new SelectP(rawdata, width, height);
 
 
                     // Data View Constructor
@@ -197,6 +200,11 @@ function load(){
 
                     d3.select("#y_attr").on('change',()=>{plots.updateattr(document.getElementById('y_attr').value)});//updateAttribute();});
 
+                    d3.select("#CompAttr").on('change',()=>{if(cnode!=undefined)
+                        loaddata.select(cnode,document.getElementById('CompAttr').value );
+                    });
+
+
                     d3.selectAll(".wb-button").on('click',()=>{
                         let option = pb.mycb();
                         // update tree plot
@@ -210,7 +218,7 @@ function load(){
 
                     d3.select("#SetRange").on('click',()=>{
 
-                        console.log('Clicked event');
+                        //console.log('Clicked event');
                         let filterattr = document.getElementById('RangeAttr').value;
                         let min = document.getElementById("mymin").value;
                         let max = document.getElementById("mymax").value;
@@ -242,7 +250,6 @@ function load(){
 
                     d3.select('#BrushSelect')
                         .on('click', () =>  {
-                            //clear();
                             [cur_selection,cur_node] = plots.highlight();
 
                             selectindex = new Set(cur_selection.map(obj=>obj.index));
@@ -265,6 +272,20 @@ function load(){
                             d3.selectAll("#selected").attr("id", null);
 
                         });
+
+                    d3.select('#createPlot')
+                        .on('click', () =>  {
+                            let selectP = document.getElementById('selectP').value ;
+
+                            if(cur_selection!=undefined)
+                            {                                  selectplot.removedata();
+                            selectplot.storedata(cur_selection);
+                            selectplot.updatediv(selectP);
+                            }
+                        });
+
+                    d3.select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
+
                 });
             });
 
