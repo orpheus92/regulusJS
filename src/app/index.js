@@ -201,6 +201,7 @@ function load(){
 
                     d3.select("#CompAttr").on('change',()=>{if(cnode!=undefined)
                         loaddata.select(cnode,document.getElementById('CompAttr').value );
+
                     });
 
 

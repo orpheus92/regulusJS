@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/Selected.js" afterPath="$PROJECT_DIR$/src/Crystal/Selected.js" />
+
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -31,6 +32,7 @@
     <favorites_list name="skeleton" />
   </component>
   <component name="FileEditorManager">
+
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.js">
@@ -47,21 +49,25 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="928">
               <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2175">
               <caret line="75" column="28" lean-forward="true" selection-start-line="75" selection-start-column="28" selection-end-line="75" selection-end-column="28" />
+
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/index.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -77,16 +83,19 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="203">
               <caret line="9" column="47" lean-forward="true" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+
       <file leaf-file-name="Partition.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Process/Partition.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="423">
               <caret line="23" column="52" lean-forward="false" selection-start-line="23" selection-start-column="52" selection-end-line="23" selection-end-column="52" />
+
               <folding>
                 <element signature="n#!!block;n#initialPartition#0;n#Partition#0" expanded="false" />
               </folding>
@@ -94,6 +103,7 @@
           </provider>
         </entry>
       </file>
+
       <file leaf-file-name="Selected.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -115,6 +125,7 @@
                 <element signature="e#45357#49709#0" expanded="false" />
                 <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
               </folding>
+
             </state>
           </provider>
         </entry>
@@ -123,6 +134,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+
       <find>store</find>
       <find>select</find>
       <find>updatediv</find>
@@ -153,6 +165,7 @@
       <find>_brushNum</find>
       <find>brushind</find>
       <find>cell.call</find>
+
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,6 +205,7 @@
         <option value="$PROJECT_DIR$/src/app/index.js" />
         <option value="$PROJECT_DIR$/dist/index.html" />
         <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
+
       </list>
     </option>
   </component>
@@ -218,6 +232,7 @@
     <option name="y" value="48" />
     <option name="width" value="1243" />
     <option name="height" value="688" />
+
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -261,13 +276,14 @@
               <item name="skeleton" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Crystal" type="462c0819:PsiDirectoryNode" />
+
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -276,6 +292,7 @@
     <property name="nodejs_interpreter_path" value="node" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Anaconda/regulusJS/skeleton/src/app/index.html&#10;font&#9;ACTION&#9;JumpToColorsAndFonts" />
   </component>
@@ -369,7 +386,12 @@
       <workItem from="1518151376766" duration="1720000" />
       <workItem from="1518190591139" duration="614000" />
       <workItem from="1518459951749" duration="502000" />
+<<<<<<< HEAD
       <workItem from="1518536520999" duration="3805000" />
+=======
+      <workItem from="1518536520999" duration="3564000" />
+
+>>>>>>> 7d484d7c43ae5ea197e51247452b015261a5e9dd
     </task>
     <servers />
   </component>
@@ -384,6 +406,7 @@
       <are-packages-shown value="true" />
       <is-autoscroll-to-source value="true" />
     </todo-panel>
+
   </component>
   <component name="ToolWindowManager">
     <frame x="1592" y="-8" width="1936" height="1056" extended-state="6" />
@@ -410,6 +433,7 @@
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32966322" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
+
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -486,6 +510,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Slider/style.css">
+
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3654">
           <caret line="126" column="0" lean-forward="false" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
@@ -552,6 +577,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/d3-hierarchy/src/tree.js">
+
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3979">
           <caret line="173" column="71" lean-forward="false" selection-start-line="173" selection-start-column="71" selection-end-line="173" selection-end-column="71" />
@@ -570,6 +596,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+
         </state>
       </provider>
     </entry>
@@ -636,6 +663,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/index.js">
+
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
           <caret line="1" column="24" lean-forward="false" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
@@ -647,6 +675,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="546" column="20" lean-forward="false" selection-start-line="546" selection-start-column="13" selection-end-line="546" selection-end-column="20" />
+
         </state>
       </provider>
     </entry>
@@ -654,6 +683,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="0" column="97311" lean-forward="false" selection-start-line="0" selection-start-column="97311" selection-end-line="0" selection-end-column="97311" />
+
         </state>
       </provider>
     </entry>
@@ -662,6 +692,7 @@
         <state relative-caret-position="203">
           <caret line="9" column="47" lean-forward="true" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
           <folding />
+
         </state>
       </provider>
     </entry>
@@ -670,6 +701,7 @@
         <state relative-caret-position="2175">
           <caret line="75" column="28" lean-forward="true" selection-start-line="75" selection-start-column="28" selection-end-line="75" selection-end-column="28" />
           <folding />
+
         </state>
       </provider>
     </entry>
@@ -678,30 +710,37 @@
         <state relative-caret-position="928">
           <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
           <folding />
+
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/index.js">
       <provider selected="true" editor-type-id="text-editor">
+
         <state relative-caret-position="0">
           <caret line="73" column="34" lean-forward="false" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
           <folding />
+
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dist/index.html">
       <provider selected="true" editor-type-id="text-editor">
+
         <state relative-caret-position="550">
           <caret line="31" column="25" lean-forward="true" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
           <folding />
+
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/newscript/Process2.py">
       <provider selected="true" editor-type-id="text-editor">
+
         <state relative-caret-position="222">
           <caret line="69" column="24" lean-forward="false" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
           <folding />
+
         </state>
       </provider>
     </entry>
@@ -712,6 +751,7 @@
           <folding>
             <element signature="n#!!block;n#initialPartition#0;n#Partition#0" expanded="false" />
           </folding>
+
         </state>
       </provider>
     </entry>
@@ -735,6 +775,7 @@
             <element signature="e#45357#49709#0" expanded="false" />
             <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
           </folding>
+
         </state>
       </provider>
     </entry>
