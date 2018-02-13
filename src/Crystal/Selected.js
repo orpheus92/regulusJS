@@ -453,7 +453,7 @@ export class Selected{
         }
     }}
 
-    scatterMat(){
+    scatterMat(option){
         //d3.selectAll('#plottip').remove();
 
         for(let iii = 0;iii<this._totaldata.length;iii++) {
@@ -549,9 +549,10 @@ export class Selected{
                     y.domain(domainByTrait[d.y]);
                     d3.select(this).call(yAxis);
                 });
-
+                let p_arr;
 // Attach index to each data;
-                let p_arr = Array.from(this._stored[this._brushNum].data._total);
+                //if (option!= "brush")
+                p_arr = Array.from(this._stored[iii].data._total);
                 /*
                 data.map((obj,i) => {
                     //console.log(obj,i);
@@ -651,7 +652,8 @@ export class Selected{
                 })
                 .attr("font-size", 2*textsize+"px");
                 */
-            cell.call(brush);
+                let brushind = this._brushNum;
+                cell.call(brush);
             let brushes = [];
 
 
@@ -710,6 +712,8 @@ export class Selected{
             // If the brush is empty, select all circles.
             function brushend() {
                 let e = d3.brushSelection(this);
+                brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+
                 brushes.push(e);
                 //console.log(brushes);
                 //console.log('hidden',svg.selectAll('.hidden'));
@@ -818,7 +822,7 @@ export class Selected{
 
                 // Attach Index Info to each point in the partition
                 // Will be fixed later for multiple plot case
-                let p_arr = Array.from(this._stored[0].data._total);
+                let p_arr = Array.from(this._stored[iii].data._total);
                 let dataind = [];
                 //console.log(data);
                 data.forEach((obj,i) => {
@@ -1029,8 +1033,10 @@ export class Selected{
 
                 // If the brush is empty, select all circles.
                 function brushend(p) {
-                    let e = d3.brushSelection(this);
                     brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    //console.log(brushind);
+                    let e = d3.brushSelection(this);
+                    //brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
                     brushes.push(e);
                     svg.selectAll("#visible").attr("id",null);
                     svg.selectAll(".hidden").attr("id", "visible");//"visible");
@@ -1045,6 +1051,7 @@ export class Selected{
                     .attr("dy", ".71em")
                     .text("Node"+iii)
                     .attr("font-size", 2*textsize+"px");
+
             }
         }
 
@@ -1315,6 +1322,7 @@ export class Selected{
     }
 
     highlight(){
+        console.log(this._brushNum);
         this._selected = [];
         d3.select("#div"+this._brushNum.index).select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
             this._selected.push(d);

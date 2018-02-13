@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/newscript/Process2.py" afterPath="$PROJECT_DIR$/newscript/Process2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/Selected.js" afterPath="$PROJECT_DIR$/src/Crystal/Selected.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Info/Info.js" afterPath="$PROJECT_DIR$/src/Info/Info.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Process/Partition.js" afterPath="$PROJECT_DIR$/src/Process/Partition.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Structure/Tree.js" afterPath="$PROJECT_DIR$/src/Structure/Tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -38,10 +33,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
+            <state relative-caret-position="0">
               <caret line="73" column="34" lean-forward="false" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
               <folding />
             </state>
@@ -51,8 +46,8 @@
       <file leaf-file-name="Tree.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="32" column="33" lean-forward="true" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+            <state relative-caret-position="928">
+              <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -61,7 +56,7 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="73">
+            <state relative-caret-position="2175">
               <caret line="75" column="28" lean-forward="true" selection-start-line="75" selection-start-column="28" selection-end-line="75" selection-end-column="28" />
               <folding />
             </state>
@@ -71,8 +66,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="50" column="46" lean-forward="false" selection-start-line="50" selection-start-column="46" selection-end-line="50" selection-end-column="46" />
+            <state relative-caret-position="550">
+              <caret line="31" column="25" lean-forward="true" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -81,7 +76,7 @@
       <file leaf-file-name="Info.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Info/Info.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
+            <state relative-caret-position="203">
               <caret line="9" column="47" lean-forward="true" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
               <folding />
             </state>
@@ -91,7 +86,7 @@
       <file leaf-file-name="Partition.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Process/Partition.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
+            <state relative-caret-position="423">
               <caret line="23" column="52" lean-forward="false" selection-start-line="23" selection-start-column="52" selection-end-line="23" selection-end-column="52" />
               <folding>
                 <element signature="n#!!block;n#initialPartition#0;n#Partition#0" expanded="false" />
@@ -100,22 +95,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Process2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newscript/Process2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="77" column="72" lean-forward="false" selection-start-line="77" selection-start-column="72" selection-end-line="77" selection-end-column="72" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Selected.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="1303" column="10" lean-forward="false" selection-start-line="1303" selection-start-column="10" selection-end-line="1303" selection-end-column="10" />
-              <folding />
+            <state relative-caret-position="144">
+              <caret line="654" column="46" lean-forward="false" selection-start-line="654" selection-start-column="46" selection-end-line="654" selection-end-column="46" />
+              <folding>
+                <element signature="n#!!block;n#updatediv#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#updateplot#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#updateattr#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
+                <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
+                <element signature="e#38381#38906#0" expanded="false" />
+                <element signature="e#38931#39379#0" expanded="false" />
+                <element signature="e#40512#45576#0" expanded="false" />
+                <element signature="e#45643#49995#0" expanded="false" />
+                <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -124,22 +123,12 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.cell</find>
-      <find>brush</find>
-      <find>this._brush</find>
-      <find>brushind</find>
-      <find>h</find>
-      <find>getElementbyId</find>
-      <find>attr</find>
-      <find>click</find>
       <find>store</find>
       <find>select</find>
       <find>updatediv</find>
-      <find>_brushNum</find>
       <find>cur_node</find>
       <find>div</find>
       <find>create</find>
-      <find>highlight</find>
       <find>remove</find>
       <find>hierarc</find>
       <find>save</find>
@@ -147,13 +136,23 @@
       <find>strlist2</find>
       <find>getPartition</find>
       <find>maxmin</find>
-      <find>data</find>
       <find>this.data</find>
       <find>storedata</find>
       <find>stored</find>
       <find>saddle</find>
       <find>partition</find>
       <find>size</find>
+      <find>updateplot</find>
+      <find>let p_arr</find>
+      <find>data</find>
+      <find>_brush</find>
+      <find>p_arr</find>
+      <find>this._brushNum</find>
+      <find>highlight</find>
+      <find>let brushind</find>
+      <find>_brushNum</find>
+      <find>brushind</find>
+      <find>cell.call</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -171,7 +170,6 @@
         <option value="$PROJECT_DIR$/data/Base_Partition.json" />
         <option value="E:/Anaconda/Lib/site-packages/topopy-0.0.1-py3.6-win-amd64.egg/topopy/MorseSmaleComplex.py" />
         <option value="$PROJECT_DIR$/newscript/Process3.py" />
-        <option value="$PROJECT_DIR$/dist/index.html" />
         <option value="$PROJECT_DIR$/src/Slider/index.js" />
         <option value="$PROJECT_DIR$/data/brushtest/data.csv" />
         <option value="$PROJECT_DIR$/data/brushtest/plot.js" />
@@ -191,8 +189,9 @@
         <option value="$PROJECT_DIR$/data/P_Partition.json" />
         <option value="$PROJECT_DIR$/src/Process/Partition.js" />
         <option value="$PROJECT_DIR$/src/Structure/Tree.js" />
-        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
         <option value="$PROJECT_DIR$/src/app/index.js" />
+        <option value="$PROJECT_DIR$/dist/index.html" />
+        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
       </list>
     </option>
   </component>
@@ -215,9 +214,10 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="36" />
-    <option name="width" value="1554" />
-    <option name="height" value="860" />
+    <option name="x" value="1820" />
+    <option name="y" value="48" />
+    <option name="width" value="1243" />
+    <option name="height" value="688" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -234,14 +234,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
               <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="dist" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
@@ -263,6 +266,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -361,12 +366,15 @@
       <workItem from="1517864488085" duration="2802000" />
       <workItem from="1517896086468" duration="115695000" />
       <workItem from="1518150082861" duration="852000" />
-      <workItem from="1518151376766" duration="1625000" />
+      <workItem from="1518151376766" duration="1720000" />
+      <workItem from="1518190591139" duration="614000" />
+      <workItem from="1518459951749" duration="502000" />
+      <workItem from="1518536520999" duration="3564000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="260350000" />
+    <option name="totallyTimeSpent" value="265125000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -378,16 +386,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1618" height="868" extended-state="6" />
+    <frame x="1592" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22010177" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1516437" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32784432" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26796407" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2234957" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37284234" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14221556" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -646,55 +654,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="0" column="97311" lean-forward="false" selection-start-line="0" selection-start-column="97311" selection-end-line="0" selection-end-column="97311" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Info/Info.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="203">
           <caret line="9" column="47" lean-forward="true" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Process/Partition.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="23" column="52" lean-forward="false" selection-start-line="23" selection-start-column="52" selection-end-line="23" selection-end-column="52" />
-          <folding>
-            <element signature="n#!!block;n#initialPartition#0;n#Partition#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="50" column="46" lean-forward="false" selection-start-line="50" selection-start-column="46" selection-end-line="50" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newscript/Process2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="77" column="72" lean-forward="false" selection-start-line="77" selection-start-column="72" selection-end-line="77" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="1303" column="10" lean-forward="false" selection-start-line="1303" selection-start-column="10" selection-end-line="1303" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
+        <state relative-caret-position="2175">
           <caret line="75" column="28" lean-forward="true" selection-start-line="75" selection-start-column="28" selection-end-line="75" selection-end-column="28" />
           <folding />
         </state>
@@ -702,17 +675,65 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="32" column="33" lean-forward="true" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+        <state relative-caret-position="928">
+          <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
+        <state relative-caret-position="0">
           <caret line="73" column="34" lean-forward="false" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="31" column="25" lean-forward="true" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newscript/Process2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="69" column="24" lean-forward="false" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Process/Partition.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="23" column="52" lean-forward="false" selection-start-line="23" selection-start-column="52" selection-end-line="23" selection-end-column="52" />
+          <folding>
+            <element signature="n#!!block;n#initialPartition#0;n#Partition#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="654" column="46" lean-forward="false" selection-start-line="654" selection-start-column="46" selection-end-line="654" selection-end-column="46" />
+          <folding>
+            <element signature="n#!!block;n#updatediv#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#updateplot#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#updateattr#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
+            <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
+            <element signature="e#38381#38906#0" expanded="false" />
+            <element signature="e#38931#39379#0" expanded="false" />
+            <element signature="e#40512#45576#0" expanded="false" />
+            <element signature="e#45643#49995#0" expanded="false" />
+            <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
