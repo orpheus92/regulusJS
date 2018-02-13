@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Crystal/Selected.js" afterPath="$PROJECT_DIR$/src/Crystal/Selected.js" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
@@ -98,8 +97,8 @@
       <file leaf-file-name="Selected.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="654" column="46" lean-forward="false" selection-start-line="654" selection-start-column="46" selection-end-line="654" selection-end-column="46" />
+            <state relative-caret-position="-553">
+              <caret line="456" column="0" lean-forward="false" selection-start-line="456" selection-start-column="0" selection-end-line="456" selection-end-column="0" />
               <folding>
                 <element signature="n#!!block;n#updatediv#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
@@ -108,11 +107,12 @@
                 <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
                 <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
+                <element signature="e#25497#25878#0" expanded="false" />
                 <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
-                <element signature="e#38381#38906#0" expanded="false" />
-                <element signature="e#38931#39379#0" expanded="false" />
-                <element signature="e#40512#45576#0" expanded="false" />
-                <element signature="e#45643#49995#0" expanded="false" />
+                <element signature="e#38095#38620#0" expanded="false" />
+                <element signature="e#38645#39093#0" expanded="false" />
+                <element signature="e#40226#45290#0" expanded="false" />
+                <element signature="e#45357#49709#0" expanded="false" />
                 <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
               </folding>
             </state>
@@ -369,12 +369,12 @@
       <workItem from="1518151376766" duration="1720000" />
       <workItem from="1518190591139" duration="614000" />
       <workItem from="1518459951749" duration="502000" />
-      <workItem from="1518536520999" duration="3564000" />
+      <workItem from="1518536520999" duration="3805000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="265125000" />
+    <option name="totallyTimeSpent" value="265366000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -717,8 +717,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="654" column="46" lean-forward="false" selection-start-line="654" selection-start-column="46" selection-end-line="654" selection-end-column="46" />
+        <state relative-caret-position="-553">
+          <caret line="456" column="0" lean-forward="false" selection-start-line="456" selection-start-column="0" selection-end-line="456" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updatediv#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#removediv#0;n#Selected#0" expanded="false" />
@@ -727,11 +727,12 @@
             <element signature="n#!!block;n#PairwisePlot#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#tooltip_render#0;n#Selected#0" expanded="false" />
             <element signature="n#!!block;n#rawDataPlot#0;n#Selected#0" expanded="false" />
+            <element signature="e#25497#25878#0" expanded="false" />
             <element signature="n#!!block;n#multiscatter#0;n#Selected#0" expanded="false" />
-            <element signature="e#38381#38906#0" expanded="false" />
-            <element signature="e#38931#39379#0" expanded="false" />
-            <element signature="e#40512#45576#0" expanded="false" />
-            <element signature="e#45643#49995#0" expanded="false" />
+            <element signature="e#38095#38620#0" expanded="false" />
+            <element signature="e#38645#39093#0" expanded="false" />
+            <element signature="e#40226#45290#0" expanded="false" />
+            <element signature="e#45357#49709#0" expanded="false" />
             <element signature="n#!!block;n#storedata#0;n#Selected#0" expanded="false" />
           </folding>
         </state>

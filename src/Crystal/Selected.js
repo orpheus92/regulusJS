@@ -454,7 +454,6 @@ export class Selected{
     }}
 
     scatterMat(option){
-        //d3.selectAll('#plottip').remove();
 
         for(let iii = 0;iii<this._totaldata.length;iii++) {
             let data = this._totaldata[iii];
@@ -466,7 +465,6 @@ export class Selected{
             //load data as array
 
             {
-                //width = 960;
                 let size = height,
                     padding = (margin.left+margin.right)*3/5;
 
@@ -551,7 +549,7 @@ export class Selected{
                 });
                 let p_arr;
 // Attach index to each data;
-                //if (option!= "brush")
+
                 p_arr = Array.from(this._stored[iii].data._total);
                 /*
                 data.map((obj,i) => {
@@ -661,12 +659,8 @@ export class Selected{
 
             // Clear the previously-active brush, if any.
             function brushstart(p) {
-                //if (brushCell !== this) {
-                //    d3.select(brushCell).call(brush.move, null);
-               //     brushCell = this;
                     x.domain(domainByTrait[p.x]);
                     y.domain(domainByTrait[p.y]);
-                //}
             }
 
             // Highlight the selected circles.
