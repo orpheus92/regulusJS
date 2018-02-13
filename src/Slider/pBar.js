@@ -12,14 +12,10 @@ export class pBar{
        for(let p in plist) {
 
            p = parseInt(p);
-           //console.log(p);
            psize.push([plist[p], data[plist[p]].length]);
            if (parseInt(p) + 1 <= plist.length - 1)
 
-           {   //console.log(p+1);
-               //console.log(plist);
-               //console.log(plist[p+1]);
-           //console.log(data[plist[p + 1]]);
+           {
            psize.push([plist[p + 1], data[plist[p]].length]);
            }
        }
@@ -150,9 +146,10 @@ export class pBar{
 
        //console.log(this.basedata)
        //console.log(Object.keys(this.basedata).length);
-       let maxsize = parseInt(this.totalsize/100);
+       let maxsize = parseInt(this.totalsize/50);
 
        //let plist = this.basedata;
+       //console.log(maxsize);
        let psize = new Array(maxsize);
        psize.fill(0);
        for(let key in this.basedata){
@@ -168,12 +165,16 @@ export class pBar{
        }
        //console.log(psize);
        this.dataset2 = psize;
+      //console.log(psize);
        this.xScale2 = d3.scaleLinear()
            .domain([0, maxsize-1]) // input
            .range([0, this.width-this.padding]); // output
 
 // 6. Y scale will use the randomly generate number
-       //console.log(plist[plist.length-1]);
+
+       //console.log(this.basedata);
+       //console.log(psize);
+       //console.log([psize[maxsize-1],psize[0]])
        this.yScale2 = d3.scaleLinear()
            .domain([psize[maxsize-1],psize[0]]) // input
            .range([this.height-this.padding, 0]); // output
@@ -264,8 +265,7 @@ export class pBar{
 
    }
    updateBar(clevel,slevel){
-        //clevel = ctree.pInter;
-        //console.log(this.dataset);
+
         let cx = this.xScale(clevel);
         let cy;
         for(let i = 0;i<this.dataset.length;i++){
@@ -273,7 +273,6 @@ export class pBar{
                 cy = this.yScale(this.dataset[i][1]);
             }
         }
-        //let t = d3.transition().duration(100);
         d3.select(".ppbar")//.data([cx])
             .attr("x", cx+this.padding-2)
             .attr("y", cy+this.margin.top-2)
@@ -282,8 +281,20 @@ export class pBar{
             .attr("class", "ppbar")
             .attr("fill","blue");
         //console.log(slevel);
-       let cx2 = this.xScale2(slevel);
-       let cy2 = this.yScale2(this.dataset2[slevel]);
+       let cx2;
+       if(slevel<this.dataset2.length)
+           cx2 = this.xScale2(slevel);
+       else
+           cx2 = this.xScale2(this.dataset2.length-1);
+
+       // Set a cap for Size Filter Chart
+       //console.log(slevel)
+       let cy2;
+       if(slevel<this.dataset2.length)
+           cy2 = this.yScale2(this.dataset2[slevel]);
+       else
+           cy2 = this.yScale2(this.dataset2[this.dataset2.length-1]);
+
        /*
        for(let i = 0;i<this.dataset.length;i++){
            if(clevel<=this.dataset[i][0]){
@@ -292,6 +303,7 @@ export class pBar{
        }
        */
        //let t = d3.transition().duration(100);
+       //console.log(slevel);
        d3.select(".pbar")//.data([cx])
            .attr("x", cx2+this.padding-2)
            .attr("y", cy2+this.margin.top-2)

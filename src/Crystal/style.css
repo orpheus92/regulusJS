@@ -7,14 +7,16 @@
 svg {
     font: 10px sans-serif;
     padding: 10px;
-    font-weight: bold;
+    /*font-weight: bold;*/
 
 }
-
+/*
 .axis,
 .frame {
     shape-rendering: crispEdges;
+
 }
+*/
 
 .axis line {
     stroke: #ddd;
@@ -22,15 +24,17 @@ svg {
 
 .axis path {
     display: none;
+
 }
 
 .cell text {
-    font-weight: bold;
+    /*font-weight: bold;*/
     text-transform: capitalize;
     fill: black;
 }
 
 .frame {
+    shape-rendering: crispEdges;
     fill: none;
     stroke: #aaa;
 }
@@ -42,7 +46,9 @@ circle {
 circle.hidden {
     fill: #ccc !important;
 }
-
+circle.highlight{
+    stroke: black
+}
 .extent {
     fill: #000;
     fill-opacity: .125;

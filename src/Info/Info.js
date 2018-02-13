@@ -5,6 +5,7 @@ import './style.css';
 export class Info {
 
     constructor() {
+
         this.raw = d3.select("#raw");//.text("rawdata");
         this.persistence = d3.select("#persistence");//.text("rawdata");
         this.sMSC = d3.select("#selected");//.text("rawdata");
@@ -15,16 +16,12 @@ export class Info {
     create(data,rawdata,cpInter,csInter){
 
         this.rawdata = rawdata;
-        //console.log(data);
         this.raw.append("li").text("Total Number of Points: "+ rawdata.length);//.classed("cplabel", true);
         this.raw.append("li").text("All Attributes: "+ rawdata.columns);
-        let totalper = Object.keys(data).sort(function(b,a){return b-a});
-        //console.log(totalper);
+        let totalper = Object.keys(data).sort(function(b,a){return parseFloat(b)-parseFloat(a)});
         this.maxP = totalper[totalper.length-1];
         this.minP = totalper[0];
-        //console.log(this.maxP);
-        //console.log(this.minP);
-        //console.log(totalper);
+
         this.persistence.append("li")
             .attr("dy", 0)
             .attr("x",0)
@@ -40,37 +37,30 @@ export class Info {
     }
 
     update(cpInter,csInter){
-        //console.log("Update P");
-        //this.cper.text("Current Persistence: "+ pInter).remove();
 
         this.cper.selectAll(".cplabel").remove();
         this.csize.selectAll(".cslabel").remove();
 
-        //.data(ppInter);
         this.cper.append("li").text("Current Persistence: "+ cpInter).classed("cplabel", true);
         this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
 
     }
 
-    select(snode){
+    select(snode, attr){
         if (snode!=undefined) {
-            //console.log("Update P");
-            //this.cper.text("Current Persistence: "+ pInter).remove();
-            //console.log(snode);
-            this.sMSC.selectAll(".sMSC").remove();
-            //this.csize.selectAll(".cslabel").remove();
 
-            //.data(ppInter);
-            //console.log(Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]);
-            //console.log(snode);
+            this.sMSC.selectAll(".sMSC").remove();
+            let p_arr = Array.from(snode.data._total);
+
+            let selectionarr = p_arr.map(x=>parseFloat(this.rawdata[x][attr]));
+
             this.sMSC
                 .append("li").text("Total Points in Selected Partition: " + snode.data._total.size).classed("sMSC", true)
-                .append("li").text("Minimum Index: " + snode.data.C1).classed("sMSC", true)
-                .append("li").text("Minimum Value: " + Object.values(this.rawdata[snode.data.C1]).slice(-1)[0]).classed("sMSC", true)
-                .append("li").text("Maximum Index: " + snode.data.C2).classed("sMSC", true)
-                .append("li").text("Maximum Value: " + Object.values(this.rawdata[snode.data.C2]).slice(-1)[0]).classed("sMSC", true)
+                .append("li").text("Minimum Index: " + p_arr[selectionarr.indexOf(Math.min(...selectionarr))]).classed("sMSC", true)
+                .append("li").text("Minimum Value: " + Math.min(...selectionarr)).classed("sMSC", true)
+                .append("li").text("Maximum Index: " + p_arr[selectionarr.indexOf(Math.max(...selectionarr))]).classed("sMSC", true)
+                .append("li").text("Maximum Value: " + Math.max(...selectionarr)).classed("sMSC", true)
                 .append("li").text("Partition Persistence: " + snode.data._persistence).classed("sMSC", true);
-            //this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
         }
 
     }
