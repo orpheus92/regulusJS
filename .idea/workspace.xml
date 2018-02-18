@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.html" afterPath="$PROJECT_DIR$/src/app/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/newscript/server.py" afterPath="$PROJECT_DIR$/newscript/server.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
@@ -34,31 +34,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="66" column="66" lean-forward="false" selection-start-line="66" selection-start-column="66" selection-end-line="66" selection-end-column="66" />
-              <folding>
-                <element signature="e#4821#7179#0" expanded="false" />
-                <element signature="e#7238#7537#0" expanded="false" />
-                <element signature="e#7597#7896#0" expanded="false" />
-                <element signature="e#8244#8379#0" expanded="false" />
-                <element signature="e#8446#8929#0" expanded="false" />
-                <element signature="e#8991#10120#0" expanded="false" />
-                <element signature="e#10185#10473#0" expanded="false" />
-                <element signature="e#10951#11241#0" expanded="false" />
-                <element signature="e#11331#11431#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2647">
-              <caret line="14" column="23" lean-forward="false" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+            <state relative-caret-position="289">
+              <caret line="37" column="14" lean-forward="true" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -67,8 +47,8 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="61" column="0" lean-forward="true" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+            <state relative-caret-position="24">
+              <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -77,19 +57,39 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1656">
-              <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+            <state relative-caret-position="574">
+              <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newscript/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="32" column="44" lean-forward="true" selection-start-line="32" selection-start-column="44" selection-end-line="32" selection-end-column="44" />
+            <state relative-caret-position="241">
+              <caret line="24" column="8" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="394">
+              <caret line="66" column="63" lean-forward="false" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
+              <folding>
+                <element signature="e#5069#7427#0" expanded="false" />
+                <element signature="e#7486#7785#0" expanded="false" />
+                <element signature="e#7845#8144#0" expanded="false" />
+                <element signature="e#8492#8627#0" expanded="false" />
+                <element signature="e#8694#9177#0" expanded="false" />
+                <element signature="e#9239#10368#0" expanded="false" />
+                <element signature="e#10433#10721#0" expanded="false" />
+                <element signature="e#11244#11534#0" expanded="false" />
+                <element signature="e#11624#11724#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -97,8 +97,8 @@
       <file leaf-file-name="TetrisServer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../neuralTetris/server/TetrisServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="35" column="16" lean-forward="false" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="16" />
+            <state relative-caret-position="96">
+              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -107,8 +107,75 @@
       <file leaf-file-name="Tetris.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../neuralTetris/js/Tetris.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="825" column="18" lean-forward="true" selection-start-line="825" selection-start-column="18" selection-end-line="825" selection-end-column="18" />
+            <state relative-caret-position="1770">
+              <caret line="1181" column="22" lean-forward="false" selection-start-line="1181" selection-start-column="8" selection-end-line="1181" selection-end-column="22" />
+              <folding>
+                <element signature="e#566#675#0" expanded="false" />
+                <element signature="n#!!block;n#shadeBlendConvert#0" expanded="false" />
+                <element signature="n#!!block;n#shuffle#0" expanded="false" />
+                <element signature="n#!!block;n#getRandomInt#0" expanded="false" />
+                <element signature="n#!!block;n#drawMonomino#0" expanded="false" />
+                <element signature="n#Tetromino#0" expanded="false" />
+                <element signature="n#I_Tetromino#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#I_Tetromino#0" expanded="false" />
+                <element signature="n#!!block;n#checkValidRotation#0;n#I_Tetromino#0" expanded="false" />
+                <element signature="n#!!block;n#rotate#0;n#I_Tetromino#0" expanded="false" />
+                <element signature="n#J_Tetromino#0" expanded="false" />
+                <element signature="n#L_Tetromino#0" expanded="false" />
+                <element signature="n#O_Tetromino#0" expanded="false" />
+                <element signature="n#S_Tetromino#0" expanded="false" />
+                <element signature="n#T_Tetromino#0" expanded="false" />
+                <element signature="n#Z_Tetromino#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Z_Tetromino#0" expanded="false" />
+                <element signature="e#19212#19292#0" expanded="false" />
+                <element signature="e#19306#19510#0" expanded="false" />
+                <element signature="e#19776#19822#0" expanded="false" />
+                <element signature="e#20016#20063#0" expanded="false" />
+                <element signature="e#20686#20730#0" expanded="false" />
+                <element signature="e#20887#21051#0" expanded="false" />
+                <element signature="e#21061#21101#0" expanded="false" />
+                <element signature="e#21216#21271#0" expanded="false" />
+                <element signature="e#21281#21325#0" expanded="false" />
+                <element signature="e#21549#21593#0" expanded="false" />
+                <element signature="e#21948#22017#0" expanded="false" />
+                <element signature="e#22075#22426#0" expanded="false" />
+                <element signature="e#22599#23481#0" expanded="false" />
+                <element signature="e#23528#23584#0" expanded="false" />
+                <element signature="e#23633#23986#0" expanded="false" />
+                <element signature="e#24033#24078#0" expanded="false" />
+                <element signature="n#!!block;n#getNext#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#lineCheck#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#lockPiece#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#setPiece#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#update#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#processInput#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#processReplayInput#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#processUserInput#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#encodeInput#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#decodeInput#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#setBoard#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#drawGrid#0;n#Game#0" expanded="false" />
+                <element signature="n#!!block;n#draw#0;n#Game#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/webdemo/server.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/webdemo/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="11" column="34" lean-forward="true" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -118,9 +185,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getPartition</find>
-      <find>maxmin</find>
-      <find>this.data</find>
       <find>storedata</find>
       <find>stored</find>
       <find>saddle</find>
@@ -142,12 +206,15 @@
       <find>this.websocket.on</find>
       <find>this.websocket.send</find>
       <find>this.websocket.</find>
-      <find>websocket</find>
-      <find>this.websocket</find>
       <find>recv</find>
       <find>path</find>
-      <find>.send</find>
       <find>update</find>
+      <find>websocket</find>
+      <find>.send</find>
+      <find>rdb</find>
+      <find>this.websocket</find>
+      <find>send</find>
+      <find>asyncio</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -182,18 +249,18 @@
         <option value="$PROJECT_DIR$/newscript/Process2.py" />
         <option value="$PROJECT_DIR$/data/P_Partition.json" />
         <option value="$PROJECT_DIR$/src/Process/Partition.js" />
-        <option value="$PROJECT_DIR$/dist/index.html" />
         <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
         <option value="$PROJECT_DIR$/src/Structure/Tree.js" />
         <option value="$PROJECT_DIR$/data/webs/index.html" />
         <option value="$PROJECT_DIR$/data/webs/server/index.js" />
         <option value="$PROJECT_DIR$/data/webs/server.py" />
         <option value="$PROJECT_DIR$/../../neuralTetris/js/Tetris.js" />
-        <option value="$PROJECT_DIR$/data/webdemo/index.html" />
         <option value="$PROJECT_DIR$/src/app/index.html" />
-        <option value="$PROJECT_DIR$/data/webdemo/server.py" />
+        <option value="$PROJECT_DIR$/dist/index.html" />
         <option value="$PROJECT_DIR$/src/app/index.js" />
         <option value="$PROJECT_DIR$/newscript/server.py" />
+        <option value="$PROJECT_DIR$/data/webdemo/index.html" />
+        <option value="$PROJECT_DIR$/data/webdemo/server.py" />
       </list>
     </option>
   </component>
@@ -213,14 +280,12 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="NodeModulesDirectoryManager">
-    <handled-path value="$PROJECT_DIR$/data/webs/server/node_modules" />
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-11" />
-    <option name="y" value="-11" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1589" />
     <option name="width" value="1942" />
-    <option name="height" value="1042" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -237,8 +302,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -249,23 +312,19 @@
             <path>
               <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
               <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
               <item name="newscript" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
-              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
-              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -396,12 +455,13 @@
       <workItem from="1518541579041" duration="2219000" />
       <workItem from="1518651046239" duration="2128000" />
       <workItem from="1518655445571" duration="4714000" />
-      <workItem from="1518792198244" duration="5940000" />
+      <workItem from="1518792198244" duration="6119000" />
+      <workItem from="1518971974945" duration="12144000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="280126000" />
+    <option name="totallyTimeSpent" value="292449000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -413,16 +473,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
+    <frame x="1589" y="0" width="1942" height="1047" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12513256" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1032666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32784432" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5977584" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42362767" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23389831" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14221556" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -474,7 +535,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="209" />
+      <option name="time" value="213" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -707,84 +768,131 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/webdemo/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="5" column="10" lean-forward="true" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/webdemo/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="17" column="4" lean-forward="true" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="61" column="0" lean-forward="true" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        <state relative-caret-position="24">
+          <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="66" column="66" lean-forward="false" selection-start-line="66" selection-start-column="66" selection-end-line="66" selection-end-column="66" />
-          <folding>
-            <element signature="e#4821#7179#0" expanded="false" />
-            <element signature="e#7238#7537#0" expanded="false" />
-            <element signature="e#7597#7896#0" expanded="false" />
-            <element signature="e#8244#8379#0" expanded="false" />
-            <element signature="e#8446#8929#0" expanded="false" />
-            <element signature="e#8991#10120#0" expanded="false" />
-            <element signature="e#10185#10473#0" expanded="false" />
-            <element signature="e#10951#11241#0" expanded="false" />
-            <element signature="e#11331#11431#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dist/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2647">
-          <caret line="14" column="23" lean-forward="false" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1656">
-          <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+        <state relative-caret-position="289">
+          <caret line="37" column="14" lean-forward="true" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../neuralTetris/js/Tetris.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="825" column="18" lean-forward="true" selection-start-line="825" selection-start-column="18" selection-end-line="825" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="1770">
+          <caret line="1181" column="22" lean-forward="false" selection-start-line="1181" selection-start-column="8" selection-end-line="1181" selection-end-column="22" />
+          <folding>
+            <element signature="e#566#675#0" expanded="false" />
+            <element signature="n#!!block;n#shadeBlendConvert#0" expanded="false" />
+            <element signature="n#!!block;n#shuffle#0" expanded="false" />
+            <element signature="n#!!block;n#getRandomInt#0" expanded="false" />
+            <element signature="n#!!block;n#drawMonomino#0" expanded="false" />
+            <element signature="n#Tetromino#0" expanded="false" />
+            <element signature="n#I_Tetromino#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#I_Tetromino#0" expanded="false" />
+            <element signature="n#!!block;n#checkValidRotation#0;n#I_Tetromino#0" expanded="false" />
+            <element signature="n#!!block;n#rotate#0;n#I_Tetromino#0" expanded="false" />
+            <element signature="n#J_Tetromino#0" expanded="false" />
+            <element signature="n#L_Tetromino#0" expanded="false" />
+            <element signature="n#O_Tetromino#0" expanded="false" />
+            <element signature="n#S_Tetromino#0" expanded="false" />
+            <element signature="n#T_Tetromino#0" expanded="false" />
+            <element signature="n#Z_Tetromino#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Z_Tetromino#0" expanded="false" />
+            <element signature="e#19212#19292#0" expanded="false" />
+            <element signature="e#19306#19510#0" expanded="false" />
+            <element signature="e#19776#19822#0" expanded="false" />
+            <element signature="e#20016#20063#0" expanded="false" />
+            <element signature="e#20686#20730#0" expanded="false" />
+            <element signature="e#20887#21051#0" expanded="false" />
+            <element signature="e#21061#21101#0" expanded="false" />
+            <element signature="e#21216#21271#0" expanded="false" />
+            <element signature="e#21281#21325#0" expanded="false" />
+            <element signature="e#21549#21593#0" expanded="false" />
+            <element signature="e#21948#22017#0" expanded="false" />
+            <element signature="e#22075#22426#0" expanded="false" />
+            <element signature="e#22599#23481#0" expanded="false" />
+            <element signature="e#23528#23584#0" expanded="false" />
+            <element signature="e#23633#23986#0" expanded="false" />
+            <element signature="e#24033#24078#0" expanded="false" />
+            <element signature="n#!!block;n#getNext#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#lineCheck#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#lockPiece#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#setPiece#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#update#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#processInput#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#processReplayInput#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#processUserInput#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#encodeInput#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#decodeInput#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#setBoard#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#drawGrid#0;n#Game#0" expanded="false" />
+            <element signature="n#!!block;n#draw#0;n#Game#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="66" column="63" lean-forward="false" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
+          <folding>
+            <element signature="e#5069#7427#0" expanded="false" />
+            <element signature="e#7486#7785#0" expanded="false" />
+            <element signature="e#7845#8144#0" expanded="false" />
+            <element signature="e#8492#8627#0" expanded="false" />
+            <element signature="e#8694#9177#0" expanded="false" />
+            <element signature="e#9239#10368#0" expanded="false" />
+            <element signature="e#10433#10721#0" expanded="false" />
+            <element signature="e#11244#11534#0" expanded="false" />
+            <element signature="e#11624#11724#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../neuralTetris/server/TetrisServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="35" column="16" lean-forward="false" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="16" />
+        <state relative-caret-position="96">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/newscript/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="32" column="44" lean-forward="true" selection-start-line="32" selection-start-column="44" selection-end-line="32" selection-end-column="44" />
+        <state relative-caret-position="241">
+          <caret line="24" column="8" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="574">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/webdemo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="11" column="34" lean-forward="true" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/webdemo/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
           <folding />
         </state>
       </provider>

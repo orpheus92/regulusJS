@@ -64,7 +64,13 @@ function load(){
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
                     //console.log(rawdata);
-                    let ws = new WebSocket('ws://localhost:8000/');
+                    let ws = new WebSocket('ws://localhost:1234/');
+                    //ws.send("WS Created Message");
+                    ws.onmessage = function(e){ console.log(e.data); };
+                    ws.onopen = () => {ws.send('hello');
+                    console.log("Sent!");
+                    };
+
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -255,6 +261,7 @@ function load(){
 
                             selectindex = new Set(cur_selection.map(obj=>obj.index));
                             console.log(cur_selection);
+                            console.log(ws);
                             ws.send("Message");
 
                         });
