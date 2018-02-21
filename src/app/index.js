@@ -1,19 +1,14 @@
 import './style.css';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
-//import {event as currentEvent} from 'd3-selection';
-//import {drag} from 'd3-drag';
-//import * as d3Tip from 'd3-tip';
-//console.log(d3.dispatch);
-//import {drag} from 'd3-drag'
-//console.log(d3drag);
-//import {event as currentEvent} from 'd3-selection';
+
 import {pBar} from '../Slider'
 import {Crystal} from '../Crystal';
 import {Selected, SelectP} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
+import * as pubsub from '../PubSub';
 //import {updateAttribute} from "../Crystal";
 //import {printPlots} from "../Crystal";
 import {Partition} from '../Process';
@@ -63,6 +58,7 @@ function load(){
 
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
+                    pubsub.subscribe("Infochange", printtt);
                     //console.log(rawdata);
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
@@ -162,7 +158,6 @@ function load(){
                                 }
                                 else
                                 {
-
                                     clearTimeout(timer);    //prevent Process-click action
                                     tree.reshapeTree(nodeinfo);
                                     treelevel.plotLevel(tree);
@@ -197,7 +192,10 @@ function load(){
 
                     d3.select("#plottype").on('change',()=>{plots.updateplot(document.getElementById('plottype').value)});//printPlots();});
 
-                    d3.select("#y_attr").on('change',()=>{plots.updateattr(document.getElementById('y_attr').value)});//updateAttribute();});
+                    d3.select("#y_attr").on('change',()=>{
+                        pubsub.publish("Infochange", "Y_val changed");
+
+                        plots.updateattr(document.getElementById('y_attr').value)});//updateAttribute();});
 
                     d3.select("#CompAttr").on('change',()=>{if(cnode!=undefined)
                         loaddata.select(cnode,document.getElementById('CompAttr').value );
@@ -295,7 +293,11 @@ function load(){
 }
 
 
+function printtt(input){
+    console.log(input);
+    console.log("In Print");
 
+}
 function clear(){
     let myNode = document.getElementById("foo");
     while (myNode.firstChild) {
