@@ -27,7 +27,8 @@ let filterdata;
 let selectindex;
 let cur_node;
 let cur_selection;
-
+let level;
+let scale;
     d3.select('#LoadFile')
     .on('click', () =>  {
         //clear();
@@ -58,7 +59,7 @@ function load(){
 
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
-                    pubsub.subscribe("Infochange", printtt);
+                    //pubsub.subscribe("Infochange", printtt);
                     //console.log(rawdata);
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
@@ -88,7 +89,8 @@ function load(){
                     tree.updateTree(pInter,sizeInter);
                     treelevel.plotLevel(tree);
                     //slider.handle.attr("cx", x(pInter));
-                    loaddata.update(pInter,sizeInter);
+                    //loaddata.update(pInter,sizeInter);
+                    pubsub.publish("infoupdate", loaddata, pInter,sizeInter);
                     //Slider Event
 
                     // Filterindex will get updated later during interaction
@@ -123,7 +125,6 @@ function load(){
 
 
                     document.getElementById("tree").onmouseover = function(event) {
-                        //console.log("sasasaas");
                         let totalnode = [];
                         d3.selectAll(".node")
                             .on("click", (nodeinfo)=>{
@@ -150,7 +151,9 @@ function load(){
                                         tree.mark(clicked);
                                         plots.updatediv();
                                         cnode = nodeinfo;
-                                        loaddata.select(cnode,document.getElementById('CompAttr').value );
+                                        //loaddata.select(cnode,document.getElementById('CompAttr').value );
+                                        pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+
                                         clicks = 0;             //after action performed, reset counter
 
                                     }, DELAY);
@@ -166,40 +169,47 @@ function load(){
                                 }
 
                             })
-                            .on("mouseover", (nodeinfo)=>{loaddata.select(nodeinfo,document.getElementById('CompAttr').value);})
-                            .on("mouseout", ()=>{loaddata.select(cnode,document.getElementById('CompAttr').value);
+                            .on("mouseover", (nodeinfo)=>{
+                                //loaddata.select(nodeinfo,document.getElementById('CompAttr').value);
+                                pubsub.publish("infoselect", loaddata, nodeinfo, document.getElementById('CompAttr').value);
+
+                            })
+                            .on("mouseout", ()=>{
+                                //loaddata.select(cnode,document.getElementById('CompAttr').value);
+                                pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+
                             });
 
                     };
 
                     d3.select("#level").on('change',()=>{
-                        let level = document.getElementById('level').value;
-                        treelevel.Level = level;
-                        treelevel.switchLevel();
+                        level = document.getElementById('level').value;
+                        scale = document.getElementById('scale').value;
 
-                        tree.Level = level;
-                        tree.layout();
-                        tree.render();});
+                        pubsub.publish("levelchange1", treelevel,level,scale);
+                        pubsub.publish("levelchange2", tree,level,scale);
+                        });
 
                     d3.select("#scale").on('change',()=>{
-                        let scale = document.getElementById('scale').value;
-                        treelevel.Scale = scale;
-                        treelevel.switchLevel();
+                        level = document.getElementById('level').value;
+                        scale = document.getElementById('scale').value;
 
-                        tree.Scale = scale;
-                        tree.layout();
-                        tree.render();});
+                        pubsub.publish("levelchange1", treelevel,level,scale);
+                        pubsub.publish("levelchange2", tree,level,scale);
+                        });
 
-                    d3.select("#plottype").on('change',()=>{plots.updateplot(document.getElementById('plottype').value)});//printPlots();});
+                    d3.select("#plottype").on('change',()=>{
+                        pubsub.publish("plottypechange", plots,document.getElementById('plottype').value);
+                    });
 
                     d3.select("#y_attr").on('change',()=>{
-                        pubsub.publish("Infochange", "Y_val changed");
+                        pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                    });
 
-                        plots.updateattr(document.getElementById('y_attr').value)});//updateAttribute();});
-
-                    d3.select("#CompAttr").on('change',()=>{if(cnode!=undefined)
-                        loaddata.select(cnode,document.getElementById('CompAttr').value );
-
+                    d3.select("#CompAttr").on('change',()=> {
+                        if (cnode != undefined) {
+                        pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+                        }
                     });
 
 
@@ -212,7 +222,9 @@ function load(){
                         // update plot level
                         treelevel.plotLevel(tree);
                         // update data
-                        loaddata.update(pInter,sizeInter);});
+                        pubsub.publish("infoupdate", loaddata, pInter,sizeInter);
+
+                    });
 
                     d3.select("#SetRange").on('click',()=>{
 
@@ -293,11 +305,7 @@ function load(){
 }
 
 
-function printtt(input){
-    console.log(input);
-    console.log("In Print");
 
-}
 function clear(){
     let myNode = document.getElementById("foo");
     while (myNode.firstChild) {

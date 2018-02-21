@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import * as d3Tip from 'd3-tip';
 import './style.css';
+import * as pubsub from '../PubSub';
 //import {event as currentEvent} from 'd3-selection';
 import {myBrush} from '../customd3';
 //console.log('.');
@@ -36,6 +37,11 @@ export class Selected{
         }
         this._obj = obj;
         this._attr = attr;
+        pubsub.subscribe("plotupdateattr", this.updateattr);
+        pubsub.subscribe("plottypechange", this.updateplot);
+
+
+        //console.log(this);
     }
     // Reconstruct the plot info
     reconstruct(){
@@ -54,8 +60,7 @@ export class Selected{
             if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
             inputnode.data._saddleinfo =  this._rawdata[inputnode.data._saddleind];
         }
-    else
-        {
+        else {
             selected = [];
             selected.push(inputnode);
             if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
@@ -90,7 +95,7 @@ export class Selected{
             //this._totalobj.push(this._obj);
             //this._totalattr.push(this._attr);
         }
-        this.updateplot();
+        this.updateplot("null",this,this._plottype);
 
     }
     // remove all divs in it
@@ -105,45 +110,47 @@ export class Selected{
             }
     }
     // Update all the plots based on plot selection
-    updateplot(option){
+    updateplot(channel, self, option){
         //console.log(option);
         let plottype;
 
-        if (option != undefined)
-            this._plottype = option;
+        if (option != undefined) {
+            self._plottype = option;
+            //this = self;
+            }
 
-        plottype = this._plottype;
-        this.removediv();
+        plottype = self._plottype;
+        self.removediv();
         //let dataFile = option;//document.getElementById('dataset').value;
         switch (plottype) {
             case "Coordinate": {
                 //this.clearPlots();
-                this.rawDataPlot(option);
+                self.rawDataPlot(option);
                 break;
             }
             case "BoxPlot": {
                 //this.clearPlots();
-                this.boxPlot(option);
+                self.boxPlot(option);
                 break;
             }
             case "Histogram": {
                 //this.clearPlots();
-                this.histogramPlot(option);
+                self.histogramPlot(option);
                 break;
             }
             case "Pairwise": {
                 //this.clearPlots();
-                this.PairwisePlot(option);
+                self.PairwisePlot(option);
                 break;
             }
             case "ScatterMat": {
                 //this.clearPlots();
-                this.scatterMat(option);
+                self.scatterMat(option);
                 break;
             }
             case "AllScatter": {
                 //this.clearPlots();
-                this.multiscatter(option);
+                self.multiscatter(option);
                 break;
             }
             case "Stats": {
@@ -154,9 +161,11 @@ export class Selected{
         }
     }
     // Update all the plots based on attr selection
-    updateattr(yattr){
-        this._y_attr = yattr;
-        this.updateplot();
+    updateattr(channel,self,yattr){
+
+        self._y_attr = yattr;
+        self.updateplot(channel,self);
+
     }
     //pairwisePlot
     PairwisePlot() {

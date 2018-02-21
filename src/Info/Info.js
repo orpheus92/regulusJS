@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 
 import './style.css';
+import * as pubsub from '../PubSub';
 
 export class Info {
 
@@ -11,6 +12,8 @@ export class Info {
         this.sMSC = d3.select("#selected");//.text("rawdata");
         this.cper = d3.select("#cper");//.text("rawdata");
         this.csize = d3.select("#csize");//.text("rawdata");
+        pubsub.subscribe("infoselect",this.select);
+        pubsub.subscribe("infoupdate",this.update);
 
     }
     create(data,rawdata,cpInter,csInter){
@@ -36,25 +39,23 @@ export class Info {
         return([this.maxP, this.minP]);
     }
 
-    update(cpInter,csInter){
-
-        this.cper.selectAll(".cplabel").remove();
-        this.csize.selectAll(".cslabel").remove();
-
-        this.cper.append("li").text("Current Persistence: "+ cpInter).classed("cplabel", true);
-        this.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
+    update(channel,self,cpInter,csInter){
+        self.cper.selectAll(".cplabel").remove();
+        self.csize.selectAll(".cslabel").remove();
+        self.cper.append("li").text("Current Persistence: "+ cpInter).classed("cplabel", true);
+        self.csize.append("li").text("Partition Size: "+ csInter).classed("cslabel", true);
 
     }
 
-    select(snode, attr){
+    select(channel, self, snode, attr){
         if (snode!=undefined) {
 
-            this.sMSC.selectAll(".sMSC").remove();
+            self.sMSC.selectAll(".sMSC").remove();
             let p_arr = Array.from(snode.data._total);
 
-            let selectionarr = p_arr.map(x=>parseFloat(this.rawdata[x][attr]));
+            let selectionarr = p_arr.map(x=>parseFloat(self.rawdata[x][attr]));
 
-            this.sMSC
+            self.sMSC
                 .append("li").text("Total Points in Selected Partition: " + snode.data._total.size).classed("sMSC", true)
                 .append("li").text("Minimum Index: " + p_arr[selectionarr.indexOf(Math.min(...selectionarr))]).classed("sMSC", true)
                 .append("li").text("Minimum Value: " + Math.min(...selectionarr)).classed("sMSC", true)

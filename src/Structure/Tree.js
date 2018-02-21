@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 //let transition = d3.transition();
 //console.log(transition.sel);
 //import * as d3Tip from 'd3-tip';
+import * as pubsub from '../PubSub';
 
 import './style.css';
 
@@ -115,8 +116,16 @@ export class Tree{
         this.Level = "tLevel";
         this.Scale = "linear";
         console.log(this);
-    }
+        pubsub.subscribe("levelchange2", this.updatelevel);
 
+
+    }
+    updatelevel(channel,self,level,scale){
+        self.Level = level;
+        self.Scale = scale;
+        self.layout();
+        self.render();
+    }
     updateTree(ppp,sss) {
         this.pInter = ppp;
         this.sizeInter = sss;

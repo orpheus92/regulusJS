@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import {getKeyByValue} from "./Tree";
 import './style.css';
+import * as pubsub from '../PubSub';
+
 export class TreeLevel {
     constructor(){
         //this.svgBounds = d3.select("#treesvg").node().getBoundingClientRect();
@@ -16,6 +18,7 @@ export class TreeLevel {
 
         this.Level = "tLevel";
         this.Scale = "linear";
+        pubsub.subscribe("levelchange1", this.switchLevel);
 
     }
     
@@ -148,15 +151,17 @@ export class TreeLevel {
 
     }
 
-    switchLevel() {
-
-        switch (this.Level) {
+    switchLevel(channel,self,level,scale) {
+        //if (level!=undefined)
+        self.Level = level;
+        self.Scale = scale;
+        switch (self.Level) {
             case "tLevel": {
-                this.plotLevel();
+                self.plotLevel();
                 break;
             }
             case "pLevel": {
-                this.plotLevel();
+                self.plotLevel();
                 break;
             }
 

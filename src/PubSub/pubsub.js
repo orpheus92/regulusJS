@@ -5,6 +5,7 @@
 let channels = new Map();
 
 export function subscribe(channel, listener) {
+  //console.log(listener)
   if (!channels.has(channel)) channels.set(channel, new Set());
   channels.get(channel).add(listener);
   return this;
@@ -20,6 +21,7 @@ export function unsubscribe(topic, listener) {
 }
 
 export function publish(msg, ...data) {
+  //console.log(data);
   _publish(false, msg, data);
   return this;
 }
