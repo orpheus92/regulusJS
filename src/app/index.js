@@ -9,8 +9,7 @@ import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
 import * as pubsub from '../PubSub';
-//import {updateAttribute} from "../Crystal";
-//import {printPlots} from "../Crystal";
+
 import {Partition} from '../Process';
 import {rangefilter} from "../Slider/rangefilter";
 //let updateAttribute = updateAttribute();
@@ -23,7 +22,7 @@ let partition;
 let loaddata;
 let cnode;
 let treelevel;
-let filterdata;
+//let filterdata;
 let selectindex;
 let cur_node;
 let cur_selection;
@@ -40,14 +39,17 @@ function load(){
 
         for (let i = 0; i< rawdata.columns.length; i++)
         {
+            // Should have only output measures
             d3.selectAll("#y_attr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
+            // Should have all attrs for range filter
             d3.selectAll("#RangeAttr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
+            // Should have all attrs for Info
             d3.selectAll("#CompAttr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
@@ -59,8 +61,6 @@ function load(){
 
             d3.csv('../data/Final_Tree.csv', function (error, treedata){
                 d3.json('../data/Base_Partition.json', function (error, basedata) {
-                    //pubsub.subscribe("Infochange", printtt);
-                    //console.log(rawdata);
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -88,8 +88,7 @@ function load(){
                     treelevel = new TreeLevel();
                     tree.updateTree(pInter,sizeInter);
                     treelevel.plotLevel(tree);
-                    //slider.handle.attr("cx", x(pInter));
-                    //loaddata.update(pInter,sizeInter);
+
                     pubsub.publish("infoupdate", loaddata, pInter,sizeInter);
                     //Slider Event
 

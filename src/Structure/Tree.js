@@ -15,10 +15,10 @@ export class Tree{
     constructor(pc_relation,partition,basedata) {
         //console.log(partition);
         this._maxsize = 0;
-        this.treewidth = 670;
-        this.treelength =380;
-        this.translatex = 50;
-        this.translatey = 100;
+        this.treewidth = 470;
+        this.treelength =250;
+        this.translatex = 30;
+        this.translatey = 70;
 
         let totalpers = [];
         let allsaddle = [];
@@ -267,7 +267,7 @@ export class Tree{
         {
             this._nodegroup.selectAll(".node").data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r",20 / Math.sqrt(this._circlesize) + 1)
+            .attr("r",10 / Math.sqrt(this._circlesize) + 1)
             .attr("transform", function (d) {
                 if (d.parent != null)
                     if (d.parent.oldx != null) {

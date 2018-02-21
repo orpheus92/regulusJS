@@ -42,9 +42,9 @@
 
 ;}
 
-.ticks{
+.tick{
     color: #1B2733;
-    font: 16px sans-serif;
+    font: 10px sans-serif;
 }
 
 .track,
@@ -113,7 +113,7 @@
 }
 
 .button text {
-    font-size: 20px;
+    font-size: 10px;
     fill: #eee;
     pointer-events: none;
     text-anchor: middle;

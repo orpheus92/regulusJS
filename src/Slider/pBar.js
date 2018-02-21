@@ -22,9 +22,9 @@ export class pBar{
 
        // 2. Use the margin convention practice 
        let margin = {top: 10, right: 10, bottom: 10, left: 10},
-           width = 300,//window.innerWidth - margin.left - margin.right, // Use the window's width
-           height = 200;//window.innerHeight - margin.top - margin.bottom; // Use the window's height
-       let padding = 40;
+           width = 230,//window.innerWidth - margin.left - margin.right, // Use the window's width
+           height = 140;//window.innerHeight - margin.top - margin.bottom; // Use the window's height
+       let padding = 30;
        this.padding = padding;
        this.width = width;
        this.height = height;
@@ -92,7 +92,7 @@ export class pBar{
 
        svg.append("text")
            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ (padding/3) +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+           .attr("transform", "translate("+ 0 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
            .text("Partitions");
 
        svg.append("text")
@@ -110,7 +110,7 @@ export class pBar{
            .y(height) // Y Location
            .labels(["-"]) // Array of round-robin labels
            .callback(callback) // User callback on click
-           .fontSize(15) // Font Size
+           .fontSize(10) // Font Size
            .color("black") // Button text color
            .fill("steelblue") // Button fill
            .fillHighlight("cyan") // Button fill when highlighted
@@ -127,7 +127,7 @@ export class pBar{
            .y(height) // Y Location
            .labels(["+"]) // Array of round-robin labels
            .callback(callback2) // User callback on click
-           .fontSize(15) // Font Size
+           .fontSize(10) // Font Size
            .color("black") // Button text color
            .fill("steelblue") // Button fill
            .fillHighlight("cyan") // Button fill when highlighted
@@ -218,7 +218,7 @@ export class pBar{
 
        svg.append("text")
            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ (this.padding/3) +","+(this.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+           .attr("transform", "translate("+ 0 +","+(this.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
            .text("Partitions");
 
        svg.append("text")
@@ -236,7 +236,7 @@ export class pBar{
            .y(this.height) // Y Location
            .labels(["-"]) // Array of round-robin labels
            .callback(callback) // User callback on click
-           .fontSize(15) // Font Size
+           .fontSize(10) // Font Size
            .color("black") // Button text color
            .fill("steelblue") // Button fill
            .fillHighlight("cyan") // Button fill when highlighted
@@ -253,7 +253,7 @@ export class pBar{
            .y(this.height) // Y Location
            .labels(["+"]) // Array of round-robin labels
            .callback(callback2) // User callback on click
-           .fontSize(15) // Font Size
+           .fontSize(10) // Font Size
            .color("black") // Button text color
            .fill("steelblue") // Button fill
            .fillHighlight("cyan") // Button fill when highlighted

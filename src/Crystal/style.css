@@ -59,3 +59,7 @@ circle.highlight{
     float:left;
 
 }
+.ticks{
+    color: #1B2733;
+    font: 10px sans-serif;
+}
