@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Structure/Tree.js" afterPath="$PROJECT_DIR$/src/Structure/Tree.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
     </list>
@@ -47,15 +46,15 @@
       <file leaf-file-name="Tree.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="667" column="10" lean-forward="false" selection-start-line="667" selection-start-column="10" selection-end-line="667" selection-end-column="10" />
+            <state relative-caret-position="347">
+              <caret line="643" column="41" lean-forward="false" selection-start-line="643" selection-start-column="41" selection-end-line="643" selection-end-column="41" />
               <folding>
                 <element signature="e#211#247#0" expanded="true" />
                 <element signature="n#!!block;n#getlowestleaf#0;n#!!block;n#constructor#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#updateTree#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#updatemodel#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#render#0;n#Tree#0" expanded="false" />
-                <element signature="e#12153#12376#0" expanded="false" />
+                <element signature="e#12050#12273#0" expanded="false" />
                 <element signature="n#!!doc;n#clearTree#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#clearTree#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#reshapeTree#0;n#Tree#0" expanded="false" />
@@ -65,7 +64,6 @@
                 <element signature="n#!!block;n#updatefilter#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#searchchildren#0;n#Tree#0" expanded="false" />
                 <element signature="n#!!block;n#checklowestchild#0" expanded="false" />
-                <element signature="n#!!block;n#diagonal#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -86,11 +84,11 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2980">
-              <caret line="70" column="33" lean-forward="false" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
+            <state relative-caret-position="326">
+              <caret line="70" column="34" lean-forward="false" selection-start-line="70" selection-start-column="34" selection-end-line="70" selection-end-column="34" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
-                <element signature="e#4539#7326#0" expanded="false" />
+                <element signature="e#4540#7327#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -140,7 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cell.call</find>
       <find>loaddata</find>
       <find>treelevel</find>
       <find>Scale</find>
@@ -166,10 +163,11 @@
       <find>_maxlevel</find>
       <find>mytree</find>
       <find>d.xx</find>
-      <find>.xx</find>
       <find>font</find>
-      <find>filterdata</find>
       <find>chart</find>
+      <find>.xx</find>
+      <find>filterdata</find>
+      <find>diagonal</find>
     </findStrings>
     <replaceStrings>
       <replace>.fontSize(10)</replace>
@@ -423,7 +421,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="293047000" />
+    <option name="totallyTimeSpent" value="294617000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -833,18 +831,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Slider/pBar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-783">
-          <caret line="7" column="34" lean-forward="false" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Crystal/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
           <caret line="55" column="1" lean-forward="true" selection-start-line="55" selection-start-column="1" selection-end-line="55" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Info/Info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Slider/pBar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-783">
+          <caret line="7" column="34" lean-forward="false" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
           <folding />
         </state>
       </provider>
@@ -859,36 +867,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2980">
-          <caret line="70" column="33" lean-forward="false" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
+        <state relative-caret-position="326">
+          <caret line="70" column="34" lean-forward="false" selection-start-line="70" selection-start-column="34" selection-end-line="70" selection-end-column="34" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
-            <element signature="e#4539#7326#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Info/Info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#4540#7327#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Structure/Tree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="667" column="10" lean-forward="false" selection-start-line="667" selection-start-column="10" selection-end-line="667" selection-end-column="10" />
+        <state relative-caret-position="347">
+          <caret line="643" column="41" lean-forward="false" selection-start-line="643" selection-start-column="41" selection-end-line="643" selection-end-column="41" />
           <folding>
             <element signature="e#211#247#0" expanded="true" />
             <element signature="n#!!block;n#getlowestleaf#0;n#!!block;n#constructor#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#updateTree#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#updatemodel#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#render#0;n#Tree#0" expanded="false" />
-            <element signature="e#12153#12376#0" expanded="false" />
+            <element signature="e#12050#12273#0" expanded="false" />
             <element signature="n#!!doc;n#clearTree#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#clearTree#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#reshapeTree#0;n#Tree#0" expanded="false" />
@@ -898,7 +896,6 @@
             <element signature="n#!!block;n#updatefilter#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#searchchildren#0;n#Tree#0" expanded="false" />
             <element signature="n#!!block;n#checklowestchild#0" expanded="false" />
-            <element signature="n#!!block;n#diagonal#0" expanded="false" />
           </folding>
         </state>
       </provider>

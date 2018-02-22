@@ -82,12 +82,9 @@ export class Tree{
             d.data._sizeinit = d.data._size;
             this._maxsize = (this._maxsize>d.data._size)?this._maxsize :d.data._size;
         });
-        //console.log(this._root);
 
-        //this._initsize = this._root.descendants().length;
-        //this._alldata = pc_relation;
-        this._treefunc = d3.tree()//.separation(function(a, b) { console.log("separate ");return (50); })
-            .size([this.treewidth,this.treelength]);//.children(function(d) {return d.children;});
+        //this._treefunc = d3.tree()
+        //    .size([this.treewidth,this.treelength]);//.children(function(d) {return d.children;});
 
 
         this._color = d3.scaleSqrt().domain([1,this._maxsize])
@@ -116,7 +113,6 @@ export class Tree{
         this.Scale = "linear";
         console.log(this);
         pubsub.subscribe("levelchange2", this.updatelevel);
-
 
     }
     updatelevel(channel,self,level,scale){
@@ -158,20 +154,24 @@ export class Tree{
         //this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.data.level;}))
         this._maxx = Math.max.apply(Math,this._activenode.map(function(o){return o.xx;}))
         let scalex = d3.scaleLinear().nice();
-        scalex.range([this.treewidth, 0]);
         scalex.domain([this._maxx,0]);
+        if(this._maxx==0)
+            scalex.range([this.treewidth/2, 0]);
+        else
+            scalex.range([this.treewidth, 0]);
+
+
         switch (this.Level) {
             case "tLevel": {
                 this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.y;}));
 
                 let scaley = d3.scaleLinear().nice();
-                scaley.range([this.treelength, 0]);
                 scaley.domain([this._maxlevel,0]);
+                scaley.range([this.treelength, 0]);
                 this._root.descendants().forEach(d => {
-                    //console.log(d.xx);
+
                     d.y = scaley(d.y);
                     d.x = scalex(d.xx);
-                    //console.log("sasadasdas")
                     if (this._filter!=undefined){
                         d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
                         d.data._size = d.data._total.size;
@@ -201,6 +201,8 @@ export class Tree{
                     }
                     this._root.descendants().forEach(d => {
                         d.y = scale(d.data._persistence);
+                        d.x = scalex(d.xx);
+
                         if (this._filter!=undefined){
                             d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
                             d.data._size = d.data._total.size;
@@ -232,6 +234,7 @@ export class Tree{
                             //console.log(plow);
                         }
                         this._root.descendants().forEach(d => {
+                            d.x = scalex(d.xx);
                             d.y = (d.data._persistence!=0)?scaleexp(d.data._persistence):scaleexp(this.pers[this.pers.length-1]);
                             if (this._filter!=undefined){
                                 d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
@@ -625,22 +628,21 @@ export function diagonal(source, target, arg3, arg4) {
     if (arg3 === undefined)
     {
         return "M" + source.x + "," + source.y
-            //+ "C" + (source.x + target.x) / 2 + "," + source.y
-            //+ " " + (source.x + target.x) / 2 + "," + target.y
-            + "C" + (source.x*9/10+target.x/10)  + "," + target.y
-            + " " + (source.x + target.x) / 2 + "," + target.y
-            //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
-            //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
+
+            //+ "C" + (source.x*9/10+target.x/10)  + "," + target.y
+            //+ " " + (source.x + target.x) / 2 + "," + source.y
+            + "C" + source.x + "," + (source.y + target.y) / 2
+            + " " + target.x + "," +  (source.y + target.y) / 2
             + " " + target.x + "," + target.y;
     }
     else{
         return "M" + source + "," + target
-            //+ "C" + (source.x + target.x) / 2 + "," + source.y
-            //+ " " + (source.x + target.x) / 2 + "," + target.y
-            + "C" + (source*9/10+arg3/10)  + "," + arg4
-            + " " + (source + arg3) / 2 + "," + arg4
-            //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
-            //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
+
+            //+ "C" + (source*9/10+arg3/10)  + "," + arg4
+            //+ " " + (source + arg3) / 2 + "," + arg4
+            + "C" + source + "," + (target + arg4) / 2
+            + " " + arg3 + "," +  (target + arg4) / 2
+
             + " " + arg3 + "," + arg4;
     }
 }
