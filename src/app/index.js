@@ -1,15 +1,17 @@
 import './style.css';
-import * as d3 from 'd3';
-import {event as currentEvent} from 'd3-selection';
+import {event,select,selectAll} from 'd3-selection';
+import {csv,json,scaleLinear} from 'd3';
+//import {event as currentEvent} from 'd3';
+import {drag} from 'd3-drag';
+import { event as currentEvent } from 'd3-selection';
+//d3.getEvent = () => require("d3-selection").event;
 
 import {pBar} from '../Slider'
-import {Crystal} from '../Crystal';
 import {Selected, SelectP} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
 import * as pubsub from '../PubSub';
-
 import {Partition} from '../Process';
 import {rangefilter} from "../Slider/rangefilter";
 //let updateAttribute = updateAttribute();
@@ -28,39 +30,42 @@ let cur_node;
 let cur_selection;
 let level;
 let scale;
-    d3.select('#LoadFile')
+    select('#LoadFile')
     .on('click', () =>  {
         //clear();
         load();
+        console.log("dasasd")
     });
 
 function load(){
-    d3.csv('../data/Pu_TOT.csv', rawdata=> {
-
+    csv('../data/Pu_TOT.csv', rawdata=> {
+        console.log(rawdata)
         for (let i = 0; i< rawdata.columns.length; i++)
         {
             // Should have only output measures
-            d3.selectAll("#y_attr")
+            selectAll("#y_attr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
             // Should have all attrs for range filter
-            d3.selectAll("#RangeAttr")
+            selectAll("#RangeAttr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
             // Should have all attrs for Info
-            d3.selectAll("#CompAttr")
+            selectAll("#CompAttr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-        d3.json('../data/P_Partition.json', function (error, data) {
+        json('../data/P_Partition.json', function (error, data) {
             if (error) throw error;
             //will be updated later
 
-            d3.csv('../data/Final_Tree.csv', function (error, treedata){
-                d3.json('../data/Base_Partition.json', function (error, basedata) {
+            csv('../data/Final_Tree.csv', function (error, treedata){
+                json('../data/Base_Partition.json', function (error, basedata) {
+                    //let drag = d3.drag();
+                    //console.log(currentEvent)
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -77,19 +82,19 @@ function load(){
 
                     // Data View Constructor
                     loaddata = new Info();
-                    let[maxp,minp] = loaddata.create(data,rawdata,pInter,sizeInter);
+                    let [maxp, minp] = loaddata.create(data, rawdata, pInter, sizeInter);
 
                     // Partition
                     partition = new Partition();
                     partition.initialPartition(data);
 
                     // Tree
-                    tree = new Tree(treedata,partition,basedata);
+                    tree = new Tree(treedata, partition, basedata);
                     treelevel = new TreeLevel();
-                    tree.updateTree(pInter,sizeInter);
+                    tree.updateTree(pInter, sizeInter);
                     treelevel.plotLevel(tree);
 
-                    pubsub.publish("infoupdate", loaddata, pInter,sizeInter);
+                    pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
                     //Slider Event
 
                     // Filterindex will get updated later during interaction
@@ -99,20 +104,41 @@ function load(){
                     // Everytime this gets updated, tree should get updated, plot should get updated
 
 
-                    //let newslider= new Slider(d3.select("#treesvg"));
-                    //let slider = newslider.createslider([minp, maxp]);
-                    /*
-                    slider.curslide.call(d3.drag()//d3.drag()
-                        //.on("start.interrupt", function() {
+                    let newslider = new Slider(select("#treesvg"));
+                    let slider = newslider.createslider([minp, maxp]);
+                    //console.log(slider);
+                    //let drag = import('d3');
+                    //console.log(drag);
+
+                    //console.log(drag.drag());
+                    //import(drag);
+                    let x = scaleLinear()
+                        .domain([minp, maxp])
+                        .range([0, 150])//size of slider and range of output, put persistence here
+                        .clamp(true);
+                    //d3.event =event;
+                    //console.log(d3.event);
+
+                    slider.curslide.call(drag()//d3.drag()
+                        //.on("start.interrupt", function() event{
                         //    console.log("AAA");
                         //    slider.interrupt(); })
-                        .on("start drag", function() {console.log("BBB");
-                            slider.handle.attr("cx", x(x.invert(d3.event.x))); //initial position for the slider
-                            pInter = x.invert(d3.event.x);
-                            loaddata.update(pInter,sizeInter);
-                            tree.updateTree(pInter,sizeInter);
-                        }));
-                    */
+                            .on("start drag", function () {
+                                //console.log("BBB");
+                                slider.handle.attr("cx", x(x.invert(event.x))); //initial position for the slider
+                                pInter = x.invert(event.x);
+                                //loaddata.update(pInter, sizeInter);
+                                pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+                                //console.log()
+                                //tree.updateTree(pInter, sizeInter);
+                                [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                                // update persistence chart and size chart
+                                pb.updateBar(pInter,sizeInter);
+                                // update plot level
+                                treelevel.plotLevel(tree);
+                            })
+                    );
+
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
 
@@ -125,16 +151,16 @@ function load(){
 
                     document.getElementById("tree").onmouseover = function(event) {
                         let totalnode = [];
-                        d3.selectAll(".node")
+                        selectAll(".node")
                             .on("click", (nodeinfo)=>{
                                 //console.log("node",nodeinfo);
-                                if (d3.event.ctrlKey)
+                                if (event.ctrlKey)
                                 {
                                     plots.storedata(nodeinfo);
                                     totalnode.push(nodeinfo);
                                 }
                                 else
-                                {d3.selectAll(".Clicked").classed("Clicked",false);
+                                {selectAll(".Clicked").classed("Clicked",false);
                                     plots.removedata();
                                     plots.storedata(nodeinfo);
                                 }
@@ -181,7 +207,7 @@ function load(){
 
                     };
 
-                    d3.select("#level").on('change',()=>{
+                    select("#level").on('change',()=>{
                         level = document.getElementById('level').value;
                         scale = document.getElementById('scale').value;
 
@@ -189,7 +215,7 @@ function load(){
                         pubsub.publish("levelchange2", tree,level,scale);
                         });
 
-                    d3.select("#scale").on('change',()=>{
+                    select("#scale").on('change',()=>{
                         level = document.getElementById('level').value;
                         scale = document.getElementById('scale').value;
 
@@ -197,23 +223,24 @@ function load(){
                         pubsub.publish("levelchange2", tree,level,scale);
                         });
 
-                    d3.select("#plottype").on('change',()=>{
+                    select("#plottype").on('change',()=>{
                         pubsub.publish("plottypechange", plots,document.getElementById('plottype').value);
                     });
 
-                    d3.select("#y_attr").on('change',()=>{
+                    select("#y_attr").on('change',()=>{
                         pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                     });
 
-                    d3.select("#CompAttr").on('change',()=> {
+                    select("#CompAttr").on('change',()=> {
                         if (cnode != undefined) {
                         pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
                         }
                     });
 
 
-                    d3.selectAll(".wb-button").on('click',()=>{
+                    selectAll(".wb-button").on('click',()=>{
                         let option = pb.mycb();
+                        //console.log(option);
                         // update tree plot
                         [pInter,sizeInter] = tree.setParameter(option);
                         // update persistence chart and size chart
@@ -222,10 +249,10 @@ function load(){
                         treelevel.plotLevel(tree);
                         // update data
                         pubsub.publish("infoupdate", loaddata, pInter,sizeInter);
-
+                        slider.handle.attr("cx", x(pInter));
                     });
 
-                    d3.select("#SetRange").on('click',()=>{
+                    select("#SetRange").on('click',()=>{
 
                         //console.log('Clicked event');
                         let filterattr = document.getElementById('RangeAttr').value;
@@ -247,7 +274,7 @@ function load(){
 
                     });
 
-                    d3.select("#RemoveRange").on('click',()=>{
+                    select("#RemoveRange").on('click',()=>{
                         console.log(plots);
                             let filterindex = tree._root.data._totalinit;
                             tree.updatefilter(filterindex);
@@ -257,7 +284,7 @@ function load(){
                     });
 
 
-                    d3.select('#BrushSelect')
+                    select('#BrushSelect')
                         .on('click', () =>  {
                             [cur_selection,cur_node] = plots.highlight();
 
@@ -267,7 +294,7 @@ function load(){
 
                         });
 
-                    d3.select('#searchC')
+                    select('#searchC')
                         .on('click', () =>  {
                             //clear();
                             if(selectindex!= undefined)
@@ -276,13 +303,13 @@ function load(){
                             console.log("No Points Selected");
                         });
 
-                    d3.select('#removeS')
+                    select('#removeS')
                         .on('click', () =>  {
                             d3.selectAll("#selected").attr("id", null);
 
                         });
 
-                    d3.select('#createPlot')
+                    select('#createPlot')
                         .on('click', () =>  {
                             let selectP = document.getElementById('selectP').value ;
 
@@ -293,7 +320,7 @@ function load(){
                             }
                         });
 
-                    d3.select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
+                    select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
 
                 });
             });

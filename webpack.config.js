@@ -7,11 +7,12 @@ module.exports = {
   entry: {
     main: './src/app/index.js',
     vendor: [
-      'd3','d3-tip','d3-shape'//,'d3-selection'
+      'd3','d3-tip','d3-shape'
     ]
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
+
     filename: '[name].[chunkhash].js',
     //libraryTarget: "amd"
   },

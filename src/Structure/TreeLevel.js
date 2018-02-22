@@ -12,9 +12,9 @@ export class TreeLevel {
         this.yScale = d3.scaleLinear().nice();
         //this.yScale2 = d3.scalePow().nice();
         this.yScale2 = d3.scaleLog().nice();
-
         d3.select("#treelevel").append("rect").attr("class", "bar");
         d3.select("#treelevel").append("text").attr("class", "levellabel");
+        //console.log(d3.select("#treelevel"))
 
         this.Level = "tLevel";
         this.Scale = "linear";
@@ -50,7 +50,7 @@ export class TreeLevel {
 
                     d3.select(".levellabel")
                         .attr("x", 40)
-                        .attr("y", -40)
+                        .attr("y", -20)
                         .text("Tree Level")
                         .attr("font-size", "15px")
                         .attr("class", "levellabel")

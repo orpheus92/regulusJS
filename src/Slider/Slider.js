@@ -11,12 +11,10 @@ export class Slider{
 constructor(inputsvg){
     this.inputsvg = inputsvg;
 
-
-
 }
 
 createslider(range){
-
+    //console.log(range);
     //let svg = d3.select("svg"),
     //console.log("Create Slider");
     //console.log(this.inputsvg);
@@ -29,9 +27,9 @@ createslider(range){
     .range([0, 150])//size of slider and range of output, put persistence here
     .clamp(true);
 
-    let slider = this.inputsvg.select("#slider");
+    let slider = this.inputsvg.select("#treeslider");
         //.attr("class", "slider");
-        slider.attr("transform", "translate(" +this.inputsvg.attr("width")*3/4 + "," + 10 + ")");
+        slider.attr("transform", "translate(" +20 + "," + 10 + ")");
     //console.log(x.domain(), range[1]);
 
     //console.log(x.range());
@@ -56,15 +54,12 @@ createslider(range){
 
     slider.handle = slider.insert("circle", ".track-overlay")
         .attr("class", "handle")
-        .attr("r", 8).attr("id","#myhandle");
-
+        .attr("r", 5).attr("id","#myhandle");
+    //console.log(slider);
     slider.curslide = curslide;
     return slider;
 
 
-
-
-    //return slider
 }
 createbutton(){
 
