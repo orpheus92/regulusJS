@@ -57,15 +57,13 @@ export class Tree{
 
                 d.children.forEach((tt,i)=>{
                     d.children[i]=getlowestleaf(tt);
-
                     d.children[i].parent =(d.children[i].parent.depth<d.depth)?d.children[i].parent:d;
-                    d.children[i].depth = (d.children[i].parent.depth<d.depth)?d.children[i].parent.depth+1:d.depth+1;
+                    //d.children[i].depth = (d.children[i].parent.depth<d.depth)?d.children[i].parent.depth+1:d.depth+1;
                     }
 
                 );
 
             }
-
             accum = [];
             accum = getbaselevelInd(d, accum);
 
@@ -84,6 +82,7 @@ export class Tree{
             d.data._sizeinit = d.data._size;
             this._maxsize = (this._maxsize>d.data._size)?this._maxsize :d.data._size;
         });
+        //console.log(this._root);
 
         //this._initsize = this._root.descendants().length;
         //this._alldata = pc_relation;
@@ -146,23 +145,33 @@ export class Tree{
                 nodeupdate(this._root, this.pShow, this.sizeInter);
             }
 
-        this._circlesize = this._root.descendants().length;
-        this._activenode = this._root.descendants();
-
-        this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.data.level;}))
+        //this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.data.level;}))
 
     };
     layout(){
 
-        this._treefunc(this._root);
+        //this._treefunc(this._root);
+        mytree(this._root);
+        this._activenode = this._root.descendants();
+        this._circlesize = this._root.descendants().length;
 
+        //this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.data.level;}))
+        this._maxx = Math.max.apply(Math,this._activenode.map(function(o){return o.xx;}))
+        let scalex = d3.scaleLinear().nice();
+        scalex.range([this.treewidth, 0]);
+        scalex.domain([this._maxx,0]);
         switch (this.Level) {
             case "tLevel": {
-                let scale = d3.scaleLinear().nice();
-                scale.range([this.treelength, 0]);
-                scale.domain([this._maxlevel,0]);
+                this._maxlevel = Math.max.apply(Math,this._activenode.map(function(o){return o.y;}));
+
+                let scaley = d3.scaleLinear().nice();
+                scaley.range([this.treelength, 0]);
+                scaley.domain([this._maxlevel,0]);
                 this._root.descendants().forEach(d => {
-                    d.y = scale(d.data.level);
+                    //console.log(d.xx);
+                    d.y = scaley(d.y);
+                    d.x = scalex(d.xx);
+                    //console.log("sasadasdas")
                     if (this._filter!=undefined){
                         d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
                         d.data._size = d.data._total.size;
@@ -267,7 +276,7 @@ export class Tree{
         {
             this._nodegroup.selectAll(".node").data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r",10 / Math.sqrt(this._circlesize) + 1)
+            .attr("r",15 / Math.sqrt(this._circlesize) + 1)
             .attr("transform", function (d) {
                 if (d.parent != null)
                     if (d.parent.oldx != null) {
@@ -276,7 +285,7 @@ export class Tree{
             });
         d3.selectAll('.node').data(this._activenode,d=>{return d.id}).exit().remove();
         t.selectAll('.node')
-            .attr("r", 20 / Math.sqrt(this._circlesize) + 2)
+            .attr("r", 15 / Math.sqrt(this._circlesize) + 1)
             .attr('fill', (d) => {
                 //Invisible nodes for better rendering, Not sure whether necessary
                 //if ((d.parent != null) && (d.children != undefined) && (d.children.length === 1) /*&& (d.children[0].data.index === d.data.index)*/)//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
@@ -583,18 +592,12 @@ export function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
 export function findparent(node){
-    //console.log("node: ", node)
-    //if(node.parent === null){
-    //    console.log("aaa");
-    //    return node;
-    //}
+
     if (node.parent != null)
         {
             let d = node.parent;
-            //console.log("d:",d);
             if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
-                //findparent(node.parent);
-                {   //console.log("In If",d.parent!=null, d.children!=undefined )
+                {
                     return findparent(d);
                 }
             else if (d.parent === null)
@@ -602,24 +605,11 @@ export function findparent(node){
             else
                return d;
         }
-    /*else if ((node.data.index === node.parent.data.index)&&(node.parent.children.length ===1))//(node.data._size === node.parent.data._size))
-        {
-            console.log("bbb");
-
-            return findparent(node.parent);}
-    else
-        {
-            console.log("ccc");
-
-            return node;}
-       */
     else
         return node;
 }
 
 export function checklowestchild(d){
-    //if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index)&&(d.children[0].data._size === d.data._size))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
-    //if((d.children!=undefined)&&(d.children.length===1)&&(d.children[0].data.index===d.data.index))
     if ((d.parent!=null)&&(d.children!=undefined)&&(d.children.length === 1)&&(d.children[0].data.index === d.data.index))//&&(d.children!=null)&&(d.children.length ==1)&&(d.x===d.parent.x))
 
     {
@@ -652,5 +642,67 @@ export function diagonal(source, target, arg3, arg4) {
             //+ "C" + (source.x*9/10+target.x/10)  + "," + (source.y+target.y)/2
             //+ " " + (source.x*9/10 + target.x/10) + "," + (target.y*9/10+source.y/10)
             + " " + arg3 + "," + arg4;
+    }
+}
+
+export function mytree(node,width,height){
+    layoutdfs(node,0);
+    //console.log(node);
+}
+export function layoutdfs(node,value){
+    if (node.children==undefined){
+        node.xx = value;
+        //console.log(node,value);
+        node.y = node.depth;
+        //value = value+1;
+        return value;
+    }
+    else if(node.children.length==1)
+    {
+        layoutdfs(node.children[0],value);
+        //if(value!=node.children[0].x)
+        value = node.children[0].xx;
+        node.xx = value;
+        //console.log(node,value);
+        node.y = node.depth;
+        //console.log(value);
+        //value = value + 1;
+        //Problem here
+        return Math.max.apply(Math,node.descendants().map(function(o){return o.xx;}));//value;
+    }
+    else if(node.children.length==2)
+    {   if (node.children[0].data._size<=node.children[1].data._size)
+        {
+            value = layoutdfs(node.children[0],value);
+            value = value + 1;
+
+            node.xx = value;
+            //console.log(node,value);
+            node.y = node.depth;
+
+            value = value + 1;
+            value = layoutdfs(node.children[1],value);
+            //value = value + 1;
+
+            return value;
+        }
+        else
+        {
+            value = layoutdfs(node.children[1],value);
+            value = value + 1;
+
+            node.xx = value;
+            //console.log(node,value);
+            node.y = node.depth;
+
+            value = value + 1;
+            value = layoutdfs(node.children[0],value);
+            //value = value + 1;
+            return value;
+
+        }
+        //layoutdfs(node.children[0]);
+        //node.x = value;
+        //value = value + 1;
     }
 }
