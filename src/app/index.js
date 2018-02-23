@@ -72,8 +72,7 @@ function load(){
                 json('../data/Base_Partition.json', function (error, basedata) {
 
                     let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
-                    console.log(func);
-                    console.log(func([36,50,0.08,15]));
+
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
