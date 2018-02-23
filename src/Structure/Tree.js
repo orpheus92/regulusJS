@@ -414,7 +414,6 @@ export class Tree{
 
         }
         else if(option === "slide"){
-            //console.log(option);
             let p = range[0];
 
             if (p>=this.pInter)
@@ -434,7 +433,6 @@ export class Tree{
                     break;
                 }
             }}
-            //this.updateTree(this.pInter, this.sizeInter,range)
             this.updateTree(this.pInter,this.sizeInter);
 
         }

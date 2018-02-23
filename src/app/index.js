@@ -40,7 +40,7 @@ let scale;
 function load(){
     csv('../data/Pu_TOT.csv', rawdata=> {
         console.log(rawdata)
-        for (let i = 0; i< rawdata.columns.length; i++)
+        for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
             selectAll("#y_attr")
@@ -154,7 +154,7 @@ function load(){
                         selectAll(".node")
                             .on("click", (nodeinfo)=>{
                                 //console.log("node",nodeinfo);
-                                if (event.ctrlKey)
+                                if (event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
                                     totalnode.push(nodeinfo);
