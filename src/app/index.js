@@ -86,7 +86,6 @@ function load(){
 
                     let selectplot = new SelectP(rawdata, width, height);
 
-
                     // Data View Constructor
                     loaddata = new Info();
                     let [maxp, minp] = loaddata.create(data, rawdata, pInter, sizeInter);
@@ -157,14 +156,14 @@ function load(){
 
 
                     document.getElementById("tree").onmouseover = function(event) {
-                        let totalnode = [];
+                        //let totalnode = [];
                         selectAll(".node")
                             .on("click", (nodeinfo)=>{
                                 //console.log("node",nodeinfo);
                                 if (event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
-                                    totalnode.push(nodeinfo);
+                                    //totalnode.push(nodeinfo);
                                 }
                                 else
                                 {selectAll(".Clicked").classed("Clicked",false);

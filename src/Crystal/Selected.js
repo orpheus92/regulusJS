@@ -20,6 +20,7 @@ export class Selected{
         this._stored = [];
         this._selected = [];
         //this._brushes = [];
+
         this._brushNum = {"index":0};
         this._plottype = plottype;
         // This part is necessary when people try to call update attribute before selecting partition
@@ -28,13 +29,25 @@ export class Selected{
         let datacol = attr.length;
         let datarow = this._data.length;
         let obj = {};
+        let objrange = {};
         for (let j = 0; j < datacol; j++)
-            obj[attr[j]] = [];
+            {
+                obj[attr[j]] = [];
+                objrange[attr[j]] = [];
+            }
         for (let i = 0; i < datarow; i++) {
             for (let j = 0; j < datacol; j++) {
                 obj[attr[j]].push(parseFloat(this._data[i][attr[j]]));
             }
         }
+        /*
+        for (let j = 0; j < datacol; j++)
+        {   //console.log(obj[attr[j]]);
+            objrange[attr[j]].push(Math.min(...obj[attr[j]]));
+            objrange[attr[j]].push(Math.max(...obj[attr[j]]));
+        }
+        */
+        //console.log(objrange);
         this._obj = obj;
         this._attr = attr;
         pubsub.subscribe("plotupdateattr", this.updateattr);
@@ -67,6 +80,7 @@ export class Selected{
                 inputnode.data._saddleinfo =  this._rawdata[inputnode.data._saddleind];
         }
         this._totaldata = [];
+        this._objrange = {};
         //this._ind = [];
         for (let i = 0;i<selected.length;i++){
             //this._ind.push(i);
@@ -75,26 +89,46 @@ export class Selected{
             nodeinfo.data._total.forEach(d => {
                 selectdata.push(this._rawdata[d]);
             });
-            this._data = selectdata;
-            this._data.columns = this._rawdata.columns;
+            //this._data = selectdata;
+            selectdata.columns = this._rawdata.columns;
 
-            let attr = this._data.columns;
+            let attr = selectdata.columns;
             let datacol = attr.length;
-            let datarow = this._data.length;
+            let datarow = selectdata.length;
             let obj = {};
+            let objrange = {};
             for (let j = 0; j < datacol; j++)
-                obj[attr[j]] = [];
+                {   obj[attr[j]] = [];
+                    objrange[attr[j]] = [];
+                }
             for (let i = 0; i < datarow; i++) {
                 for (let j = 0; j < datacol; j++) {
-                    obj[attr[j]].push(parseFloat(this._data[i][attr[j]]));
+                    obj[attr[j]].push(parseFloat(selectdata[i][attr[j]]));
                 }
             }
-            this._obj = obj;
+            for (let j = 0; j < datacol; j++)
+            {   //console.log(obj[attr[j]]);
+                objrange[attr[j]].push(Math.min(...obj[attr[j]]));
+                objrange[attr[j]].push(Math.max(...obj[attr[j]]));
+            }
+            //this._obj = obj;
+            if(Object.keys(this._objrange).length === 0 && this._objrange.constructor === Object)
+            {
+                this._objrange = objrange;
+            }
+            else{
+                for (let ir =0;ir<datacol;ir++){
+                    this._objrange[attr[ir]][0] = Math.min(this._objrange[attr[ir]][0],objrange[attr[ir]][0])
+                    this._objrange[attr[ir]][1] = Math.max(this._objrange[attr[ir]][1],objrange[attr[ir]][1])
+                }
+            }
             this._attr = attr;
-            this._totaldata.push(this._data);
+            console.log(objrange);
+            this._totaldata.push(selectdata);
             //this._totalobj.push(this._obj);
             //this._totalattr.push(this._attr);
         }
+        console.log(this);
         this.updateplot();
 
     }
@@ -518,7 +552,6 @@ export class Selected{
             let textsize = this._textsize;
 
             //load data as array
-
             {
                 //width = 960;
                 let size = height,
@@ -546,17 +579,25 @@ export class Selected{
                     ztrait = this._y_attr,
                     n = traits.length;
 
-                traits.forEach(function (trait) {
-                    domainByTrait[trait] = d3.extent(data, function (d) {
+                traits.forEach(trait=> {
+                    domainByTrait[trait] = this._objrange[trait];/*
+                        d3.extent(data, function (d) {
+
                         return parseFloat(d[trait]);
                     });
+                    */
                 });
-                rangeByTrait = d3.extent(data, function (d) {
+
+                rangeByTrait = this._objrange[ztrait];
+                    /*
+                    d3.extent(data, function (d) {
                     return parseFloat(d[ztrait]);
                 });
+                */
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
+                //Later
 
             xAxis.tickSize(-size);
             yAxis.tickSize(-size);
@@ -828,14 +869,20 @@ export class Selected{
                     ztrait = this._y_attr,
                     n = traits.length;
 
-                traits.forEach(function (trait) {
-                    domainByTrait[trait] = d3.extent(data, function (d) {
+                traits.forEach(trait=> {
+                    domainByTrait[trait] = this._objrange[trait];
+                        /*
+                        d3.extent(data, function (d) {
                         return parseFloat(d[trait]);
                     });
+                    */
                 });
-                rangeByTrait = d3.extent(data, function (d) {
+                rangeByTrait = this._objrange[ztrait];
+                    /*
+                    d3.extent(data, function (d) {
                     return parseFloat(d[ztrait]);
                 });
+                */
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
