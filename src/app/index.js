@@ -1,6 +1,7 @@
 import './style.css';
+import * as kernel from 'kernel-smooth'
 import {event,select,selectAll} from 'd3-selection';
-import {csv,json,scaleLinear} from 'd3';
+import {csv,json,scaleLinear,csvParse} from 'd3';
 //import {event as currentEvent} from 'd3';
 import {drag} from 'd3-drag';
 import { event as currentEvent } from 'd3-selection';
@@ -34,12 +35,17 @@ let scale;
     .on('click', () =>  {
         //clear();
         load();
-        console.log("dasasd")
+        //console.log("dasasd")
     });
 
 function load(){
     csv('../data/Pu_TOT.csv', rawdata=> {
+        let a= csvParse('../data/Pu_TOT.csv');
+        //console.log(a)
         console.log(rawdata)
+        let[outx,outy]=parseObj(rawdata);
+        console.log(outx,outy);
+
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
@@ -64,8 +70,10 @@ function load(){
 
             csv('../data/Final_Tree.csv', function (error, treedata){
                 json('../data/Base_Partition.json', function (error, basedata) {
-                    //let drag = d3.drag();
-                    //console.log(currentEvent)
+
+                    let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
+                    console.log(func);
+                    console.log(func([36,50,0.08,15]));
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -341,3 +349,19 @@ function clear(){
 /*
 function updateDataInfo(){}
 */
+function parseObj(data,option){
+    let outx = [];
+    let outy = [];
+    // This should take in object array, return 2d array x and 1d array y
+    for (let i = 0;i<data.length;i++)
+    {
+        let curx = Object.values(data[i]).map(Number);
+        let cury = curx.pop();
+        //console.log(curx,cury);
+        outx.push(curx);
+        outy.push(cury);
+    }
+
+    return[outx,outy];
+
+}
