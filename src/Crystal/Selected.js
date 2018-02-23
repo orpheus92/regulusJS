@@ -7,7 +7,7 @@ import {myBrush} from '../customd3';
 //console.log('.');
 export class Selected{
     // Assign a parentnode for all divs
-    constructor(data, width, height, yattr,plottype){
+    constructor(data, width, height, yattr, plottype){
         this._rawdata = data;
         this._data = data;
         this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
@@ -95,7 +95,7 @@ export class Selected{
             //this._totalobj.push(this._obj);
             //this._totalattr.push(this._attr);
         }
-        this.updateplot("null",this,this._plottype);
+        this.updateplot();
 
     }
     // remove all divs in it
@@ -113,44 +113,42 @@ export class Selected{
     updateplot(channel, self, option){
         //console.log(option);
         let plottype;
-
-        if (option != undefined) {
-            self._plottype = option;
-            //this = self;
-            }
-
-        plottype = self._plottype;
-        self.removediv();
+        if (self==undefined)
+        {
+            if (option != undefined)
+            this._plottype = option;
+        plottype = this._plottype;
+        this.removediv();
         //let dataFile = option;//document.getElementById('dataset').value;
         switch (plottype) {
             case "Coordinate": {
                 //this.clearPlots();
-                self.rawDataPlot(option);
+                this.rawDataPlot(option);
                 break;
             }
             case "BoxPlot": {
                 //this.clearPlots();
-                self.boxPlot(option);
+                this.boxPlot(option);
                 break;
             }
             case "Histogram": {
                 //this.clearPlots();
-                self.histogramPlot(option);
+                this.histogramPlot(option);
                 break;
             }
             case "Pairwise": {
                 //this.clearPlots();
-                self.PairwisePlot(option);
+                this.PairwisePlot(option);
                 break;
             }
             case "ScatterMat": {
                 //this.clearPlots();
-                self.scatterMat(option);
+                this.scatterMat(option);
                 break;
             }
             case "AllScatter": {
                 //this.clearPlots();
-                self.multiscatter(option);
+                this.multiscatter(option);
                 break;
             }
             case "Stats": {
@@ -159,15 +157,201 @@ export class Selected{
 
             default:
         }
+        }
+        else{
+
+            if (option != undefined)
+                self._plottype = option;
+            plottype = self._plottype;
+            self.removediv();
+            //let dataFile = option;//document.getElementById('dataset').value;
+            switch (plottype) {
+                case "Coordinate": {
+                    //this.clearPlots();
+                    self.rawDataPlot(option);
+                    break;
+                }
+                case "BoxPlot": {
+                    //this.clearPlots();
+                    self.boxPlot(option);
+                    break;
+                }
+                case "Histogram": {
+                    //this.clearPlots();
+                    self.histogramPlot(option);
+                    break;
+                }
+                case "Pairwise": {
+                    //this.clearPlots();
+                    self.PairwisePlot(option);
+                    break;
+                }
+                case "ScatterMat": {
+                    //this.clearPlots();
+                    self.scatterMat(option);
+                    break;
+                }
+                case "AllScatter": {
+                    //this.clearPlots();
+                    self.multiscatter(option);
+                    break;
+                }
+                case "Stats": {
+                    break;
+                }
+
+                default:
+            }
+
+        }
     }
     // Update all the plots based on attr selection
     updateattr(channel,self,yattr){
 
         self._y_attr = yattr;
-        self.updateplot(channel,self);
+        self.updateplot();
 
     }
     //pairwisePlot
+    PairwisePlot() {
+        d3.selectAll('#plottip').remove();
+        for(let i = 0;i<this._totaldata.length;i++){
+        let data = this._totaldata[i];//this._data;
+        let margin = this._margin;
+        //let height = this._height - margin.top - margin.bottom;
+        //let width = this._width - margin.left - margin.right;
+        let height = this._height;
+        let width = this._width;
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
+        let textsize = this._textsize;
+
+        //load data as array
+        let attr = data.columns;
+        let datacol = attr.length;
+        let datarow = data.length;
+
+
+        for (let i = 0; i < datacol; i++) {
+            for (let i_2 = i + 1; i_2 < datacol; i_2++) {
+                if(attr[i] != this._y_attr && attr[i_2] != this._y_attr){
+                    let curData = [];
+                    for (let j = 0; j < datarow; j++) {
+                        let curPoint = {};
+                        curPoint.x = parseFloat(data[j][attr[i]]);
+                        curPoint.y = parseFloat(data[j][attr[i_2]]);
+                        curPoint.z = parseFloat(data[j][this._y_attr]);
+                        curData.push(curPoint);
+                    }
+
+                    let x_minVal = d3.min(curData, function (d) {
+                        return d.x;
+                    });
+                    let x_maxVal = d3.max(curData, function (d) {
+                        return d.x;
+                    });
+                    let y_minVal = d3.min(curData, function (d) {
+                        return d.y;
+                    });
+                    let y_maxVal = d3.max(curData, function (d) {
+                        return d.y;
+                    });
+                    let z_minVal = d3.min(curData, function (d) {
+                        return d.z;
+                    });
+                    let z_maxVal = d3.max(curData, function (d) {
+                        return d.z;
+                    });
+
+
+                    let x = d3.scaleLinear()
+                        .domain([x_minVal, x_maxVal])
+                        //.range([0, width])
+                        .range([0, width - margin.left - margin.right])
+                        .nice();
+                    let y = d3.scaleLinear()
+                        .domain([y_minVal, y_maxVal])
+                        //.range([0, height])
+                        .range([height - margin.top - margin.bottom, 0])
+                        .nice();
+
+                    let colorScale = d3.scaleLinear()
+                        .range(['blue', 'red'])
+                        .domain([z_minVal, z_maxVal]);
+
+                    let svg = newplot.append("svg")
+                        .attr("height", height)
+                        .attr("width", width);
+                    let g = svg
+                        .append('g')
+                        .attr('id', "pairwisePlot" + i);
+
+                    g.selectAll("circle")
+                        .data(curData)
+                        .enter()
+                        .append("circle")
+                        .attr("r",2)
+                        .attr("cx", function (d) {
+                            return x(d.x);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d.y);
+                        })
+                        .attr("transform", "translate(" + [margin.left, margin.top] + ")")
+                        .attr('fill', function (d) {
+                            return colorScale(d.z);
+                        }).attr("class", "scattercolor");
+
+                    let tip = d3Tip().attr('class', 'd3-tip').attr('id','plottip')
+                        .direction('se')
+                        .offset(function() {
+                            return [0,0];
+                        })
+                        .html((d,ind)=>{
+                            return this.tooltip_render(d,ind);
+
+                        });
+                    //console.log(curscatter);
+                    //this._curscatter = curscatter;
+                    g.selectAll("circle").call(tip)
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide);
+
+                    g
+                        .append('g')
+                        .attr('id', "xAxis" + i)
+                        .call( d3.axisBottom(x).scale(x))
+                        .attr("font-size", textsize+"px")
+                        .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
+
+                    g
+                        .append('g')
+                        .attr('id', "yAxis" + i)
+                        .call(d3.axisLeft(y).scale(y))//;
+                        .attr("font-size", textsize+"px")
+                        .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+
+
+                    svg
+                        .append("text")
+                        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                        .attr("font-size", textsize+"px")
+                        //.attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
+                        .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
+                        .text(attr[i]);
+                    svg
+                        .append("text")
+                        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                        .attr("font-size", textsize+"px")
+                        //.attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
+                        .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
+                        .text(attr[i_2]);
+                }
+
+
+
+            }
+        }
+    }}
 
     tooltip_render(d,ind) {
         let text = "";
@@ -178,7 +362,150 @@ export class Selected{
         return text;
     }
     //rawDataPlot
+    rawDataPlot() {
+        d3.selectAll('#plottip').remove();
+        for (let i = 0;i<this._totaldata.length;i++){
+        let data = this._totaldata[i];//this._data;
+        let margin = this._margin;
+        let height = this._height;
+        let width = this._width;
+        //let newplot = this._plot;
+        let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
+        let textsize = this._textsize;
+        //load data as array
+        let attr = data.columns;
+        let datacol = attr.length;
+        let datarow = data.length;
+        let obj = {};
+        for (let j = 0; j < datacol; j++)
+            obj[attr[j]] = [];
+        for (let i = 0; i < datarow; i++) {
+            for (let j = 0; j < datacol; j++) {
+                obj[attr[j]].push(parseFloat(data[i][attr[j]]));
+            }
+        }
+        //this._obj = obj;
+        //this._attr = attr;
+        let value = function (d) {
+            return d;
+        }; // data -> value
 
+        let minVal = d3.min(obj[this._y_attr], value);
+        let maxVal = d3.max(obj[this._y_attr], value);
+
+        let yScale = d3.scaleLinear()
+                .range([height - margin.top - margin.bottom, 0])
+                .nice(), // value -> display
+            yAxis = d3.axisLeft(yScale);
+        let xScale = d3.scaleLinear()
+                .range([0, width - margin.left - margin.right])
+                .domain([minVal, maxVal])
+                .nice(), // value -> display
+            xAxis = d3.axisBottom(xScale);
+        let colorScale = d3.scaleLinear()
+            .range(['blue', 'red'])
+            .domain([minVal, maxVal]);
+
+
+        let curplot;
+
+        for (let i = 0; i < datacol; i++) {
+            if(attr[i] != this._y_attr){
+                yScale.domain([d3.min(obj[attr[i]], value), d3.max(obj[attr[i]], value)]);
+                let curplot = newplot.append("svg")
+                    .attr('id', "plot" + i);
+                curplot.data([{
+                    x: obj[this._y_attr],//d3.range(n).map(function(i) { return i / n; }),
+                    y: obj[attr[i]]//d3.range(n).map(function(i) { return Math.sin(4 * i * Math.PI / n) + (Math.random() - .5) / 5; })
+                }]);
+
+                curplot.attr("height", height)
+                    .attr("width", width);
+
+                curplot.append('g').attr('id', "xAxis" + i);
+                curplot.append('g').attr('id', "yAxis" + i);
+                //d3.selectAll("#plottip").remove();
+                let curscatter = curplot.selectAll("circle")
+                //.data(obj[attr[i]])
+                    .data(function(d) {
+                        return d3.zip(d.x, d.y); })
+                    .enter()
+                    .append("circle")
+                    .attr("r", 2)
+                    .attr("cx", function(d) { return xScale(d[0]); })
+                    .attr("cy", function(d) { return yScale(d[1]); })
+                    //.attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")")
+                    .attr("transform", "translate(" + [margin.left, margin.top] + ")")
+                    .attr('fill', function (d) {
+                        return colorScale(d[0]);
+                    }).attr("class", "scattercolor");
+
+                let tip = d3Tip().attr('class', 'd3-tip').attr('id','plottip')
+                    .direction('se')
+                    .offset(function() {
+                        return [0,0];
+                    })
+                    .html((d,ind)=>{
+                        return this.tooltip_render(d,ind);
+
+                    });
+                //console.log(curscatter);
+                //this._curscatter = curscatter;
+                curscatter.call(tip);
+                //console.log(this._node);
+                //console.log(curscatter.on('mouseover', tip.show));
+                curscatter.on('mouseover', tip.show)//.attr('class',d=>{
+                //console.log("Mouse Over");
+                //return "highlighted";})
+                    .on('mouseout', tip.hide);//.attr('fill', function (d) {
+                //return colorScale(d[0]);
+                //});
+
+                //.on("mouseover", function(d,ind){tipMouseover(d,ind,attr,obj);})
+                //.on("mouseout", tipMouseout);
+
+                xAxis.scale(xScale);
+                yAxis.scale(yScale);
+
+                curplot.select("#xAxis" + i)
+                    .call(xAxis)
+                    .attr("font-size", textsize+"px")
+                    .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
+                //Translate for y_val will be modified later
+                curplot.select("#yAxis" + i)
+                    .call(yAxis)
+                    .attr("font-size", textsize+"px")
+                    .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+
+                curplot
+                    .append("text")
+                    .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("transform", "translate("+ (width/2) +","+(height)+")")  // centre below axis
+                    .attr("font-size", textsize+"px")
+                    .text(this._y_attr);
+                curplot
+                    .append("text")
+                    .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("transform", "translate("+ (textsize) +","+(height/2)+")rotate(-90)")
+                    .attr("font-size", textsize+"px")
+                    .text(attr[i]);
+
+
+
+                /*
+                .append("text")
+                .classed("label", true)
+                .attr("transform", "rotate(-90)")
+                .attr("y", margin.left)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Ylabel");//.attr("class","label");
+                */
+            }
+
+
+        }
+    }}
 
     scatterMat(option){
         //d3.selectAll('#plottip').remove();
@@ -237,7 +564,7 @@ export class Selected{
                 .on("start", brushstart)
                 .on("brush", brushmove)
                 .on("end", brushend)
-                .extent([[0, 0], [size, size]]);
+                .extent([[padding/2, padding/2], [size-padding/2, size-padding/2]]);
 
             // Size of SVG declared here
 
@@ -347,7 +674,7 @@ export class Selected{
 
                     // Ylable
                     cell.append("text")
-                        .attr("x", 0)//size-15)
+                        .attr("x", -20)//size-15)
                         .attr("y", 5)//size+10)
                         //.attr("dy", ".71em")
                         .text(function (d) {
@@ -388,18 +715,18 @@ export class Selected{
 
             // Clear the previously-active brush, if any.
             function brushstart(p) {
-                //if (brushCell !== this) {
-                //    d3.select(brushCell).call(brush.move, null);
-               //     brushCell = this;
+                if (brushCell !== this) {
+                    d3.select(brushCell).call(brush.move, null);
+                    brushCell = this;
                     x.domain(domainByTrait[p.x]);
                     y.domain(domainByTrait[p.y]);
-                //}
+                }
             }
 
             // Highlight the selected circles.
             function brushmove(p) {
                 let e = d3.brushSelection(this);
-                /*
+
                 svg.selectAll("circle").classed("hidden", function (d) {
                     return !e
                         ? false
@@ -409,8 +736,8 @@ export class Selected{
                         );
                 });
 
-                */
 
+                /*
                 if (brushes.length!=0) {
                     //console.log('visible',svg.selectAll('#visible'))
                     svg.selectAll("#visible").classed("hidden", function (d) {
@@ -433,7 +760,7 @@ export class Selected{
                     });
                 }
 
-
+                */
             }
 
             // If the brush is empty, select all circles.
@@ -568,7 +895,7 @@ export class Selected{
                     .each(plot);
 
                 cell.append("text")
-                    .attr("x", padding/2)
+                    .attr("x", -padding)
                     .attr("y", 0)
                     .attr("dy", ".71em")
                     .text(function (d) {
@@ -618,7 +945,7 @@ export class Selected{
                     .on("start", brushstart)
                     .on("brush", brushmove)
                     .on("end", brushend)
-                    .extent([[0, 0], [width, size]]);
+                    .extent([[padding/2, padding/2], [width-padding/2, size-padding/2]]);
 
                 let brushes = [];
 
@@ -722,12 +1049,12 @@ export class Selected{
                     //console.log(brushes);
                     //console.log("Staret");
                     //brushCell = this;
-                    //if (brushCell != this) {
-                        //d3.select(brushCell).call(brush.move, null);
-                        //brushCell = this;//
+                    if (brushCell != this) {
+                        d3.select(brushCell).call(brush.move, null);
+                        brushCell = this;//
                         x.domain(rangeByTrait);
                         y.domain(domainByTrait[p]);
-                    //}
+                    }
                 }
 
                 // Highlight the selected circles.
@@ -735,6 +1062,16 @@ export class Selected{
                     //console.log(p);
                     let e = d3.brushSelection(this);
 
+                    svg.selectAll("circle").classed("hidden", function (d) {
+                        return !e
+                            ? false
+                            : (
+                                e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
+                                || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
+                            );
+                    });
+
+                    /*
                     if (brushes.length!=0) {
                         //console.log('visible',svg.selectAll('#visible'))
                         svg.selectAll("#visible").classed("hidden", function (d) {
@@ -756,6 +1093,7 @@ export class Selected{
                                 );
                         });
                     }
+                    */
                 }
 
                 // If the brush is empty, select all circles.

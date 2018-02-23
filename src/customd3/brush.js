@@ -167,7 +167,7 @@ export function brush(dim) {
         .attr("class", "selection")
         .attr("cursor", cursors.selection)
         .attr("fill", "#777")
-        .attr("fill-opacity", 0.3)
+        .attr("fill-opacity", 0)
         .attr("stroke", "#fff")
         //.attr("stroke-width", "1px")
         .attr("shape-rendering", "crispEdges");

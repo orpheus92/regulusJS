@@ -312,7 +312,7 @@ function load(){
 
                     select('#removeS')
                         .on('click', () =>  {
-                            d3.selectAll("#selected").attr("id", null);
+                            selectAll("#selected").attr("id", null);
 
                         });
 
