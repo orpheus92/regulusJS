@@ -42,9 +42,9 @@ function load(){
     csv('../data/Pu_TOT.csv', rawdata=> {
         let a= csvParse('../data/Pu_TOT.csv');
         //console.log(a)
-        console.log(rawdata)
+        //console.log(rawdata)
         let[outx,outy]=parseObj(rawdata);
-        console.log(outx,outy);
+        //console.log(outx,outy);
 
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
@@ -163,14 +163,13 @@ function load(){
                                 if (event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
-                                    //totalnode.push(nodeinfo);
                                 }
                                 else
                                 {selectAll(".Clicked").classed("Clicked",false);
                                     plots.removedata();
                                     plots.storedata(nodeinfo);
                                 }
-                                console.log(nodeinfo);
+                                //console.log(nodeinfo);
 
                                 let timer;
                                 clicks++;  //count clicks
@@ -179,12 +178,12 @@ function load(){
 
                                     timer = setTimeout(function() {
                                         let clicked = plots.getdata();
+                                        //console.log(clicked);
                                         tree.mark(clicked);
                                         plots.updatediv();
                                         cnode = nodeinfo;
                                         //loaddata.select(cnode,document.getElementById('CompAttr').value );
                                         pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
-
                                         clicks = 0;             //after action performed, reset counter
 
                                     }, DELAY);

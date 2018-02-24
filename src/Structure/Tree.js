@@ -104,10 +104,12 @@ export class Tree{
         // Default
         this.Level = "tLevel";
         this.Scale = "linear";
+        this._curselection = [];
         console.log(this);
         pubsub.subscribe("levelchange2", this.updatelevel);
 
     }
+
     updatelevel(channel,self,level,scale){
         self.Level = level;
         self.Scale = scale;
@@ -286,6 +288,8 @@ export class Tree{
         d3.selectAll('.node').data(this._activenode,d=>{return d.id}).exit().remove();
 
         }
+
+        this.mark();
     };
 
     /**
@@ -358,22 +362,48 @@ export class Tree{
     }
 
 
-    mark(clicked){
-        //console.log("clicked:", clicked);
+    mark(clicked) {
+        //console.log(clicked);
+        if (clicked != undefined) {
+        this._curselection.push(clicked);
         d3.select("#tree").selectAll("text").remove();
         d3.select("#tree").selectAll("text")
-            .data(clicked)
+            .data(clicked, d=>{return d.id})
             .enter()
             .append("text")
-            .attr("x", d=>{return d.x+50/Math.sqrt(this._circlesize)+2;})
-            .attr("y", d=>{return d.y;})
+            .attr("x", d => {
+                return d.x + 50 / Math.sqrt(this._circlesize) + 2;
+            })
+            .attr("y", d => {
+                return d.y;
+            })
             .attr("dy", ".71em")
-            .text((d,i)=> {
-            //console.log(i);
-                return "Node"+i;
+            .text((d) => {
+                return d.id;
             });
 
+        }
+        else {
+            for (let i = 0; i < this._curselection.length; i++)
+            {
 
+            d3.select("#tree").selectAll("text").remove();
+            d3.select("#tree").selectAll("text")
+                .data(this._curselection[i], d=>{return d.id})
+                .enter()
+                .append("text")
+                .attr("x", d => {
+                    return d.x + 50 / Math.sqrt(this._circlesize) + 2;
+                })
+                .attr("y", d => {
+                    return d.y;
+                })
+                .attr("dy", ".71em")
+                .text((d) => {
+                    return d.id;
+                });
+        }
+        }
     }
 
     setParameter(option, range){

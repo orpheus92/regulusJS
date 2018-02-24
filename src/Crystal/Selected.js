@@ -123,12 +123,12 @@ export class Selected{
                 }
             }
             this._attr = attr;
-            console.log(objrange);
+            //console.log(objrange);
             this._totaldata.push(selectdata);
             //this._totalobj.push(this._obj);
             //this._totalattr.push(this._attr);
         }
-        console.log(this);
+        //console.log(this);
         this.updateplot();
 
     }
@@ -817,11 +817,12 @@ export class Selected{
                 if (e === null) {svg.selectAll(".hidden").classed("hidden", false);
                 brushes = [];};
             }
+            //console.log(this);
                 svg.append("text")
-                    .attr("x", size*n-3*padding)
+                    .attr("x", size*n/2-3*padding)
                     .attr("y", 0)
-                    .attr("dy", ".71em")
-                    .text("Node"+iii)
+                    .text(this._stored[iii].id)
+                    .attr("font-weight", "bold")
                     .attr("font-size", 2*textsize+"px");
             }
 
@@ -1158,10 +1159,10 @@ export class Selected{
                 }
 
                 svg.append("text")
-                    .attr("x", width-3*padding)
+                    .attr("x", width/2-3*padding)
                     .attr("y", 0)
-                    .attr("dy", ".71em")
-                    .text("Node"+iii)
+                    .text(this._stored[iii].id)
+                    .attr("font-weight", "bold")
                     .attr("font-size", 2*textsize+"px");
 
             }
@@ -1421,9 +1422,32 @@ export class Selected{
 
     storedata(data){
         //console.log(data);
+        if (this._stored.length===0)
+        {
+        //console.log(data);
         this._stored.push(data);
         if (data.data._saddleind != undefined && data.data._saddleind != -1)
             data.data._saddleinfo =  this._rawdata[data.data._saddleind];
+        }
+        else{
+            let remove = -1;
+            for (let i =0;i<this._stored.length;i++){
+
+                if(this._stored[i].id === data.id){
+                    //this._stored.splice(i,1);
+                    remove = i;
+                }
+
+            }
+            if(remove ==-1){
+                this._stored.push(data);
+                if (data.data._saddleind != undefined && data.data._saddleind != -1)
+                    data.data._saddleinfo =  this._rawdata[data.data._saddleind];
+            }
+            else{
+                this._stored.splice(remove,1);
+            }
+        }
     }
     removedata(){
         this._stored = [];
@@ -1434,7 +1458,7 @@ export class Selected{
     }
 
     highlight(){
-        console.log(this._brushNum);
+        //console.log(this._brushNum);
         this._selected = [];
         d3.select("#div"+this._brushNum.index).select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d)=>{
             this._selected.push(d);
