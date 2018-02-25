@@ -41,8 +41,8 @@ let band;
     });
 
 function load(){
-    csv('../data/Pu_TOT.csv', rawdata=> {
-        let a= csvParse('../data/Pu_TOT.csv');
+    csv('data/data.csv', rawdata=> {
+        //let a= csvParse('../data/Pu_TOT.csv');
         //console.log(a)
         //console.log(rawdata)
         let[outx,outy]=parseObj(rawdata);
