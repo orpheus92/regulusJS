@@ -1,5 +1,5 @@
 import './style.css';
-import * as kernel from 'kernel-smooth'
+//import * as kernel from 'kernel-smooth'
 import {event,select,selectAll} from 'd3-selection';
 import {csv,json,scaleLinear,csvParse} from 'd3';
 //import {event as currentEvent} from 'd3';
@@ -8,7 +8,7 @@ import { event as currentEvent } from 'd3-selection';
 //d3.getEvent = () => require("d3-selection").event;
 
 import {pBar} from '../Slider'
-import {Selected, SelectP} from '../Crystal';
+import {parseObj,Selected, SelectP} from '../Crystal';
 import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
@@ -25,12 +25,14 @@ let partition;
 let loaddata;
 let cnode;
 let treelevel;
+let check = false;
 //let filterdata;
 let selectindex;
 let cur_node;
 let cur_selection;
 let level;
 let scale;
+let band;
     select('#LoadFile')
     .on('click', () =>  {
         //clear();
@@ -71,7 +73,7 @@ function load(){
             csv('../data/Final_Tree.csv', function (error, treedata){
                 json('../data/Base_Partition.json', function (error, basedata) {
 
-                    let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
+                    //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
 
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
@@ -81,7 +83,8 @@ function load(){
                     let height = 100;
                     pInter = 0.2;
                     sizeInter = 25;
-                    let plots = new Selected(rawdata, width, height, yattr, plottype);
+                    band = 0.1;
+                    let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
                     // Load data in JS
 
                     let selectplot = new SelectP(rawdata, width, height);
@@ -110,28 +113,23 @@ function load(){
                     // Everytime this gets updated, tree should get updated, plot should get updated
 
 
-                    let newslider = new Slider(select("#treesvg"));
-                    let slider = newslider.createslider([minp, maxp]);
-                    //console.log(slider);
-                    //let drag = import('d3');
-                    //console.log(drag);
+                    let newslider = new Slider(select("#treeslider"));
+                    let slider = newslider.createslider([minp, maxp],150);
+                    //let kslider = new Slider(select("#kernelslider"));
+                    //let slider2 = kslider.createslider([0.0001, 1],150);
 
-                    //console.log(drag.drag());
-                    //import(drag);
+
+
                     let x = scaleLinear()
                         .domain([minp, maxp])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
-                    //d3.event =event;
-                    //console.log(d3.event);
 
-                    slider.curslide.call(drag()//d3.drag()
-                        //.on("start.interrupt", function() event{
-                        //    console.log("AAA");
-                        //    slider.interrupt(); })
+
+                    slider.curslide.call(drag()
                             .on("start drag", function () {
                                 //console.log("BBB");
-                                slider.handle.attr("cx", x(x.invert(event.x))); //initial position for the slider
+                                slider.handle.attr("cx", x(pInter)); //initial position for the slider
                                 pInter = x.invert(event.x);
                                 //loaddata.update(pInter, sizeInter);
                                 pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
@@ -144,7 +142,20 @@ function load(){
                                 treelevel.plotLevel(tree);
                             })
                     );
+                    let kval = 0.1;
+                    /*
+                    slider2.curslide.call(drag()
+                        .on("start drag", function () {
 
+                            slider2.handle.attr("cx", x(kval)); //initial position for the slider
+                            kval = x.invert(event.x);
+                            plots._bandwidth = kval;
+                            pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+
+
+                        })
+                    );
+                    */
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
 
@@ -314,6 +325,15 @@ function load(){
 
                         });
 
+                    select('#myCheck')
+                        .on('click', () =>  {
+                            //selectAll("#selected").attr("id", null);
+                            plots._reg = !plots._reg;
+
+                            // Will use this for now
+                            pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                        });
+
                     select('#createPlot')
                         .on('click', () =>  {
                             let selectP = document.getElementById('selectP').value ;
@@ -343,9 +363,8 @@ function clear(){
         myNode.removeChild(myNode.firstChild);
     }
 }
+
 /*
-function updateDataInfo(){}
-*/
 function parseObj(data,option){
     let outx = [];
     let outy = [];
@@ -362,3 +381,4 @@ function parseObj(data,option){
     return[outx,outy];
 
 }
+*/

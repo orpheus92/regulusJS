@@ -2,12 +2,14 @@ import * as d3 from 'd3';
 import * as d3Tip from 'd3-tip';
 import './style.css';
 import * as pubsub from '../PubSub';
-//import {event as currentEvent} from 'd3-selection';
+
+import * as kernel from '../Process/kernel';
+
 import {myBrush} from '../customd3';
 //console.log('.');
 export class Selected{
     // Assign a parentnode for all divs
-    constructor(data, width, height, yattr, plottype){
+    constructor(data, width, height, yattr, plottype,check,band){
         this._rawdata = data;
         this._data = data;
         this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
@@ -20,9 +22,10 @@ export class Selected{
         this._stored = [];
         this._selected = [];
         //this._brushes = [];
-
+        this._reg = check;
         this._brushNum = {"index":0};
         this._plottype = plottype;
+        this._bandwidth = band;
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
 
@@ -842,6 +845,17 @@ export class Selected{
             let width = this._width;
             let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
+            let reg = this._reg;
+            let pxs,px,py,f_hat,regy;
+            let [ymin,ymax] = this._objrange[this._y_attr];
+            if (reg === true) {
+            [px, py] = parseObj(data);
+            f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, this._bandwidth*(ymax-ymin));
+            regy = linspace(ymin,ymax,100);
+            pxs = f_hat(regy);
+            }
+            //console.log(pxs);
+            //console.log(f_hat);
 
             {
                 //width = 960;
@@ -932,7 +946,7 @@ export class Selected{
                     dataind[i]=Object.assign({},obj);
                     dataind[i].index = p_arr[i];
                 });
-                //console.log(this);
+
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
@@ -959,8 +973,8 @@ export class Selected{
 
                     .attr("font-size", 2*textsize+"px");
 
-                //console.log(dataind);
-                function plot(p) {
+                function plot(p,di) {
+                    //console.log(di);
                     let cell = d3.select(this);
 
                     x.domain(rangeByTrait);
@@ -972,21 +986,65 @@ export class Selected{
                         .attr("y", padding / 2)
                         .attr("width", width - padding)
                         .attr("height", size - padding);
-                    //console.log(data);
+                    //console.log(dataind);
+
+                    //console.log(dataind);
+                    //console.log(py);
+
                     cell.selectAll("circle")
                         .data(dataind)
                         .enter().append("circle")
                         .attr("cx", function (d) { //console.log(d);
+                            //console.log(d[ztrait])
                             return x(d[ztrait]);
+                            //return py[i]
                         })
                         .attr("cy", function (d) {
                             return y(d[p]);
+
                         })
                         .attr("r", 2)
                         .style("fill", function (d) {
 
                             return colorScale(d[ztrait]);
                         });
+
+                    // If regression is turned on
+                    if (pxs!=undefined)
+                    {
+                        let line = d3.line()
+                            .x((d,i)=> { return x(regy[i]); })
+                            .y((d,i)=> { return y(pxs[i][di]); });
+                        /*
+                        let regpath = cell.selectAll("path")
+                            .data(py,(d,i)=>{return d[i]})
+                            .enter().append("path");
+                        console.log(regpath);
+                            regpath
+                                */
+                        cell.append("path")
+                            .datum(regy).attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-linejoin", "round")
+                            .attr("stroke-linecap", "round")
+                            .attr("stroke-width", 1.5)
+                            .attr("d", line);
+                        /*
+                        let regc = cell.selectAll("circle")
+                            .data(py,(d,i)=>{return d[i]})
+                            .enter().append("circle");
+                        console.log(regc);
+                            regc.attr("cx", function (d, i) {
+
+                                return x(py[i]);
+                            })
+                            .attr("cy", function (d, i) {
+                                return y(pxs[i][di]);
+
+                            })
+                            .attr("r", 1)
+                            .attr("fill", "black");*/
+                    }
                 }
 
                 let brush = myBrush()
@@ -1484,4 +1542,41 @@ export function halfcross(a, b) {
             }
             //console.log(c);
     return c;
+}
+export function parseObj(data,option) {
+    let outx = [];
+    let outy = [];
+    if (option == undefined)
+    // This should take in object array, return 2d array x and 1d array y
+    {
+
+    for (let i = 0; i < data.length; i++) {
+        let curx = Object.values(data[i]).map(Number);
+        let cury = curx.pop();
+        //console.log(curx,cury);
+        outx.push(curx);
+        outy.push(cury);
+    }
+}else{for (let i = 0; i < data.length; i++) {
+        let curx = Object.values(data[i]).map(Number);
+        //console.log(curx);
+        curx.pop();
+        //console.log(curx);
+
+        let cury = curx.pop();
+        //console.log(curx,cury);
+        outx.push(curx);
+        outy.push(cury);
+    }}
+    return[outx,outy];
+
+}
+
+function linspace(a,b,n) {
+    if(typeof n === "undefined") n = Math.max(Math.round(b-a)+1,1);
+    if(n<2) { return n===1?[a]:[]; }
+    let i,ret = Array(n);
+    n--;
+    for(i=n;i>=0;i--) { ret[i] = (i*b+(n-i)*a)/n; }
+    return ret;
 }

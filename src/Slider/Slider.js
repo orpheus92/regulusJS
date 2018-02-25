@@ -13,7 +13,7 @@ constructor(inputsvg){
 
 }
 
-createslider(range){
+createslider(range,width){
     //console.log(range);
     //let svg = d3.select("svg"),
     //console.log("Create Slider");
@@ -21,18 +21,19 @@ createslider(range){
     //let margin = {right: 50, left: 50},
         //width = +this.inputsvg.attr("width") - margin.left - margin.right,
         //height = +this.inputsvg.attr("height");
-
+    //console.log(this.inputsvg);
     let x = d3.scaleLinear()
     .domain([range[0], range[1]])
-    .range([0, 150])//size of slider and range of output, put persistence here
+    .range([0, width])//size of slider and range of output, put persistence here
     .clamp(true);
 
-    let slider = this.inputsvg.select("#treeslider");
+    let slider = this.inputsvg;
         //.attr("class", "slider");
-        slider.attr("transform", "translate(" +20 + "," + 10 + ")");
+        slider.attr("transform", "translate(" +20 + "," + 15+ ")");
     //console.log(x.domain(), range[1]);
 
     //console.log(x.range());
+    //console.log(slider);
     let curslide = slider.append("line")
         .attr("class", "track")
         .attr("x1", x.range()[0])
