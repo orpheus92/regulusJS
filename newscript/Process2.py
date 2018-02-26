@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     graph = 'relaxed beta skeleton'
     gradient = 'steepest'
-    knn = 100
+    knn = 200
     beta = 1.0
     normalization = 'feature'
     hierarchy = 'Hierarchy.csv'

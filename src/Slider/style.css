@@ -41,8 +41,7 @@
     /*font: 10px sans-serif;*/
 
 ;}
-
-.tick{
+#slider.tick{
     color: #1B2733;
     font: 10px sans-serif;
 }
@@ -52,12 +51,10 @@
 .track-overlay {
     stroke-linecap: round;
 }
-/*
-.track-inset {
-// stroke: #ddd;
-// stroke-width: 10px;
-}
-*/
+
+
+
+
 .track-overlay {
     pointer-events: stroke;
     stroke-width: 50px;

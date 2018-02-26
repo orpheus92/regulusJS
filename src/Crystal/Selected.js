@@ -558,7 +558,8 @@ export class Selected{
             {
                 //width = 960;
                 let size = height,
-                    padding = (margin.left+margin.right)*3/5;
+                    padding = (margin.left+margin.right)/3;
+                   padding = padding/2
 
                 let x = d3.scaleLinear()
                     .range([padding / 2, size - padding / 2]);
@@ -568,11 +569,11 @@ export class Selected{
 
                 let xAxis = d3.axisBottom()
                     .scale(x)
-                    .ticks(4);
+                    .ticks(2);
 
                 let yAxis = d3.axisLeft()
                     .scale(y)
-                    .ticks(4);
+                    .ticks(2);
 
                 let domainByTrait = {},
                     rangeByTrait = [],
@@ -602,8 +603,8 @@ export class Selected{
                     .domain(rangeByTrait);
                 //Later
 
-            xAxis.tickSize(-size);
-            yAxis.tickSize(-size);
+            xAxis.tickSize(-size).tickFormat(d3.format(".1e"));
+            yAxis.tickSize(-size).tickFormat(d3.format(".1e"));
             let brush = myBrush()
                 .on("start", brushstart)
                 .on("brush", brushmove)
@@ -611,13 +612,21 @@ export class Selected{
                 .extent([[padding/2, padding/2], [size-padding/2, size-padding/2]]);
 
             // Size of SVG declared here
-
-            let svg = newplot.append("svg")
-                .attr("width", (size+padding) * (n-1)+padding)
-                .attr("height", (size+padding) * (n-1)+padding)//size * n + padding)
+                /*
+                let svg = newplot.append("svg")
+                    .attr("width", width+padding)
+                    .attr("height", size * n + padding)
+                    .append("g")
+                    .attr("transform", "translate(" + padding + "," + padding  + ")");
+                */
+                let svg = newplot.append("svg")
+                .attr("width", (size+padding) * (n-1)+4*padding)
+                .attr("height", (size+padding) * (n-1)+4*padding)//size * n + padding)
                 .append("g")
-                .attr("transform", "translate(" + padding + "," + padding + ")");
+                .attr("transform", "translate(" + 4*padding + "," + 0 + ")");
 
+                console.log(halfcross(traits,traits))
+                let totalblocks = halfcross(traits, traits).length;
             svg.selectAll(".x.axis")
                 .data(halfcross(traits, traits))
                 .enter().append("g")
@@ -628,9 +637,13 @@ export class Selected{
                     return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
                 })
                 .each(function (d) {
-                    //console.log(d, domainByTrait[d.x]);
+                    //console.log(d.j)
+                    if (d.j > totalblocks / 2-1) {
+                    //console.log(padding);
                     x.domain(domainByTrait[d.x]);
-                    d3.select(this).call(xAxis);
+                    xAxis.tickValues(domainByTrait[d.x]);
+                    d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate("+(-padding)+","+padding*2+") rotate(-90)");
+                }
                 });
 
             svg.selectAll(".y.axis")
@@ -639,25 +652,23 @@ export class Selected{
                 .attr("class", "y axis")
                 .attr("font-size", textsize+"px")
                 .attr("transform", function (d) {
-                    //console.log('d0',d);
-                    //return "translate(0," + i * size + ")";
+
                     return "translate(" + ( d.i ) * (size+padding) + "," + (d.j-1) * (size+padding) + ")";
                 })
-                .each(function (d) {
+                .each(function (d,i) {
+                    //console.log(i)
+                    if (d.i === 0) {
+
+                    yAxis.tickValues(domainByTrait[d.y]);
                     y.domain(domainByTrait[d.y]);
                     d3.select(this).call(yAxis);
+                    }
                 });
+                svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
                 let p_arr;
 // Attach index to each data;
-                //if (option!= "brush")
                 p_arr = Array.from(this._stored[iii].data._total);
-                /*
-                data.map((obj,i) => {
-                    //console.log(obj,i);
-                    obj.index = p_arr[i];
-                    return obj;
-                });
-                */
+
                 let dataind = [];
                 //console.log(data);
                 data.forEach((obj,i) => {
@@ -677,7 +688,8 @@ export class Selected{
 
 
 
-                function plot(p) {
+                function plot(p,i) {
+                    //console.log(i)
                     let cell = d3.select(this);
 
                     x.domain(domainByTrait[p.x]);
@@ -700,30 +712,35 @@ export class Selected{
                         .attr("cy", function (d) {
                             return y(d[p.y]);
                         })
-                        .attr("r", 2)
+                        .attr("r", height/60)
                         .style("fill", function (d) {
 
                             return colorScale(d[ztrait]);
                         });
                     // Xlable
                     cell.append("text")
-                        .attr("x", size-10)
+                        .attr("x", size/3)
                         .attr("y", size+10)
                         //.attr("dy", ".71em")
                         .text(function (d) {
-                            //console.log(d);
+                            if (d.j > totalblocks / 2 - 1) {
                             return d.x;
+                        }
                         })
                         .attr("font-size", 2*textsize+"px");
 
                     // Ylable
                     cell.append("text")
-                        .attr("x", -20)//size-15)
-                        .attr("y", 5)//size+10)
+                        //.attr("x", -20)//size-15)
+                        //.attr("y", 5)//size+10)
                         //.attr("dy", ".71em")
+                        .attr("x", -size*2/3)//-padding)
+                        .attr("y", -padding)
+                        .attr("dy", ".71em").attr("transform", "rotate(-90)")
                         .text(function (d) {
-                            //console.log(d);
-                            return d.y;
+                            if (d.i===0) {
+                                return d.y;
+                            }
                         })
                         .attr("font-size", 2*textsize+"px");
                         /*
@@ -860,7 +877,7 @@ export class Selected{
             {
                 //width = 960;
                 let size = height,
-                    padding = (margin.left+margin.right)/2;
+                    padding = (margin.left+margin.right)/3;
 
                 let x = d3.scaleLinear()
                     .range([padding / 2, width - padding / 2]);
@@ -874,7 +891,7 @@ export class Selected{
 
                 let yAxis = d3.axisLeft()
                     .scale(y)
-                    .ticks(4);
+                    .ticks(2);
 
                 let domainByTrait = {},
                     rangeByTrait = [],
@@ -901,10 +918,11 @@ export class Selected{
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
-                xAxis.tickSize(size *n);
-                yAxis.tickSize(-size * n);
-
-
+                //xAxis.tickSize(size *n).tickFormat(d3.format(".1e"));
+                //yAxis.tickSize(-size * n).tickFormat(d3.format(".1e"));
+//
+                xAxis.tickSize(padding/4).tickFormat(d3.format(".1e")).tickPadding(size*n-padding/4);
+                yAxis.tickSize(-padding/4).tickFormat(d3.format(".1e")).tickPadding(-padding/4);
 
 
                 // Size of SVG declared here
@@ -916,6 +934,7 @@ export class Selected{
                     .attr("transform", "translate(" + padding + "," + padding  + ")");
 
                 x.domain(rangeByTrait);
+                //console.log(ztrait,traits)
                 svg.selectAll(".x.axis")
                     .data(ztrait)
                     .enter().append("g")
@@ -933,9 +952,12 @@ export class Selected{
                     })
                     .each(function (d) {
                         y.domain(domainByTrait[d]);
-                        d3.select(this).call(yAxis);
-                    });
-
+                        d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
+                    })
+                //console.log(svg.selectAll(".tick").selectAll("line"))
+                svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
+                //svg.selectAll(".tick").selectAll("line").attr("fill", "transparent");
+                //svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
                 // Attach Index Info to each point in the partition
                 // Will be fixed later for multiple plot case
                 let p_arr = Array.from(this._stored[iii].data._total);
@@ -957,17 +979,17 @@ export class Selected{
                     .each(plot);
 
                 cell.append("text")
-                    .attr("x", -padding)
-                    .attr("y", 0)
-                    .attr("dy", ".71em")
+                    .attr("x", -size+1.5*padding)//-padding)
+                    .attr("y", -padding/3)
+                    .attr("dy", ".71em").attr("transform", "rotate(-90)")
                     .text(function (d) {
                         return d;
                     })
                     .attr("font-size", 2*textsize+"px");
 
                 cell.append("text")
-                    .attr("x", width-2*padding)
-                    .attr("y", size)
+                    .attr("x", width-3*padding)
+                    .attr("y", size+padding/3)
                     //.attr("dy", ".71em")
                     .text(ztrait)
 
@@ -1003,7 +1025,7 @@ export class Selected{
                             return y(d[p]);
 
                         })
-                        .attr("r", 2)
+                        .attr("r", width/200)
                         .style("fill", function (d) {
 
                             return colorScale(d[ztrait]);
