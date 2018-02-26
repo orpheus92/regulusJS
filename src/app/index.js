@@ -33,6 +33,7 @@ let cur_selection;
 let level;
 let scale;
 let band;
+let measure;
     select('#LoadFile')
     .on('click', () =>  {
         //clear();
@@ -68,7 +69,7 @@ function load(){
                 //console.log(treedata);
                 //console.log(rawdata);
                 json('../data/Base_Partition.json', function (error, basedata) {
-
+                    measure = rawdata.columns[rawdata.columns.length-1];
                     //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
 
                     let yattr = document.getElementById('y_attr').value;
@@ -87,7 +88,7 @@ function load(){
 
                     // Data View Constructor
                     loaddata = new Info();
-                    let [maxp, minp] = loaddata.create(data, rawdata, pInter, sizeInter);
+                    let [maxp, minp] = loaddata.create(data, rawdata, pInter, sizeInter,measure);
 
                     // Partition
                     partition = new Partition();
