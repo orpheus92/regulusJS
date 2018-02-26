@@ -79,8 +79,8 @@ function load(){
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
                     // Plot SIZE
-                    let width = 300;
-                    let height = 100;
+                    let width = 150;
+                    let height = 50;
                     pInter = 0.2;
                     sizeInter = 25;
                     band = 0.1;
@@ -346,7 +346,17 @@ function load(){
                         });
 
                     select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
+                    select("#plus").on('click',()=>{
+                        plots._height = plots._height*1.2;
+                        plots._width = plots._width*1.2;
+                        pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                    })
 
+                    select("#minus").on('click',()=>{
+                        plots._height = plots._height*0.9;
+                        plots._width = plots._width*0.9;
+                        pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                    })
                 });
             });
 

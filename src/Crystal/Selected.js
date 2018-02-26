@@ -59,6 +59,15 @@ export class Selected{
 
         //console.log(this);
     }
+    updatesize(){
+
+        let width = this._width;
+        let height = this._height;
+        this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
+        this._barWidth = width/20;
+        this._textsize = height/20;
+
+    }
     // Reconstruct the plot info
     reconstruct(){
 
@@ -548,9 +557,13 @@ export class Selected{
         //d3.selectAll('#plottip').remove();
 
         for(let iii = 0;iii<this._totaldata.length;iii++) {
+            this.updatesize();
             let data = this._totaldata[iii];
-            let margin = this._margin;
+            let width = this._width;
             let height = this._height;
+            this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
+            let margin = this._margin;
+
             let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
@@ -855,11 +868,15 @@ export class Selected{
 
         for(let iii = 0;iii<this._totaldata.length;iii++) {
             let data = this._totaldata[iii];
+            this.updatesize();
             //console.log(data);
             //console.log(this);
-            let margin = this._margin;
+            //let margin = this._margin;
             let height = this._height;
             let width = this._width;
+            this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
+            let margin = this._margin;
+
             let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
             let reg = this._reg;
@@ -887,7 +904,7 @@ export class Selected{
 
                 let xAxis = d3.axisBottom()
                     .scale(x)
-                    .ticks(5);
+                    .ticks(2);
 
                 let yAxis = d3.axisLeft()
                     .scale(y)
@@ -934,13 +951,13 @@ export class Selected{
                     .attr("transform", "translate(" + padding + "," + padding  + ")");
 
                 x.domain(rangeByTrait);
-                //console.log(ztrait,traits)
+
                 svg.selectAll(".x.axis")
-                    .data(ztrait)
+                    .data([ztrait])
                     .enter().append("g")
                     .attr("class", "x axis")
                     .attr("font-size", textsize+"px")
-                    .call(xAxis);
+                    .call(xAxis.tickValues(rangeByTrait));
 
                 svg.selectAll(".y.axis")
                     .data(traits)
@@ -956,10 +973,7 @@ export class Selected{
                     })
                 //console.log(svg.selectAll(".tick").selectAll("line"))
                 svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
-                //svg.selectAll(".tick").selectAll("line").attr("fill", "transparent");
-                //svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
-                // Attach Index Info to each point in the partition
-                // Will be fixed later for multiple plot case
+
                 let p_arr = Array.from(this._stored[iii].data._total);
                 let dataind = [];
                 //console.log(data);
@@ -968,7 +982,7 @@ export class Selected{
                     dataind[i]=Object.assign({},obj);
                     dataind[i].index = p_arr[i];
                 });
-
+                //console.log(traits);
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
@@ -988,11 +1002,10 @@ export class Selected{
                     .attr("font-size", 2*textsize+"px");
 
                 cell.append("text")
-                    .attr("x", width-3*padding)
+                    .attr("x", width/2-padding)
                     .attr("y", size+padding/3)
                     //.attr("dy", ".71em")
-                    .text(ztrait)
-
+                    .text(d=>{if(d===traits[traits.length-1])return ztrait;})
                     .attr("font-size", 2*textsize+"px");
 
                 function plot(p,di) {
@@ -1253,13 +1266,17 @@ export class Selected{
     //BoxPlot
     boxPlot() {for(let i = 0;i<this._totaldata.length;i++){
         //let data = this._data;
+        this.updatesize();
         let data = this._totaldata[i];//this._data;
         //console.log(data);
-        let margin = this._margin;
+        //let margin = this._margin;
         //let height = this._height - margin.top - margin.bottom;
         //let width = this._width - margin.left - margin.right;
         let height = this._height;
         let width = this._width;
+        this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
+        let margin = this._margin;
+
         //let newplot = this._plot;
         let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
 
@@ -1384,11 +1401,15 @@ export class Selected{
     }}
 
     histogramPlot() {for(let i = 0;i<this._totaldata.length;i++){
+        this.updatesize();
         //let data = this._data;
         let data = this._totaldata[i];//this._data;
-        let margin = this._margin;
+        //let margin = this._margin;
         let height = this._height;
         let width = this._width;
+        this._margin = {top: height/10, right: height/10, bottom: width/10, left: width/10};
+        let margin = this._margin;
+
         //let newplot = this._plot;
         let newplot = this._plot.append("div").attr("id","div"+i).attr("class", "crystaldiv");
         let barWidth = this._barWidth;
