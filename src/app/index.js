@@ -41,7 +41,7 @@ let band;
     });
 
 function load(){
-    csv('data/data.csv', rawdata=> {
+    csv('../data/data.csv', rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
@@ -344,15 +344,17 @@ function load(){
 
                     select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
                     select("#plus").on('click',()=>{
-                        plots._height = plots._height*1.2;
-                        plots._width = plots._width*1.2;
-                        pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                        //plots._height = plots._height*1.2;
+                        //plots._width = plots._width*1.2;
+                        //pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                        plots.increase();
                     })
 
                     select("#minus").on('click',()=>{
-                        plots._height = plots._height*0.9;
-                        plots._width = plots._width*0.9;
-                        pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                        //plots._height = plots._height*0.9;
+                        //plots._width = plots._width*0.9;
+                        plots.decrease();
+                        //pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                     })
                 });
             });

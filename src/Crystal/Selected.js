@@ -650,9 +650,12 @@ export class Selected{
                     return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
                 })
                 .each(function (d) {
-                    //console.log(d.j)
-                    if (d.j > totalblocks / 2-1) {
-                    //console.log(padding);
+                    //console.log(d)
+                    //console.log(totalblocks)
+                    if (d.j === (traits.length-1))
+                    {
+
+                    //console.log(d.j);
                     x.domain(domainByTrait[d.x]);
                     xAxis.tickValues(domainByTrait[d.x]);
                     d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate("+(-padding)+","+padding*2+") rotate(-90)");
@@ -677,7 +680,7 @@ export class Selected{
                     d3.select(this).call(yAxis);
                     }
                 });
-                svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
+                svg.selectAll(".tick").selectAll("text").style("font-size", 2*textsize+"px");
                 let p_arr;
 // Attach index to each data;
                 p_arr = Array.from(this._stored[iii].data._total);
@@ -736,7 +739,7 @@ export class Selected{
                         .attr("y", size+10)
                         //.attr("dy", ".71em")
                         .text(function (d) {
-                            if (d.j > totalblocks / 2 - 1) {
+                            if (d.j === (traits.length-1)) {
                             return d.x;
                         }
                         })
@@ -862,7 +865,17 @@ export class Selected{
         }
 
     }
+    increase(){
+        this._width = this._width*1.1;
+        this._height = this._height*1.1;
+        this.updateplot();
+    }
 
+    decrease(){
+        this._width = this._width*0.9;
+        this._height = this._height*0.9;
+        this.updateplot();
+    }
     multiscatter(){
         //d3.selectAll('#plottip').remove();
 
@@ -972,7 +985,7 @@ export class Selected{
                         d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
                     })
                 //console.log(svg.selectAll(".tick").selectAll("line"))
-                svg.selectAll(".tick").selectAll("text").style("font-size", 1.5*textsize+"px");
+                svg.selectAll(".tick").selectAll("text").style("font-size", 2*textsize+"px");
 
                 let p_arr = Array.from(this._stored[iii].data._total);
                 let dataind = [];
@@ -993,7 +1006,7 @@ export class Selected{
                     .each(plot);
 
                 cell.append("text")
-                    .attr("x", -size+1.5*padding)//-padding)
+                    .attr("x", -size*2/3)//-padding)
                     .attr("y", -padding/3)
                     .attr("dy", ".71em").attr("transform", "rotate(-90)")
                     .text(function (d) {
