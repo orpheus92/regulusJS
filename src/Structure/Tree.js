@@ -149,9 +149,9 @@ export class Tree{
         let scalex = d3.scaleLinear().nice();
         scalex.domain([this._maxx,0]);
         if(this._maxx==0)
-            scalex.range([this.treewidth/2, 0]);
+            scalex.range([this.treewidth/2, this.translatex/4]);
         else
-            scalex.range([this.treewidth, 0]);
+            scalex.range([this.treewidth-this.translatex/2, this.translatex/4]);
 
 
         switch (this.Level) {
@@ -262,7 +262,7 @@ export class Tree{
         {
             this._nodegroup.selectAll(".node").data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r",15 / Math.sqrt(this._circlesize) + 1)
+            .attr("r",/*5 / Math.sqrt(this._circlesize) + */3)
             .attr("transform", function (d) {
                 if (d.parent != null)
                     if (d.parent.oldx != null) {
@@ -271,7 +271,7 @@ export class Tree{
             });
 
         t.selectAll('.node')
-            .attr("r", 15 / Math.sqrt(this._circlesize) + 1)
+            .attr("r", /*5 / Math.sqrt(this._circlesize) + */3)
             .attr('fill', (d) => {
                 if (d.data._size >= this.sizeInter && d.data._persistence >= this.pInter)
                     return this._color(d.data._size);
@@ -370,18 +370,20 @@ export class Tree{
         //console.log(clicked);
         if (clicked != undefined) {
         this._curselection.push(clicked);
+        //console.log(clicked)
         d3.select("#tree").selectAll("text").remove();
         d3.select("#tree").selectAll("text")
             .data(clicked, d=>{return d.id})
             .enter()
             .append("text")
             .attr("x", d => {
-                return d.x + 50 / Math.sqrt(this._circlesize) + 2;
+                return d.x;
             })
             .attr("y", d => {
                 return d.y;
             })
-            .attr("dy", ".71em")
+            .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
+            .attr("dy", "-1em")
             .text((d) => {
                 return d.id;
             });

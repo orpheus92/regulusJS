@@ -273,8 +273,12 @@ ns.averageStd = function( Xs, ys, kernel, bandwidth ) {
     var _p  = Xs[0].length;
     var weight_fun = weight.bind( null, kernel, bandwidth );
 
-    var kernel_smoother = function( y ) {
+    var kernel_smoother = function( y,x ) {
 
+            //let y = yx[0];
+            //let x = yx[1];
+            //console.log("YX = ",yx)
+        //console.log("Y = ",y,"X = ", x);
         let arr = [];
         for (let ii = 0; ii < y.length; ii++) {
             let weights = _ys.map(function (y_i) {
@@ -286,9 +290,9 @@ ns.averageStd = function( Xs, ys, kernel, bandwidth ) {
 
             let curarr = [];
             for(let jj = 0;jj<_Xs[0].length;jj++){
-                curarr.push(sum(weights.map(function (w, i) {
-                    return w * _Xs[i][jj];
-                })) / denom)
+                curarr.push(Math.sqrt(sum(weights.map(function (w, i) {
+                    return w * (Math.pow((x[ii][jj]-_Xs[i][jj]),2));
+                })) / denom))
 
             }
 
@@ -300,7 +304,7 @@ ns.averageStd = function( Xs, ys, kernel, bandwidth ) {
 
     };
 
-    return matrixize( kernel_smoother );
+    return kernel_smoother;//matrixize( kernel_smoother );
 };
 // EXPORTS //
 

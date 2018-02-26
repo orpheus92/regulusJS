@@ -893,13 +893,16 @@ export class Selected{
             let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
             let reg = this._reg;
-            let pxs,px,py,f_hat,regy;
+            let pxs,px,py,f_hat,regy,f_hat2,std;
             let [ymin,ymax] = this._objrange[this._y_attr];
             if (reg === true) {
             [px, py] = parseObj(data);
             f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, this._bandwidth*(ymax-ymin));
             regy = linspace(ymin,ymax,100);
+            f_hat2 = kernel.averageStd(px, py, kernel.fun.gaussian, this._bandwidth*(ymax-ymin));
             pxs = f_hat(regy);
+            //console.log([regy,pxs])
+            std = f_hat2(regy,pxs);
             }
             //console.log(pxs);
             //console.log(f_hat);
@@ -1039,6 +1042,74 @@ export class Selected{
                     //console.log(dataind);
                     //console.log(py);
 
+                    if (pxs!=undefined)
+                    {   let area = d3.area()
+                        .x0((d,i)=> { return x(regy[i]); })
+                        .y0((d,i)=> { return y(pxs[i][di]+std[i][di]/2); })
+                        .x1((d,i)=> { return x(regy[i]); })
+                        .y1((d,i)=> { return y(pxs[i][di]-std[i][di]/2); });
+                        let line = d3.line()
+                            .x((d,i)=> { return x(regy[i]); })
+                            .y((d,i)=> { return y(pxs[i][di]); });
+                        /*
+                        let line2 = d3.line()
+                            .x((d,i)=> { return x(regy[i]); })
+                            .y((d,i)=> { return y(pxs[i][di]+std[i][di]/2); });
+
+                        let line3 = d3.line()
+                            .x((d,i)=> { return x(regy[i]); })
+                            .y((d,i)=> { return y(pxs[i][di]-std[i][di]/2); });
+                            */
+                        /*
+                        let regpath = cell.selectAll("path")
+                            .data(py,(d,i)=>{return d[i]})
+                            .enter().append("path");
+                        console.log(regpath);
+                            regpath
+                                */
+
+                        /*
+                        cell.append("path")
+                            .datum(regy).attr("fill", "none")
+                            .attr("stroke", "#d3d3d3")
+                            .attr("stroke-linejoin", "round")
+                            .attr("stroke-linecap", "round")
+                            .attr("stroke-width", 1)
+                            //.attr("stroke-opacity", 0.2)
+                            .attr("d", line2);
+                        */
+                        cell.insert("path")
+                            .datum(regy).attr("fill", "#f1f1f1")
+                            .attr("stroke", "#f1f1f1")
+                            .attr("stroke-linejoin", "round")
+                            .attr("stroke-linecap", "round")
+                            .attr("stroke-width", 1)
+                            .attr("stroke-opacity", 0.2)
+                            .attr("d", area);
+                        cell.append("path")
+                            .datum(regy).attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-linejoin", "round")
+                            .attr("stroke-linecap", "round")
+                            .attr("stroke-width", 1)
+                            .attr("stroke-opacity", 0.5)
+                            .attr("d", line);
+                        /*
+                        let regc = cell.selectAll("circle")
+                            .data(py,(d,i)=>{return d[i]})
+                            .enter().append("circle");
+                        console.log(regc);
+                            regc.attr("cx", function (d, i) {
+
+                                return x(py[i]);
+                            })
+                            .attr("cy", function (d, i) {
+                                return y(pxs[i][di]);
+
+                            })
+                            .attr("r", 1)
+                            .attr("fill", "black");*/
+                    }
                     cell.selectAll("circle")
                         .data(dataind)
                         .enter().append("circle")
@@ -1058,41 +1129,7 @@ export class Selected{
                         });
 
                     // If regression is turned on
-                    if (pxs!=undefined)
-                    {
-                        let line = d3.line()
-                            .x((d,i)=> { return x(regy[i]); })
-                            .y((d,i)=> { return y(pxs[i][di]); });
-                        /*
-                        let regpath = cell.selectAll("path")
-                            .data(py,(d,i)=>{return d[i]})
-                            .enter().append("path");
-                        console.log(regpath);
-                            regpath
-                                */
-                        cell.append("path")
-                            .datum(regy).attr("fill", "none")
-                            .attr("stroke", "black")
-                            .attr("stroke-linejoin", "round")
-                            .attr("stroke-linecap", "round")
-                            .attr("stroke-width", 1.5)
-                            .attr("d", line);
-                        /*
-                        let regc = cell.selectAll("circle")
-                            .data(py,(d,i)=>{return d[i]})
-                            .enter().append("circle");
-                        console.log(regc);
-                            regc.attr("cx", function (d, i) {
 
-                                return x(py[i]);
-                            })
-                            .attr("cy", function (d, i) {
-                                return y(pxs[i][di]);
-
-                            })
-                            .attr("r", 1)
-                            .attr("fill", "black");*/
-                    }
                 }
 
                 let brush = myBrush()
