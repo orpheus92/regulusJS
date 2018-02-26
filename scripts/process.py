@@ -92,47 +92,52 @@ class PostMSC(object):
 
     def mergemin(self, c, p, d, per):
         outlist = []
-        indpair = list(d.keys())
-        indpair2 = np.array([self.str2int(pair) for pair in indpair])
-        listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
-        listother = indpair2[indpair2[:, 0] != int(c)]
+        if c!=p:
+            indpair = list(d.keys())
+            indpair2 = np.array([self.str2int(pair) for pair in indpair])
 
-        for maxin in listmax:
-            if self.int2str(int(p), maxin) in indpair:
-                temp = d[self.int2str(int(c), maxin)]
-                d[self.int2str(int(p), maxin)] = d[self.int2str(int(p), maxin)] + temp
-                del d[self.int2str(int(c), maxin)]
-                outlist.append(self.int2str(int(p), maxin, per - 1))
-                outlist.append(self.int2str(int(c), maxin, per))
-            else:
-                d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
-                outlist.append(self.int2str(int(p), maxin, per - 1))
-                outlist.append(self.int2str(int(c), maxin, per))
-        for pair in listother:
-            outlist.append(self.int2str(pair[0], pair[1], per - 1))
-            outlist.append(self.int2str(pair[0], pair[1], per))
+            ##print(indpair2[:, 0] != int(c))
+
+            listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
+            listother = indpair2[indpair2[:, 0] != int(c)]
+
+            for maxin in listmax:
+                if self.int2str(int(p), maxin) in indpair:
+                    temp = d[self.int2str(int(c), maxin)]
+                    d[self.int2str(int(p), maxin)] = d[self.int2str(int(p), maxin)] + temp
+                    del d[self.int2str(int(c), maxin)]
+                    outlist.append(self.int2str(int(p), maxin, per - 1))
+                    outlist.append(self.int2str(int(c), maxin, per))
+                else:
+                    d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
+                    outlist.append(self.int2str(int(p), maxin, per - 1))
+                    outlist.append(self.int2str(int(c), maxin, per))
+            for pair in listother:
+                outlist.append(self.int2str(pair[0], pair[1], per - 1))
+                outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def mergemax(self, c, p, d, per):
         outlist = []
-        indpair = list(d.keys())
-        indpair2 = np.array([self.str2int(pair) for pair in indpair])
-        listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
-        listother = indpair2[indpair2[:, 1] != int(c)]
-        for minin in listmin:
-            if (self.int2str(minin, int(p)) in indpair):
-                temp = d[self.int2str(minin, int(c))]
-                d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
-                del d[self.int2str(minin, int(c))]
-                outlist.append(self.int2str(minin, int(p), per - 1))
-                outlist.append(self.int2str(minin, int(c), per))
-            else:
-                d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
-                outlist.append(self.int2str(minin, int(p), per - 1))
-                outlist.append(self.int2str(minin, int(c), per))
-        for pair in listother:
-            outlist.append(self.int2str(pair[0], pair[1], per - 1))
-            outlist.append(self.int2str(pair[0], pair[1], per))
+        if c != p:
+            indpair = list(d.keys())
+            indpair2 = np.array([self.str2int(pair) for pair in indpair])
+            listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
+            listother = indpair2[indpair2[:, 1] != int(c)]
+            for minin in listmin:
+                if (self.int2str(minin, int(p)) in indpair):
+                    temp = d[self.int2str(minin, int(c))]
+                    d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
+                    del d[self.int2str(minin, int(c))]
+                    outlist.append(self.int2str(minin, int(p), per - 1))
+                    outlist.append(self.int2str(minin, int(c), per))
+                else:
+                    d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
+                    outlist.append(self.int2str(minin, int(p), per - 1))
+                    outlist.append(self.int2str(minin, int(c), per))
+            for pair in listother:
+                outlist.append(self.int2str(pair[0], pair[1], per - 1))
+                outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def str2int(self, str):

@@ -42,10 +42,11 @@ let measure;
     });
 
 function load(){
-    csv('../data/data.csv', rawdata=> {
+    csv('../data/data22.csv', rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
+            //console.log(rawdata)
             selectAll("#y_attr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
