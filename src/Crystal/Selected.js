@@ -638,7 +638,7 @@ export class Selected{
                 .append("g")
                 .attr("transform", "translate(" + 4*padding + "," + 0 + ")");
 
-                console.log(halfcross(traits,traits))
+                //console.log(halfcross(traits,traits))
                 let totalblocks = halfcross(traits, traits).length;
             svg.selectAll(".x.axis")
                 .data(halfcross(traits, traits))
