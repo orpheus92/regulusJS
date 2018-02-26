@@ -7,11 +7,15 @@ export class pBar{
    constructor(tree,data,basedata){
        this.totalsize = tree._maxsize;
        this.basedata = basedata;
-       let plist = tree.pers;
+       let plist = Object.keys(data).sort(function(a,b){return parseFloat(b)-parseFloat(a)});
        let psize = [];
+       //console.log(data);
+       //console.log(plist);
        for(let p in plist) {
-
+           //console.log(p,i)
            p = parseInt(p);
+           //console.log([plist[p]])
+           //console.log(data[plist[p]])
            psize.push([plist[p], data[plist[p]].length]);
            if (parseInt(p) + 1 <= plist.length - 1)
 

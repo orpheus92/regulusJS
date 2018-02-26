@@ -41,11 +41,11 @@ let band;
     });
 
 function load(){
-    csv('../data/Pu_TOT.csv', rawdata=> {
-        let a= csvParse('../data/Pu_TOT.csv');
+    csv('../data/data.csv', rawdata=> {
+        //let a= csvParse('../data/data.csv');
         //console.log(a)
         //console.log(rawdata)
-        let[outx,outy]=parseObj(rawdata);
+        //let[outx,outy]=parseObj(rawdata);
         //console.log(outx,outy);
 
         for (let i = rawdata.columns.length-1; i>= 0; i--)
@@ -70,7 +70,9 @@ function load(){
             if (error) throw error;
             //will be updated later
 
-            csv('../data/Final_Tree.csv', function (error, treedata){
+            csv('../data/Final_Tree.csv', treedata=>{
+                //console.log(treedata);
+                //console.log(rawdata);
                 json('../data/Base_Partition.json', function (error, basedata) {
 
                     //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
@@ -129,7 +131,8 @@ function load(){
                     slider.curslide.call(drag()
                             .on("start drag", function () {
                                 //console.log("BBB");
-                                slider.handle.attr("cx", x(pInter)); //initial position for the slider
+                                //slider.handle.attr("cx", x(pInter)); //initial position for the slider
+                                slider.handle.attr("cx", x(x.invert(event.x)));
                                 pInter = x.invert(event.x);
                                 //loaddata.update(pInter, sizeInter);
                                 pubsub.publish("infoupdate", loaddata, pInter, sizeInter);

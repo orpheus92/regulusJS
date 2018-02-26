@@ -14,6 +14,7 @@ export class Tree{
      */
     constructor(pc_relation,partition,basedata) {
         //console.log(partition);
+        //console.log(partition);
         this._maxsize = 0;
         this.treewidth = 470;
         this.treelength =250;
@@ -27,7 +28,7 @@ export class Tree{
             allsaddle.push(parseInt(partition.data[item][partition.data[item].length-1]));
         });
         this.saddle = allsaddle;
-
+        //console.log(pc_relation);
 
         this.pers = totalpers;
 
@@ -119,6 +120,8 @@ export class Tree{
     updateTree(ppp,sss) {
         //console.log("updateTree")
         this.pInter = ppp;
+        //console.log(this.pInter);
+        //console.log(this.pShow);
         this.sizeInter = sss;
 
         this.updatemodel();
@@ -235,6 +238,7 @@ export class Tree{
 
     };
     render(option) {
+        //console.log(this._activenode);
         d3.select("#tree").selectAll("text").remove();
         let t = d3.transition()
             .duration(250).ease(d3.easeLinear);
@@ -408,9 +412,13 @@ export class Tree{
 
     setParameter(option, range){
         //let pShow;
+
         if(option === "increase"){
+            //console.log("Increase")
             for (let i=this.pers.length-1; i>=0; i--) {
-                if(this.pers[i]>this.pInter){
+                //console.log(i," PINTER:",this.pInter,"Pi:",this.pers[i])
+                //console.log()
+                if(parseFloat(this.pers[i])>parseFloat(this.pInter)){
                     this.pInter = this.pers[i];
                     this.pShow = (i+1>0) ?this.pers[i+1]:this.pers[0];
                     break;
@@ -420,8 +428,11 @@ export class Tree{
 
         }
         else if(option === "decrease"){
+            //console.log("Decrease")
+
             for (let i=1; i<this.pers.length; i++) {
-                if(this.pers[i]<this.pInter){
+                //console.log(i," PINTER:",this.pInter,"Pi:",this.pers[i])
+                if(parseFloat(this.pers[i])<parseFloat(this.pInter)){
                     this.pInter = this.pers[i];
                     this.pShow = (i+1<this.pers.length-1) ?this.pers[i+1]:this.pers[this.pers.length-1]//this.pers[i];
                     break;
