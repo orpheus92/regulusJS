@@ -106,7 +106,7 @@ export class Tree{
         this.Level = "tLevel";
         this.Scale = "linear";
         this._curselection = [];
-        console.log(this);
+        //console.log(this);
         pubsub.subscribe("levelchange2", this.updatelevel);
 
     }
@@ -320,14 +320,25 @@ export class Tree{
     }
 
     reshapemodel(curnode){
+
+        if(curnode.viz ===undefined) {
+            curnode.viz = true;
+
+        }
+        else{
+            curnode.viz = undefined;
+
+        }
+
         //expand
-        if(curnode.children===undefined) {//  console.log(curnode);
+        if (curnode.children === undefined) {//  console.log(curnode);
             curnode.children = curnode._children;
             delete curnode._children;
 
             //Expand the collapsed nodes
-            if ((curnode.data._persistence < this.pInter)||(curnode.data._size < this.sizeInter)) {
-                curnode.viz = true;
+            //curnode.children.forEach(d=>{})
+            //if ((curnode.data._persistence < this.pInter) || (curnode.data._size < this.sizeInter)) {
+                //curnode.viz = true;
 
                 if (curnode.children != undefined) {
                     curnode.children.forEach(d => {
@@ -337,31 +348,29 @@ export class Tree{
                             delete d.children;
                         }
                         else if (d.children != undefined) {
-                            d._children = [d._children, d.children];
-                            delete d.children;
+                            d._children.push(...d.children);// = [d._children, d.children];
 
+                            delete d.children;
                         }
                     });
                 }
                 else
-                    console.log("Coundn't Expand Anymore, Need to Decrease Persistence Level");
-            }
-            else
-                delete curnode.viz;
+                    alert("Coundn't Expand Anymore, No children for the node");
+            //}
+            //else
+                //delete curnode.viz;
         }
         //collapse
-        else{
+        else {
 
-            if (curnode._children === undefined)
-            {
+            if (curnode._children === undefined) {
                 curnode._children = curnode.children;
             }
             else
-                curnode._children = [curnode.children,curnode];
+                curnode._children = curnode._children.push(...curnode.children);//[curnode.children, curnode];
 
             delete curnode.children;
-            delete curnode.viz;
-
+            //delete curnode.viz;
         }
     }
 
@@ -399,13 +408,17 @@ export class Tree{
                 .enter()
                 .append("text")
                 .attr("x", d => {
-                    return d.x + 50 / Math.sqrt(this._circlesize) + 2;
+                    return d.x;
                 })
                 .attr("y", d => {
                     return d.y;
                 })
-                .attr("dy", ".71em")
+                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
+                .attr("dy", "-1em")
                 .text((d) => {
+                    //console.log(d);
+                    //console.log(this.pShow);
+                    if(d.parent!=null && d.parent.children!=undefined &&d.data._persistence>=this.pShow)
                     return d.id;
                 });
         }
@@ -533,7 +546,7 @@ export function getbaselevelInd(node, accum) {
 export function nodeupdate(node, p, s){
     //Check current node, if meets the contraint, then check its children recursively
     // Check Node Persistence
-
+    if(node.viz===undefined){
     node.oldx = node.x;
     node.oldy = node.y;
     if (node.data._persistence<p)
@@ -613,6 +626,7 @@ export function nodeupdate(node, p, s){
             });
             delete node.__children;
         }
+    }
     }
 
 
