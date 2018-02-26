@@ -41,13 +41,7 @@ let band;
     });
 
 function load(){
-    csv('../data/data.csv', rawdata=> {
-        //let a= csvParse('../data/data.csv');
-        //console.log(a)
-        //console.log(rawdata)
-        //let[outx,outy]=parseObj(rawdata);
-        //console.log(outx,outy);
-
+    csv('data/data.csv', rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
