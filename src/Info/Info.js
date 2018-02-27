@@ -61,7 +61,7 @@ export class Info {
 
     select(channel, self, snode, attr){
         if (snode!=undefined) {
-            console.log(snode);
+            //console.log(snode);
             self.sMSC.selectAll(".sMSC").remove();
             let p_arr = Array.from(snode.data._total);
 

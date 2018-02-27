@@ -8,21 +8,26 @@ from pathlib import Path
 from topopy.MorseSmaleComplex import MorseSmaleComplex as MSC
 
 
+
 class PostMSC(object):
     def load(self, hierarchy, base):
         self.hierarchy = np.genfromtxt(hierarchy, delimiter=",")
 
         with open(base) as data_file:
             self.base = json.load(data_file)
-
+    def addnoise(self,hsorted):
+        for i in range(len(hsorted)):
+            hsorted[i,0] = hsorted[i,0] + i*np.finfo(float).eps
+        return hsorted
     def compute(self):
         hierarchy_sorted = self.hierarchy[np.argsort(self.hierarchy[:, 0])]
         p_max = hierarchy_sorted[-1, 0]
         hierarchy_sorted[:, 0] = hierarchy_sorted[:, 0] / p_max
-
+        num = len(hierarchy_sorted[:,0][hierarchy_sorted[:,0]==1])
+        # print(num)
         # Remove indexes for the root from the hierarchy which did not merge to any parent
-        hierarchy_sorted = hierarchy_sorted[0:-2, :]
-
+        hierarchy_sorted = hierarchy_sorted[0:-num, :]
+        hierarchy_sorted = self.addnoise(hierarchy_sorted)
         child = hierarchy_sorted[:, 2]
         parent = hierarchy_sorted[:, 3]
         saddle = hierarchy_sorted[:, 4]
@@ -32,6 +37,7 @@ class PostMSC(object):
         total_partitions = []
         p_tree = {}
         for i in range(r):
+
             if hierarchy_sorted[i, 1] == 0:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemin(int(child[i]), int(parent[i]), self.base, r - i)
                 p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]],saddle[i])
@@ -173,14 +179,17 @@ def process(args=None):
 
     path = Path(ns.filename).parent
 
-    msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
-    msc.LoadData(ns.filename)
-    msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
+    try:
+        msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
+        msc.LoadData(ns.filename)
+        msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
 
-    post = PostMSC()
-    post.load(path / 'Hierarchy.csv', path / 'Base_Partition.json')
-    post.compute()
-    post.save(str(path / 'P_Partition.json'), str(path / 'Final_Tree.csv'))
+        post = PostMSC()
+        post.load(path / 'Hierarchy.csv', path / 'Base_Partition.json')
+        post.compute()
+        post.save(str(path / 'P_Partition.json'), str(path / 'Final_Tree.csv'))
+    except ValueError as error:
+        print(error)
 
 
 if __name__ == '__main__':
