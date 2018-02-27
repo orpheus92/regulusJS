@@ -1084,7 +1084,7 @@ export class Selected{
                             .attr("stroke-linejoin", "round")
                             .attr("stroke-linecap", "round")
                             .attr("stroke-width", 1)
-                            .attr("stroke-opacity", 0.2)
+                            .attr("stroke-opacity", 0.3)
                             .attr("d", area);
                         cell.append("path")
                             .datum(regy).attr("fill", "none")
@@ -1092,31 +1092,16 @@ export class Selected{
                             .attr("stroke-linejoin", "round")
                             .attr("stroke-linecap", "round")
                             .attr("stroke-width", 1)
-                            .attr("stroke-opacity", 0.5)
+                            .attr("stroke-opacity", 0.7)
                             .attr("d", line);
-                        /*
-                        let regc = cell.selectAll("circle")
-                            .data(py,(d,i)=>{return d[i]})
-                            .enter().append("circle");
-                        console.log(regc);
-                            regc.attr("cx", function (d, i) {
 
-                                return x(py[i]);
-                            })
-                            .attr("cy", function (d, i) {
-                                return y(pxs[i][di]);
 
-                            })
-                            .attr("r", 1)
-                            .attr("fill", "black");*/
                     }
                     cell.selectAll("circle")
                         .data(dataind)
                         .enter().append("circle")
-                        .attr("cx", function (d) { //console.log(d);
-                            //console.log(d[ztrait])
+                        .attr("cx", function (d) {
                             return x(d[ztrait]);
-                            //return py[i]
                         })
                         .attr("cy", function (d) {
                             return y(d[p]);

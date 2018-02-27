@@ -39,7 +39,7 @@ h1 {
 
 h2 {
   font-family: 'font2';
-  font: 25px 'font2';
+  font: 20px 'font2';
   font-weight: bold;
   color: orange;
   padding-bottom: 0;
@@ -179,12 +179,12 @@ input:focus { background-color:yellow; outline: none;}
   /*box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
 /*}*/
 #allattr {
-  height: 60px;
-  width: 180px;
+  height: 100px;
+  width: 220px;
   overflow: auto;
 }
 #attrcontent {
   /*height: 300px;*/
-  width: 150px;
+  width: 300px;
   /*background-color: coral;*/
 }

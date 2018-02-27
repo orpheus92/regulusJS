@@ -10,9 +10,8 @@ export class Partition{
         this.data = Pdata;
 
         this.pers = Object.keys(Pdata).sort(function(a,b){return parseFloat(b)-parseFloat(a)});
-        //console.log(Pdata);
-        this.length = this.pers.length;
 
+        this.length = this.pers.length;
 
     }
 

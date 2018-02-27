@@ -49,9 +49,9 @@ export class TreeLevel {
                     let cy = this.yScale(clevel);
 
                     d3.select(".levellabel")
-                        .attr("x", 40)
+                        .attr("x", 100)
                         .attr("y", -20)
-                        .text("Tree Level")
+                        .text("Persistence Level")
                         .attr("font-size", "15px")
                         .attr("class", "levellabel")
                         .attr("fill", "blue");
@@ -88,9 +88,9 @@ export class TreeLevel {
                     let cy = this.yScale(clevel);
 
                             d3.select(".levellabel")
-                                .attr("x", 80)
-                                .attr("y", -40)
-                                .text("Persistence Level")
+                                .attr("x", 100)
+                                .attr("y", -20)
+                                .text("Persistence Value")
                                 .attr("font-size", "15px")
                                 .attr("class", "levellabel")
                                 .attr("fill","blue");

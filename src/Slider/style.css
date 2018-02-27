@@ -28,8 +28,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-weight: bold;
-    /*font: 10px sans-serif;*/
+    /*font-weight: bold;*/
+    font: 10px sans-serif;
 
 
 }
@@ -37,8 +37,7 @@
 .sizechart{
     top: 50%;
     transform: translateY(100%);
-    font-weight: bold;
-    /*font: 10px sans-serif;*/
+    font: 10px sans-serif;
 
 ;}
 #slider.tick{
@@ -71,7 +70,7 @@
 .line {
     fill: none;
     stroke: #ffab00;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 /* Style the dots by assigning a fill and stroke */

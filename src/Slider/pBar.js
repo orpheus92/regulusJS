@@ -1,5 +1,10 @@
-import * as d3 from 'd3';
+import {event,select,selectAll} from 'd3-selection';
+
+import {scaleLinear,scaleLog,axisBottom,axisLeft} from 'd3';
+import {line as myline} from 'd3-shape';
 import './style.css';
+import { event as currentevent } from 'd3-selection';
+import {drag} from 'd3-drag';
 
 //Persistence Barcode
 
@@ -9,13 +14,11 @@ export class pBar{
        this.basedata = basedata;
        let plist = Object.keys(data).sort(function(a,b){return parseFloat(b)-parseFloat(a)});
        let psize = [];
-       //console.log(data);
-       //console.log(plist);
+
        for(let p in plist) {
-           //console.log(p,i)
+
            p = parseInt(p);
-           //console.log([plist[p]])
-           //console.log(data[plist[p]])
+
            psize.push([plist[p], data[plist[p]].length]);
            if (parseInt(p) + 1 <= plist.length - 1)
 
@@ -24,7 +27,6 @@ export class pBar{
            }
        }
 
-       // 2. Use the margin convention practice 
        let margin = {top: 10, right: 10, bottom: 10, left: 10},
            width = 230,//window.innerWidth - margin.left - margin.right, // Use the window's width
            height = 140;//window.innerHeight - margin.top - margin.bottom; // Use the window's height
@@ -33,75 +35,52 @@ export class pBar{
        this.width = width;
        this.height = height;
        this.margin = margin;
-// The number of datapoints
-       //let n = 21;
 
-// 5. X scale will use the index of our data
-       this.xScale = d3.scaleLinear()
-           .domain([0, 1]) // input
-           .range([0, width-padding]); // output
 
-// 6. Y scale will use the randomly generate number
-       //console.log(plist[plist.length-1]);
-       this.yScale = d3.scaleLinear()
+       this.xScale = scaleLog()//.nice()//;scaleLinear()
+           .domain([Number.EPSILON, 1+Number.EPSILON]) // input
+           .range([0, width-padding]).clamp(true); // output
+
+       this.yScale = scaleLinear()
            .domain([1,psize[psize.length-1][1]]) // input
            .range([height-padding, 0]); // output
-        //console.log(psize)
-// 7. d3's line generator
-       let line = d3.line()
-           .x(d=> { return this.xScale(d[0]); }) // set the x values for the line generator
-           .y(d=> { return this.yScale(d[1]); }); // set the y values for the line generator
-           //.curve(d3.curveMonotoneX) // apply smoothing to the line
 
-// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-       this.dataset = psize;//= d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
+       let line = myline()
+           .x(d=> {return this.xScale(parseFloat(d[0])+Number.EPSILON); }) // set the x values for the line generator
+           .y(d=> { return this.yScale(parseFloat(d[1])); }); // set the y values for the line generator
 
-// 1. Add the SVG to the page and employ #2
-       let svg = d3.select("#pBarcode").append("svg")
+       this.dataset = psize;
+
+       let svg = select("#pBarcode").append("svg")
            .attr("width", width + margin.left + margin.right)
            .attr("height", height + margin.top + margin.bottom)//;
            .attr("class", "pchart");
-
-       //.append("g")
-           //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-       //this.svg = svg;
-// 3. Call the x axis in a group tag
+       //Path for Partitions vs Persistence
+       svg.append("path")
+           .datum(this.dataset)
+           .attr("class", "line")
+           .attr("transform", "translate("+(padding)+","+margin.top+")")
+           .attr("d", line);
+       // Axis
        svg.append("g")
            .attr("class", "pxaxis")
            .attr("transform", "translate("+(padding)+"," + (height-padding+ margin.top) + ")")
-           .call(d3.axisBottom(this.xScale)); // Create an axis component with d3.axisBottom
-       //d3.select(".x axis").append("rect").attr("class", "pbar");
-// 4. Call the y axis in a group tag
+           .call(axisBottom(this.xScale));
+
        svg.append("g")
            .attr("class", "pyaxis")
-           .attr("transform", "translate("+(padding)+","+(margin.top)+")")// + height + ")")
-           .call(d3.axisLeft(this.yScale)); // Create an axis component with d3.axisLeft
+           .attr("transform", "translate("+(padding)+","+(margin.top)+")")
+           .call(axisLeft(this.yScale));
 
-// 9. Append the path, bind the data, and call the line generator 
-       svg.append("path")
-           .datum(this.dataset) // 10. Binds data to the line
-           .attr("class", "line")
-           .attr("transform", "translate("+(padding)+","+margin.top+")")// + height + ")")
-           .attr("d", line); // 11. Calls the line generator 
-
-// 12. Appends a circle for each datapoint 
-       svg.selectAll(".dot")
-           .data(this.dataset)
-           .enter().append("circle") // Uses the enter().append() method
-           .attr("class", "dot") // Assign a class for styling
-           .attr("cx", d=> { return this.xScale(d[0])})
-           .attr("cy", d=> { return this.yScale(d[1])})//d.y) })
-           .attr("r", 1)
-           .attr("transform", "translate("+(padding)+","+margin.top+")");// + height + ")")
-
+       svg.selectAll(".tick").selectAll("text").style("font-size", 8+"px");
        svg.append("text")
-           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ 0 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+           .attr("text-anchor", "middle")
+           .attr("transform", "translate("+ 0 +","+(height/2)+")rotate(-90)")
            .text("Partitions");
 
        svg.append("text")
-           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ (width/2) +","+(height+margin.top)+")")  // centre below axis
+           .attr("text-anchor", "middle")
+           .attr("transform", "translate("+ (width/2) +","+(height+margin.top)+")")
            .text("Persistence");
 
        // Add Buttons
@@ -110,7 +89,7 @@ export class pBar{
        }
 
        let btn = mybutton()
-           .x(width-padding) // X Location
+           .x(width-1.5*padding) // X Location
            .y(height) // Y Location
            .labels(["-"]) // Array of round-robin labels
            .callback(callback) // User callback on click
@@ -127,7 +106,7 @@ export class pBar{
        }
 
        let btn2 = mybutton()
-           .x(width) // X Location
+           .x(width-0.5*padding) // X Location
            .y(height) // Y Location
            .labels(["+"]) // Array of round-robin labels
            .callback(callback2) // User callback on click
@@ -139,151 +118,134 @@ export class pBar{
        svg.call(btn2)
 
        //add persistence bar
-        svg.append("rect").attr("class", "ppbar");
-       this.reshape();
+       svg.append("rect").attr("class", "ppbar");
+
+       let maxsize = parseInt(this.totalsize/50);
+
+       let psize2 = new Array(maxsize);
+       psize2.fill(0);
+       for(let key in this.basedata){
+           if(this.basedata[key].length<maxsize)
+               psize2[this.basedata[key].length]++;
+           else
+               psize2[maxsize-1]++;
+       }
+       for(let i=psize2.length-1;i>0;i--){
+           psize2[i-1]=psize2[i-1]+psize2[i];
+       }
+       this.dataset2 = psize2;
+       this.xScale2 = scaleLinear()
+           .domain([0, maxsize-1]) // input
+           .range([0, width-padding]).clamp(true); // output
+
+
+       this.yScale2 = scaleLinear()
+           .domain([psize2[maxsize-1],psize2[0]]) // input
+           .range([height-padding, 0]); // output
+
+       let line2 = myline()
+           .x((d,i)=> { return this.xScale2(i); })
+           .y(d=> { return this.yScale2(d); });
+
+       let svg2 = select("#pBarcode").append("svg")
+           .attr("width", width + margin.left + margin.right)
+           .attr("height", height + margin.top + margin.bottom)
+           .attr("class", "sizechart");
+
+       svg2.append("path")
+           .datum(psize2)
+           .attr("class", "line")
+           .attr("transform", "translate("+(padding)+","+margin.top+")")
+           .attr("d", line2);
+
+       svg2.append("g")
+           .attr("class", "pxaxis")
+           .attr("transform", "translate("+(padding)+"," + (height-padding+ margin.top) + ")")
+           .call(axisBottom(this.xScale2));
+
+       svg2.append("g")
+           .attr("class", "pyaxis")
+           .attr("transform", "translate("+(padding)+","+(margin.top)+")")
+           .call(axisLeft(this.yScale2));
+
+       svg2.selectAll(".tick").selectAll("text").style("font-size", 8+"px");
+
+
+       svg2.append("text")
+           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+           .attr("transform", "translate("+ 0 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+           .text("Partitions");
+
+       svg2.append("text")
+           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+           .attr("transform", "translate("+ (width/2) +","+(height+margin.top)+")")  // centre below axis
+           .text("Size");
+
+       // Add Buttons
+       let callback3 = ()=> {
+           this.option = "decreaseS";
+       }
+
+       let btn3 = mybutton()
+           .x(width-1.5*padding) // X Location
+           .y(height) // Y Location
+           .labels(["-"]) // Array of round-robin labels
+           .callback(callback3) // User callback on click
+           .fontSize(10) // Font Size
+           .color("black") // Button text color
+           .fill("steelblue") // Button fill
+           .fillHighlight("cyan") // Button fill when highlighted
+           .opacity(0.8) // Opacity
+
+       svg2.call(btn3)
+
+       let callback4 = ()=>{
+           this.option = "increaseS";
+       }
+
+       let btn4 = mybutton()
+           .x(width-0.5*padding) // X Location
+           .y(height) // Y Location
+           .labels(["+"]) // Array of round-robin labels
+           .callback(callback4) // User callback on click
+           .fontSize(10) // Font Size
+           .color("black") // Button text color
+           .fill("steelblue") // Button fill
+           .fillHighlight("cyan") // Button fill when highlighted
+           .opacity(0.8) // Opacity
+       svg2.call(btn4)
+
+       //add persistence bar
+       svg2.append("rect").attr("class", "pbar");
    }
 
    mycb(){
        return this.option;
    }
+   /*
    reshape(){
 
-       //console.log(this.basedata)
-       //console.log(Object.keys(this.basedata).length);
-       let maxsize = parseInt(this.totalsize/50);
 
-       //let plist = this.basedata;
-       //console.log(maxsize);
-       let psize = new Array(maxsize);
-       psize.fill(0);
-       for(let key in this.basedata){
-           if(this.basedata[key].length<maxsize)
-               psize[this.basedata[key].length]++;
-           else
-               psize[maxsize-1]++;
-           //p = parseInt(p);
-       }
-       //console.log(psize);
-       for(let i=psize.length-1;i>0;i--){
-           psize[i-1]=psize[i-1]+psize[i];
-       }
-       //console.log(psize);
-       this.dataset2 = psize;
-      //console.log(psize);
-       this.xScale2 = d3.scaleLinear()
-           .domain([0, maxsize-1]) // input
-           .range([0, this.width-this.padding]); // output
-
-// 6. Y scale will use the randomly generate number
-
-       //console.log(this.basedata);
-       //console.log(psize);
-       //console.log([psize[maxsize-1],psize[0]])
-       this.yScale2 = d3.scaleLinear()
-           .domain([psize[maxsize-1],psize[0]]) // input
-           .range([this.height-this.padding, 0]); // output
-
-       let line = d3.line()
-           .x((d,i)=> { return this.xScale2(i); }) // set the x values for the line generator
-           .y(d=> { return this.yScale2(d); });
-
-       let svg = d3.select("#pBarcode").append("svg")
-       .attr("width", this.width + this.margin.left + this.margin.right)
-       .attr("height", this.height + this.margin.top + this.margin.bottom)
-           .attr("class", "sizechart");
-
-       svg.append("g")
-           .attr("class", "pxaxis")
-           .attr("transform", "translate("+(this.padding)+"," + (this.height-this.padding+ this.margin.top) + ")")
-           .call(d3.axisBottom(this.xScale2)); // Create an axis component with d3.axisBottom
-       //d3.select(".x axis").append("rect").attr("class", "pbar");
-// 4. Call the y axis in a group tag
-       svg.append("g")
-           .attr("class", "pyaxis")
-           .attr("transform", "translate("+(this.padding)+","+(this.margin.top)+")")// + height + ")")
-           .call(d3.axisLeft(this.yScale2)); // Create an axis component with d3.axisLeft
-
-// 9. Append the path, bind the data, and call the line generator
-       svg.append("path")
-           .datum(psize) // 10. Binds data to the line
-           .attr("class", "line")
-           .attr("transform", "translate("+(this.padding)+","+this.margin.top+")")// + height + ")")
-           .attr("d", line); // 11. Calls the line generator
-
-// 12. Appends a circle for each datapoint
-       svg.selectAll(".dot")
-           .data(psize)
-           .enter().append("circle") // Uses the enter().append() method
-           .attr("class", "dot") // Assign a class for styling
-           .attr("cx", (d,i)=> { return this.xScale2(i)})
-           .attr("cy", d=> { return this.yScale2(d)})//d.y) })
-           .attr("r", 1)
-           .attr("transform", "translate("+(this.padding)+","+this.margin.top+")");// + height + ")")
-
-       svg.append("text")
-           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ 0 +","+(this.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-           .text("Partitions");
-
-       svg.append("text")
-           .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-           .attr("transform", "translate("+ (this.width/2) +","+(this.height+this.margin.top)+")")  // centre below axis
-           .text("Size");
-
-       // Add Buttons
-       let callback = ()=> {
-           this.option = "decreaseS";
-       }
-
-       let btn = mybutton()
-           .x(this.width-this.padding) // X Location
-           .y(this.height) // Y Location
-           .labels(["-"]) // Array of round-robin labels
-           .callback(callback) // User callback on click
-           .fontSize(10) // Font Size
-           .color("black") // Button text color
-           .fill("steelblue") // Button fill
-           .fillHighlight("cyan") // Button fill when highlighted
-           .opacity(0.8) // Opacity
-
-       svg.call(btn)
-
-       let callback2 = ()=>{
-           this.option = "increaseS";
-       }
-
-       let btn2 = mybutton()
-           .x(this.width) // X Location
-           .y(this.height) // Y Location
-           .labels(["+"]) // Array of round-robin labels
-           .callback(callback2) // User callback on click
-           .fontSize(10) // Font Size
-           .color("black") // Button text color
-           .fill("steelblue") // Button fill
-           .fillHighlight("cyan") // Button fill when highlighted
-           .opacity(0.8) // Opacity
-       svg.call(btn2)
-
-       //add persistence bar
-       svg.append("rect").attr("class", "pbar");
 
    }
+   */
    updateBar(clevel,slevel){
 
-        let cx = this.xScale(clevel);
+        let cx = this.xScale(clevel+Number.EPSILON);
         let cy;
         for(let i = 0;i<this.dataset.length;i++){
             if(clevel<=this.dataset[i][0]){
                 cy = this.yScale(this.dataset[i][1]);
             }
         }
-        d3.select(".ppbar")//.data([cx])
+        select(".ppbar")//.data([cx])
             .attr("x", cx+this.padding-2)
-            .attr("y", cy+this.margin.top-2)
+            .attr("y", this.margin.top-2)
             .attr("width", 4)
-            .attr("height", 4)
+            .attr("height", this.height-this.margin.top-this.margin.bottom)
             .attr("class", "ppbar")
-            .attr("fill","blue");
+            .attr("fill","blue")
+            .attr("opacity","0.5");
         //console.log(slevel);
        let cx2;
        if(slevel<this.dataset2.length)
@@ -299,22 +261,15 @@ export class pBar{
        else
            cy2 = this.yScale2(this.dataset2[this.dataset2.length-1]);
 
-       /*
-       for(let i = 0;i<this.dataset.length;i++){
-           if(clevel<=this.dataset[i][0]){
-               cy2 = this.yScale(this.dataset[i][1]);
-           }
-       }
-       */
-       //let t = d3.transition().duration(100);
-       //console.log(slevel);
-       d3.select(".pbar")//.data([cx])
+
+       select(".pbar")//.data([cx])
            .attr("x", cx2+this.padding-2)
-           .attr("y", cy2+this.margin.top-2)
+           .attr("y", this.margin.top-2)
            .attr("width", 4)
-           .attr("height", 4)
+           .attr("height", this.height-this.margin.top-this.margin.bottom)
            .attr("class", "pbar")
-           .attr("fill","blue");
+           .attr("fill","blue")
+           .attr("opacity","0.5");
     }
 
 
@@ -350,7 +305,7 @@ export function mybutton() {
     function button(selection) {
 
         selection.each(function(data, i) {
-            var sel = d3.select(this)
+            var sel = select(this)
             buttonGroup = sel.append("g").attr("class", "wb-button")
             var rect = buttonGroup.append("rect")
             var text = buttonGroup.append("text")
@@ -386,7 +341,7 @@ export function mybutton() {
                     })
                     .on("mouseover", function(d, i) {
                         pulse = false // user discovered the button
-                        d3.select(this)
+                        select(this)
                             //.transition()
                             //.duration(250)
                             .style("fill", fillHighlight)
@@ -395,7 +350,7 @@ export function mybutton() {
 
                     })
                     .on("mouseout", function(d, i) {
-                        d3.select(this)
+                        select(this)
                             //.transition()
                             // .duration(250)
                             .style("fill", fill)
@@ -505,7 +460,7 @@ export function mybutton() {
 /*
 export function mybutton()// = function() {
 {
-    var dispatch = d3.dispatch('press', 'release');
+    var dispatch = dispatch('press', 'release');
 
     var padding = 5,
         radius = 5,
@@ -515,7 +470,7 @@ export function mybutton()// = function() {
 
     function my(selection) {
         selection.each(function(d, i) {
-            var g = d3.select(this)
+            var g = select(this)
                 .attr('id', 'd3-button' + i)
                 .attr('transform', 'translate(' + d.x + ',' + d.y + ')');
 
@@ -539,7 +494,7 @@ export function mybutton()// = function() {
     }
 
     function addGradient(d, i) {
-        var defs = d3.select(this).select('defs');
+        var defs = select(this).select('defs');
         var gradient = defs.append('linearGradient')
             .attr('id', 'gradient' + i)
             .attr('x1', '0%')
@@ -555,12 +510,12 @@ export function mybutton()// = function() {
             .attr('id', 'gradient-stop')
             .attr('offset', '100%')
 
-        d3.select(this).select('rect').attr('fill', 'url(#gradient' + i + ")" );
+        select(this).select('rect').attr('fill', 'url(#gradient' + i + ")" );
     }
 
     function addShadow(d, i) {
-        var defs = d3.select(this).select('defs');
-        var rect = d3.select(this).select('rect').attr('filter', 'url(#dropShadow' + i + ")" );
+        var defs = select(this).select('defs');
+        var rect = select(this).select('rect').attr('filter', 'url(#dropShadow' + i + ")" );
         var shadow = defs.append('filter')
             .attr('id', 'dropShadow' + i)
             .attr('x', rect.attr('x'))
@@ -583,23 +538,23 @@ export function mybutton()// = function() {
     }
 
     function activate() {
-        var gradient = d3.select(this.parentNode).select('linearGradient')
-        d3.select(this.parentNode).select("rect").classed('active', true)
+        var gradient = select(this.parentNode).select('linearGradient')
+        select(this.parentNode).select("rect").classed('active', true)
         if (!gradient.node()) return;
         gradient.select('#gradient-start').classed('active', true)
         gradient.select('#gradient-stop').classed('active', true)
     }
 
     function deactivate() {
-        var gradient = d3.select(this.parentNode).select('linearGradient')
-        d3.select(this.parentNode).select("rect").classed('active', false)
+        var gradient = select(this.parentNode).select('linearGradient')
+        select(this.parentNode).select("rect").classed('active', false)
         if (!gradient.node()) return;
         gradient.select('#gradient-start').classed('active', false);
         gradient.select('#gradient-stop').classed('active', false);
     }
 
     function toggle(d, i) {
-        if (d3.select(this).classed('pressed')) {
+        if (select(this).classed('pressed')) {
             release.call(this, d, i);
             deactivate.call(this, d, i);
         } else {
@@ -610,8 +565,8 @@ export function mybutton()// = function() {
 
     function press(d, i) {
         dispatch.call('press', this, d, i)
-        d3.select(this).classed('pressed', true);
-        var shadow = d3.select(this.parentNode).select('filter')
+        select(this).classed('pressed', true);
+        var shadow = select(this.parentNode).select('filter')
         if (!shadow.node()) return;
         shadow.select('feOffset').attr('dx', 0).attr('dy', 0);
         shadow.select('feGaussianBlur').attr('stdDeviation', 0);
@@ -623,8 +578,8 @@ export function mybutton()// = function() {
     }
 
     my.clear = function(d, i) {
-        d3.select(this).classed('pressed', false);
-        var shadow = d3.select(this.parentNode).select('filter')
+        select(this).classed('pressed', false);
+        var shadow = select(this.parentNode).select('filter')
         if (!shadow.node()) return;
         shadow.select('feOffset').attr('dx', offsetX).attr('dy', offsetY);
         shadow.select('feGaussianBlur').attr('stdDeviation', stdDeviation);

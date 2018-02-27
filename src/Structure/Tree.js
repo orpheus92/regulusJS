@@ -471,7 +471,7 @@ export class Tree{
         }
         else if(option === "slide"){
             let p = range[0];
-
+            let s = range[1];
             if (p>=this.pInter)
             {for (let i=this.pers.length-1; i>=0; i--) {
                 if(this.pers[i]>p){
@@ -489,7 +489,7 @@ export class Tree{
                     break;
                 }
             }}
-            this.updateTree(this.pInter,this.sizeInter);
+            this.updateTree(this.pInter,s);
 
         }
         // Set pShow for initialization

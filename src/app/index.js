@@ -1,11 +1,8 @@
 import './style.css';
-//import * as kernel from 'kernel-smooth'
 import {event,select,selectAll} from 'd3-selection';
 import {csv,json,scaleLinear,csvParse} from 'd3';
-//import {event as currentEvent} from 'd3';
 import {drag} from 'd3-drag';
-import { event as currentEvent } from 'd3-selection';
-//d3.getEvent = () => require("d3-selection").event;
+//import { event as currentEvent } from 'd3-selection';
 
 import {pBar} from '../Slider'
 import {parseObj,Selected, SelectP} from '../Crystal';
@@ -15,8 +12,7 @@ import {Slider} from '../Slider';
 import * as pubsub from '../PubSub';
 import {Partition} from '../Process';
 import {rangefilter} from "../Slider/rangefilter";
-//let updateAttribute = updateAttribute();
-//import {loader,setValue} from '../loader';
+
 
 let pInter;
 let sizeInter;
@@ -26,7 +22,6 @@ let loaddata;
 let cnode;
 let treelevel;
 let check = false;
-//let filterdata;
 let selectindex;
 let cur_node;
 let cur_selection;
@@ -113,16 +108,16 @@ function load(dir){
 
                     let newslider = new Slider(select("#treeslider"));
                     let slider = newslider.createslider([minp, maxp],150);
-                    //let kslider = new Slider(select("#kernelslider"));
-                    //let slider2 = kslider.createslider([0.0001, 1],150);
-
-
 
                     let x = scaleLinear()
                         .domain([minp, maxp])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
 
+
+                    slider.handle.attr("cx", x(pInter));
+                    //let kslider = new Slider(select("#kernelslider"));
+                    //let slider2 = kslider.createslider([0.0001, 1],150);
 
                     slider.curslide.call(drag()
                             .on("start drag", function () {
@@ -141,6 +136,8 @@ function load(dir){
                                 treelevel.plotLevel(tree);
                             })
                     );
+
+
                     let kval = 0.1;
                     /*
                     slider2.curslide.call(drag()
@@ -157,6 +154,35 @@ function load(dir){
                     */
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
+
+                    select(".ppbar").call(drag()
+                        .on("start drag", ()=>{
+                            select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x)));
+                            pInter = pb.xScale.invert(event.x)-Number.EPSILON;
+
+                            pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+                            //console.log(pInter,sizeInter)
+                            [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+
+                            //pb.updateBar(pInter,sizeInter);
+                            slider.handle.attr("cx", x(pInter));
+                            treelevel.plotLevel(tree);
+
+                        }));
+
+                        select(".pbar").call(drag()
+                            .on("start drag", ()=>{
+                            select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x)));
+                            sizeInter = parseInt(pb.xScale2.invert(event.x));
+                            //console.log(sizeInter);
+                            pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+                            //console.log(pInter,sizeInter)
+                            [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                            //pb.updateBar(pInter,sizeInter);
+                            //slider.handle.attr("cx", x(pInter));
+                            treelevel.plotLevel(tree);
+
+                        }));
 
                     let clicks = 0;
                     let DELAY = 500;
@@ -374,22 +400,3 @@ function clear(){
         myNode.removeChild(myNode.firstChild);
     }
 }
-
-/*
-function parseObj(data,option){
-    let outx = [];
-    let outy = [];
-    // This should take in object array, return 2d array x and 1d array y
-    for (let i = 0;i<data.length;i++)
-    {
-        let curx = Object.values(data[i]).map(Number);
-        let cury = curx.pop();
-        //console.log(curx,cury);
-        outx.push(curx);
-        outy.push(cury);
-    }
-
-    return[outx,outy];
-
-}
-*/
