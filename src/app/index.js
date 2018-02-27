@@ -77,8 +77,6 @@ function load(dir){
                     pInter = 0.2;
                     sizeInter = 25;
                     band = 0.1;
-                    let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
-                    // Load data in JS
 
                     let selectplot = new SelectP(rawdata, width, height);
 
@@ -97,6 +95,10 @@ function load(dir){
                     treelevel.plotLevel(tree);
 
                     pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+
+                    let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
+                    plots.storedata(tree._root);
+
                     //Slider Event
 
                     // Filterindex will get updated later during interaction
@@ -161,10 +163,8 @@ function load(dir){
                             pInter = pb.xScale.invert(event.x)-Number.EPSILON;
 
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
-                            //console.log(pInter,sizeInter)
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
 
-                            //pb.updateBar(pInter,sizeInter);
                             slider.handle.attr("cx", x(pInter));
                             treelevel.plotLevel(tree);
 
@@ -174,23 +174,15 @@ function load(dir){
                             .on("start drag", ()=>{
                             select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x)));
                             sizeInter = parseInt(pb.xScale2.invert(event.x));
-                            //console.log(sizeInter);
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
-                            //console.log(pInter,sizeInter)
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
-                            //pb.updateBar(pInter,sizeInter);
-                            //slider.handle.attr("cx", x(pInter));
                             treelevel.plotLevel(tree);
-
                         }));
 
                     let clicks = 0;
                     let DELAY = 500;
 
                     //Separate clicking from double clicking
-
-
-
                     document.getElementById("tree").onmouseover = function(event) {
                         //let totalnode = [];
                         selectAll(".node")
@@ -324,20 +316,21 @@ function load(dir){
 
                     });
 
-
+                    /*
                     select('#BrushSelect')
                         .on('click', () =>  {
-                            [cur_selection,cur_node] = plots.highlight();
 
-                            selectindex = new Set(cur_selection.map(obj=>obj.index));
                             console.log(cur_selection)
 
 
                         });
-
+                    */
                     select('#searchC')
                         .on('click', () =>  {
                             //clear();
+                            [cur_selection,cur_node] = plots.highlight();
+
+                            selectindex = new Set(cur_selection.map(obj=>obj.index));
                             if(selectindex!= undefined)
                             tree.searchchildren(selectindex, cur_node);
                             else
@@ -347,12 +340,10 @@ function load(dir){
                     select('#removeS')
                         .on('click', () =>  {
                             selectAll("#selected").attr("id", null);
-
                         });
 
                     select('#myCheck')
                         .on('click', () =>  {
-                            //selectAll("#selected").attr("id", null);
                             plots._reg = !plots._reg;
 
                             // Will use this for now
@@ -362,19 +353,19 @@ function load(dir){
                     select('#createPlot')
                         .on('click', () =>  {
                             let selectP = document.getElementById('selectP').value ;
+                            [cur_selection,cur_node] = plots.highlight();
+                            //selectindex = new Set(cur_selection.map(obj=>obj.index));
 
                             if(cur_selection!=undefined)
-                            {                                  selectplot.removedata();
+                            {selectplot.removedata();
                             selectplot.storedata(cur_selection);
                             selectplot.updatediv(selectP);
                             }
+
                         });
 
                     select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
                     select("#plus").on('click',()=>{
-                        //plots._height = plots._height*1.2;
-                        //plots._width = plots._width*1.2;
-                        //pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                         plots.increase();
                     })
 

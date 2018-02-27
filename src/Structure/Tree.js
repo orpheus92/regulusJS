@@ -490,7 +490,6 @@ export class Tree{
                 }
             }}
             this.updateTree(this.pInter,s);
-
         }
         // Set pShow for initialization
         else

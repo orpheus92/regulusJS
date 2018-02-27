@@ -82,6 +82,7 @@ export class Selected{
         }
         else if(inputnode.length != undefined) {
             selected = inputnode;
+            //console.log(inputnode.data)
             if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
             inputnode.data._saddleinfo =  this._rawdata[inputnode.data._saddleind];
         }
@@ -135,10 +136,8 @@ export class Selected{
                 }
             }
             this._attr = attr;
-            //console.log(objrange);
             this._totaldata.push(selectdata);
-            //this._totalobj.push(this._obj);
-            //this._totalattr.push(this._attr);
+
         }
         //console.log(this);
         this.updateplot();
@@ -157,10 +156,13 @@ export class Selected{
     }
     // Update all the plots based on plot selection
     updateplot(channel, self, option){
-        //console.log(option);
+        //console.log(self);
         let plottype;
-        if (self==undefined)
-        {
+        if (self===undefined)
+        {   if(this._totaldata ===undefined)
+                {   //console.log(this._totaldata)
+                    this.updatediv(this._stored[0]);
+                }
             if (option != undefined)
             this._plottype = option;
         plottype = this._plottype;
@@ -205,7 +207,10 @@ export class Selected{
         }
         }
         else{
-
+            if(self._totaldata ===undefined)
+            {   //console.log(this._totaldata)
+                self.updatediv(self._stored[0]);
+            }
             if (option != undefined)
                 self._plottype = option;
             plottype = self._plottype;
@@ -1584,6 +1589,7 @@ export class Selected{
                 this._stored.splice(remove,1);
             }
         }
+        //console.log(this._stored);
     }
     removedata(){
         this._stored = [];
