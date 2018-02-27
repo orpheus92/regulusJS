@@ -42,7 +42,7 @@ let measure;
     });
 
 function load(){
-    csv('../data/data22.csv', rawdata=> {
+    csv('../data/data.csv', rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
