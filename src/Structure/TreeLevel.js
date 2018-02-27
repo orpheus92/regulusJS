@@ -21,8 +21,8 @@ export class TreeLevel {
         pubsub.subscribe("levelchange1", this.switchLevel);
 
     }
-    
-    
+
+
     plotLevel(ctree) {
         if (ctree != undefined)
         {
@@ -69,23 +69,23 @@ export class TreeLevel {
 
                     switch (this.Scale){
                         case "linear":{
-                    // Define Scale Function
-                    if (ctree.pShow == undefined)
-                        this.yScale.domain([ctree.pInter, 1]);
-                    else
-                        this.yScale.domain([ctree.pShow, 1]);
-                    // Draw Axis
-                    let yAxis = d3.axisLeft()
-                        .scale(this.yScale);
+                            // Define Scale Function
+                            if (ctree.pShow == undefined)
+                                this.yScale.domain([ctree.pInter, 1]);
+                            else
+                                this.yScale.domain([ctree.pShow, 1]);
+                            // Draw Axis
+                            let yAxis = d3.axisLeft()
+                                .scale(this.yScale);
 
-                    t.select("#treelevel")
-                        .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
-                        .call(yAxis);
+                            t.select("#treelevel")
+                                .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
+                                .call(yAxis);
 
-                    //Draw Current Level
+                            //Draw Current Level
 
-                    clevel = ctree.pInter;
-                    let cy = this.yScale(clevel);
+                            clevel = ctree.pInter;
+                            let cy = this.yScale(clevel);
 
                             d3.select(".levellabel")
                                 .attr("x", 100)
@@ -95,14 +95,14 @@ export class TreeLevel {
                                 .attr("class", "levellabel")
                                 .attr("fill","blue");
 
-                    t.select(".bar")//.data([clevel])
-                        .attr("x", -5)
-                        .attr("y", cy)
-                        .attr("width", 10)
-                        .attr("height", 5)
-                        .attr("class", "bar")
-                        .attr("fill","blue");
-                    break;
+                            t.select(".bar")//.data([clevel])
+                                .attr("x", -5)
+                                .attr("y", cy)
+                                .attr("width", 10)
+                                .attr("height", 5)
+                                .attr("class", "bar")
+                                .attr("fill","blue");
+                            break;
                         }
                         case "log":{
                             //this.clearPlots();
@@ -168,5 +168,5 @@ export class TreeLevel {
             default:
         }
     }
-    
+
 }
