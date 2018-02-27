@@ -39,9 +39,6 @@ export class Info {
         }
         //console.log(obj);
 
-        console.log('num:',n;
-        console.log(`num: ${n}`);
-
         for (let j = 0; j < datacol; j++)
         {   //console.log(obj[attr[j]]);
             objrange[attr[j]].push(Math.min(...obj[attr[j]]));
