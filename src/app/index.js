@@ -37,12 +37,13 @@ let measure;
     select('#LoadFile')
     .on('click', () =>  {
         //clear();
-        load();
+        load('../data/full/full/excess/');
         //console.log("dasasd")
     });
 
-function load(){
-    csv('../data/data22.csv', rawdata=> {
+function load(dir){
+    csv(dir.concat('data.csv'), rawdata=> {
+        console.log(dir.concat('data.csv'))
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
@@ -62,14 +63,14 @@ function load(){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-        json('../data/P_Partition.json', function (error, data) {
+        json(dir.concat('P_Partition.json'), function (error, data) {
             if (error) throw error;
             //will be updated later
 
-            csv('../data/Final_Tree.csv', treedata=>{
+            csv(dir.concat('Final_Tree.csv'), treedata=>{
                 //console.log(treedata);
                 //console.log(rawdata);
-                json('../data/Base_Partition.json', function (error, basedata) {
+                json(dir.concat('Base_Partition.json'), function (error, basedata) {
                     measure = rawdata.columns[rawdata.columns.length-1];
                     //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
 
