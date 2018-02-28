@@ -9,7 +9,7 @@ import {myBrush} from '../customd3';
 //console.log('.');
 export class Selected {
     // Assign a parentnode for all divs
-    constructor(data, width, height, yattr, plottype, check, band) {
+    constructor(data, width, height, yattr, plottype, check, band, dataarray) {
         this._rawdata = data;
         this._data = data;
         this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
@@ -28,30 +28,21 @@ export class Selected {
         this._bandwidth = band;
         // This part is necessary when people try to call update attribute before selecting partition
         let attr = data.columns;
+        this._obj = dataarray;
 
-        let datacol = attr.length;
-        let datarow = this._data.length;
-        let obj = {};
-        let objrange = {};
-        for (let j = 0; j < datacol; j++) {
-            obj[attr[j]] = [];
-            objrange[attr[j]] = [];
-        }
-        for (let i = 0; i < datarow; i++) {
-            for (let j = 0; j < datacol; j++) {
-                obj[attr[j]].push(parseFloat(this._data[i][attr[j]]));
-            }
+        this._objrange = {};
+        for (let i = 0; i<attr.length; i++)
+        {
+            this._objrange[attr[i]] = [Math.min(...dataarray[attr[i]]),Math.max(...dataarray[attr[i]])];
         }
 
-        this._obj = obj;
         this._attr = attr;
+        this._totaldata = {};
         pubsub.subscribe("plotupdateattr", this.updateattr);
         pubsub.subscribe("plottypechange", this.updateplot);
 
-
     }
     updatesize() {
-
         let width = this._width;
         let height = this._height;
         this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
@@ -105,7 +96,9 @@ export class Selected {
     // Update divs based on input data
     updatediv(/*inputnode*/) {
         let selected;
-        //if (inputnode === undefined) {
+
+        // this._stored got updated based on selection
+        // Plots should also get updated in the same way
         selected = this._stored;
         /*
         }
@@ -123,7 +116,7 @@ export class Selected {
         */
 
         this._totaldata = {};
-        this._objrange = {};
+        //this._objrange = {};
 
         for (let i = 0; i < selected.length; i++) {
             let nodeinfo = selected[i];
@@ -132,24 +125,22 @@ export class Selected {
                 selectdata.push(this._rawdata[d]);
             });
             selectdata.columns = this._rawdata.columns;
-            let attr = selectdata.columns;
-            let datacol = attr.length;
-            let datarow = selectdata.length;
+            //let attr = selectdata.columns;
+            //let datacol = attr.length;
+            //let datarow = selectdata.length;
+            /*
             let obj = {};
             let objrange = {};
+
             for (let j = 0; j < datacol; j++) {
                 obj[attr[j]] = [];
                 objrange[attr[j]] = [];
-            }
-            for (let i = 0; i < datarow; i++) {
-                for (let j = 0; j < datacol; j++) {
+                for (let i = 0; i < datarow; i++) {
                     obj[attr[j]].push(parseFloat(selectdata[i][attr[j]]));
                 }
+                objrange[attr[j]] = [Math.min(...obj[attr[j]]),Math.max(...obj[attr[j]])];
             }
-            for (let j = 0; j < datacol; j++) {   //console.log(obj[attr[j]]);
-                objrange[attr[j]].push(Math.min(...obj[attr[j]]));
-                objrange[attr[j]].push(Math.max(...obj[attr[j]]));
-            }
+
             if (Object.keys(this._objrange).length === 0 && this._objrange.constructor === Object) {
                 this._objrange = objrange;
             }
@@ -160,7 +151,7 @@ export class Selected {
                 }
             }
             this._attr = attr;
-            //this._totaldata.push(selectdata);
+            */
             this._totaldata[nodeinfo.id] = selectdata;
         }
         this.updateplot();
@@ -179,13 +170,26 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
+        //console.log(option)
+        let newplot = [];
         let plottype;
         if (self === undefined) {
-            /*
-            if (this._totaldata === undefined) {   //console.log(this._totaldata)
-                this.updatediv(this._stored[0]);
-            }
-            */
+            if(option!=this._plottype)
+                this._plot.selectAll("div").remove();
+
+
+            this._plot.selectAll("div")
+                .data(Object.keys(this._totaldata),d=>{return d})
+                .enter()
+                .append("div")
+                .attr("class", "crystaldiv")
+                .attr("id", d=>{newplot.push(d);});
+
+            this._plot.selectAll("div")
+                .data(Object.keys(this._totaldata),d=>{return d})
+                .exit()
+                .remove();
+
             if (option != undefined)
                 this._plottype = option;
             plottype = this._plottype;
@@ -193,22 +197,22 @@ export class Selected {
             switch (plottype) {
                 case "BoxPlot": {
                     //this.clearPlots();
-                    this.boxPlot(option);
+                    this.boxPlot(newplot);
                     break;
                 }
                 case "Histogram": {
                     //this.clearPlots();
-                    this.histogramPlot(option);
+                    this.histogramPlot(newplot);
                     break;
                 }
                 case "ScatterMat": {
                     //this.clearPlots();
-                    this.scatterMat(option);
+                    this.scatterMat(newplot);
                     break;
                 }
                 case "AllScatter": {
                     //this.clearPlots();
-                    this.multiscatter(option);
+                    this.multiscatter(newplot);
                     break;
                 }
                 case "Stats": {
@@ -219,11 +223,21 @@ export class Selected {
             }
         }
         else {
-            /*
-            if (self._totaldata === undefined) {
-                self.updatediv(self._stored[0]);
-            }
-            */
+            if(option!=self._plottype)
+                self._plot.selectAll("div").remove();
+
+            self._plot.selectAll("div")
+                .data(Object.keys(self._totaldata),d=>{return d})
+                .enter()
+                .append("div")
+                .attr("class", "crystaldiv")
+                .attr("id", d=>{newplot.push(d);});
+
+            self._plot.selectAll("div")
+                .data(Object.keys(self._totaldata),d=>{return d})
+                .exit()
+                .remove();
+
             if (option != undefined)
                 self._plottype = option;
             plottype = self._plottype;
@@ -232,22 +246,22 @@ export class Selected {
             switch (plottype) {
                 case "BoxPlot": {
                     //this.clearPlots();
-                    self.boxPlot(option);
+                    self.boxPlot(newplot);
                     break;
                 }
                 case "Histogram": {
                     //this.clearPlots();
-                    self.histogramPlot(option);
+                    self.histogramPlot(newplot);
                     break;
                 }
                 case "ScatterMat": {
                     //this.clearPlots();
-                    self.scatterMat(option);
+                    self.scatterMat(newplot);
                     break;
                 }
                 case "AllScatter": {
                     //this.clearPlots();
-                    self.multiscatter(option);
+                    self.multiscatter(newplot);
                     break;
                 }
                 case "Stats": {
@@ -277,22 +291,25 @@ export class Selected {
         this._height = this._height * 0.9;
         this.updateplot();
     }
-    scatterMat(option) {
-
-        for (let iii = 0; iii < this._totaldata.length; iii++) {
-            this.updatesize();
-            let data = this._totaldata[iii];
-            let width = this._width;
-            let height = this._height;
-            this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
-            let margin = this._margin;
-            let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
-            let textsize = this._textsize;
-
+    scatterMat(newid) {
+        for (let iii = 0; iii<newid.length; iii++) {
+            drawscatter(iii,this)
+        }
+            function drawscatter(iii,self){
+            self.updatesize();
+            let data = self._totaldata[newid[iii]];
+            let width = self._width;
+            let height = self._height;
+            self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
+            let margin = self._margin;
+            //let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
+                let newplot = self._plot.selectAll("div")
+                    .data([newid[iii]],d=>{return d;});
+                let textsize = self._textsize;
             {
                 //width = 960;
                 let size = height,
-                    padding = (margin.left + margin.right) / 3;
+                padding = (margin.left + margin.right) / 3;
                 padding = padding / 2
 
                 let x = d3.scaleLinear()
@@ -312,13 +329,13 @@ export class Selected {
                 let domainByTrait = {},
                     rangeByTrait = [],
                     traits = d3.keys(data[0]).filter(d => {
-                        return d != this._y_attr;
+                        return d != self._y_attr;
                     }),
-                    ztrait = this._y_attr,
+                    ztrait = self._y_attr,
                     n = traits.length;
 
                 traits.forEach(trait => {
-                    domainByTrait[trait] = this._objrange[trait];
+                    domainByTrait[trait] = self._objrange[trait];
                     /*
                                             d3.extent(data, function (d) {
 
@@ -327,12 +344,8 @@ export class Selected {
                                         */
                 });
 
-                rangeByTrait = this._objrange[ztrait];
-                /*
-                d3.extent(data, function (d) {
-                return parseFloat(d[ztrait]);
-            });
-            */
+                rangeByTrait = self._objrange[ztrait];
+
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
@@ -393,7 +406,7 @@ export class Selected {
                 svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
                 let p_arr;
                 // Attach index to each data;
-                p_arr = Array.from(this._stored[iii].data._total);
+                p_arr = Array.from(self._stored[iii].data._total);
 
                 let dataind = [];
 
@@ -491,7 +504,7 @@ export class Selected {
                 })
                 .attr("font-size", 2*textsize+"px");
                 */
-                let brushind = this._brushNum;
+                let brushind = self._brushNum;
                 cell.call(brush);
                 let brushes = [];
 
@@ -551,7 +564,7 @@ export class Selected {
                 // If the brush is empty, select all circles.
                 function brushend() {
                     let e = d3.brushSelection(this);
-                    brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    brushind.index = newid[iii];//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
 
                     brushes.push(e);
                     //console.log(brushes);
@@ -569,7 +582,7 @@ export class Selected {
                 svg.append("text")
                     .attr("x", size * n / 2 - 3 * padding)
                     .attr("y", 0)
-                    .text(this._stored[iii].id)
+                    .text(self._stored[iii].id)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
             }
@@ -577,14 +590,15 @@ export class Selected {
         }
 
     }
-    multiscatter() {
-        for (let iii = 0;iii<Object.entries(this._totaldata).length; iii++ )
-        {
-            drawscatter(iii,this);
+    multiscatter(newid) {
+        //console.log(newid);
+        for (let iii = 0; iii<newid.length; iii++){
+            drawscatter(iii,this)
         }
-        function drawscatter(iii, self){
 
-            let data = self._totaldata[Object.entries(self._totaldata)[iii][0]];
+        function drawscatter(iii,self){
+            let data = self._totaldata[newid[iii]];
+            //console.log(data)
             self.updatesize();
 
             let height = self._height;
@@ -592,7 +606,11 @@ export class Selected {
             self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = self._margin;
 
-            let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
+            let newplot = self._plot.selectAll("div")
+                .data([newid[iii]],d=>{return d;});
+
+
+            //let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = self._textsize;
             let reg = self._reg;
             let pxs, px, py, f_hat, regy, f_hat2, std;
@@ -654,6 +672,15 @@ export class Selected {
                     .append("g")
                     .attr("transform", "translate(" + padding + "," + padding + ")");
 
+                /*
+                d3.selectAll(".crystaldiv")
+                    .enter()
+                    .append("svg")
+                    .attr("width", width + padding)
+                    .attr("height", size * n + padding)
+                    .append("g")
+                    .attr("transform", "translate(" + padding + "," + padding + ")");
+                */
                 x.domain(rangeByTrait);
 
                 svg.selectAll(".x.axis")
@@ -818,10 +845,9 @@ export class Selected {
                             );
                     });
                 }
-
                 // If the brush is empty, select all circles.
                 function brushend(p) {
-                    brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    brushind.index = newid[iii];//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
                     let e = d3.brushSelection(this);
                     brushes.push(e);
                     svg.selectAll("#visible").attr("id", null);
@@ -830,43 +856,47 @@ export class Selected {
                         svg.selectAll(".hidden").classed("hidden", false)
                         brushes = [];
                     }
-
                 }
-
                 svg.append("text")
                     .attr("x", width / 2 - 3 * padding)
                     .attr("y", 0)
                     .text(self._stored[iii].id)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
-
             }
 
         }
     }
     //BoxPlot
-    boxPlot() {
-        for (let i = 0; i < this._totaldata.length; i++) {
+    boxPlot(newid) {
+        for (let iii = 0; iii<newid.length; iii++) {
+            drawbox(iii,this)
+        }
+
+        function drawbox(iii,self){
+            let format = d3.format('.3g');
             //let data = this._data;
-            this.updatesize();
-            let data = this._totaldata[i];//this._data;
-            //console.log(data);
-            //let margin = this._margin;
-            //let height = this._height - margin.top - margin.bottom;
-            //let width = this._width - margin.left - margin.right;
-            let height = this._height;
-            let width = this._width;
-            this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
-            let margin = this._margin;
+            self.updatesize();
+            let data = self._totaldata[newid[iii]];//this._data;
+
+            let height = self._height;
+            let width = self._width;
+            self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
+            let margin = self._margin;
+            //console.log(height,width)
 
             //let newplot = this._plot;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            //let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+            let newplot = self._plot.selectAll("div")
+                .data([newid[iii]],d=>{return d;});
 
-            let barWidth = this._barWidth;
-            let textsize = this._textsize;
-
+            let barWidth = self._barWidth;
+            let textsize = self._textsize;
+            let size = height,
+                padding = (margin.left + margin.right) / 3;
             //load data as array
             let attr = data.columns;
+            let n = attr.length;
             let datacol = attr.length;
             let datarow = data.length;
             let obj = {};
@@ -877,6 +907,12 @@ export class Selected {
                     obj[attr[j]].push(parseFloat(data[i][attr[j]]));
                 }
             }
+
+            let svg = newplot.append("svg")
+                .attr("width", width + padding)
+                .attr("height", size * n + padding)
+                //.append("g")
+                .attr("transform", "translate(" + padding + "," + padding + ")");
 
             for (let i = 0; i < datacol; i++) {
                 let groupCount = obj[attr[i]];
@@ -895,13 +931,14 @@ export class Selected {
                     .domain([localMin, localMax])
                     .range([0, width - margin.left - margin.right]);
 
-                let svg = newplot.append("svg")
-                    .attr("height", height)
-                    .attr("width", width);
+                //let svg = newplot.append("svg")
+                //    .attr("height", height)
+                //    .attr("width", width);
+
                 let g = svg
                     .append('g')
                     .attr('id', "boxPlot" + i)
-                    .attr("transform", "translate(" + [margin.left, margin.top] + ")");
+                    .attr("transform", "translate(" + [padding, i * size+padding] + ")");
 
                 g.append("line")
                     .attr("x1", xScale(record.whiskers[0]))
@@ -934,38 +971,41 @@ export class Selected {
                 g.append("text")
                     .attr("x", xScale(record.quartile[0]))
                     .attr("y", height / 2 + 15 + barWidth / 2)
-                    .text(record.quartile[0].toFixed(2))
-                    .attr("style", "text-anchor: middle;")
-                    .attr("font-size", 2 * textsize + "px");
-                g.append("text")
-                    .attr("x", xScale(record.quartile[1]))
-                    .attr("y", height / 2 + 15 + barWidth / 2)
-                    .text(record.quartile[1].toFixed(2))
-                    .attr("style", "text-anchor: middle;")
-                    .attr("font-size", 2 * textsize + "px");
-                g.append("text")
-                    .attr("x", xScale(record.quartile[2]))
-                    .attr("y", height / 2 + 15 + barWidth / 2)
-                    .text(record.quartile[2].toFixed(2))
-                    .attr("style", "text-anchor: middle;")
-                    .attr("font-size", 2 * textsize + "px");
-                g.append("text")
-                    .attr("x", xScale(record.whiskers[1]))
-                    .attr("y", height / 2 + 15)
-                    .text(record.whiskers[1].toFixed(2))
-                    .attr("style", "text-anchor: middle;")
-                    .attr("font-size", 2 * textsize + "px");
-                g.append("text")
-                    .attr("x", xScale(record.whiskers[0]))
-                    .attr("y", height / 2 + 15)
-                    .text(record.whiskers[0].toFixed(2))
+                    .text(format(record.quartile[0].toFixed(2)))
                     .attr("style", "text-anchor: middle;")
                     .attr("font-size", 2 * textsize + "px");
 
-                svg
-                    .append("text")
+                g.append("text")
+                    .attr("x", xScale(record.quartile[1]))
+                    .attr("y", height / 2 + 15 + barWidth / 2)
+                    .text(format(record.quartile[1].toFixed(2)))
+                    .attr("style", "text-anchor: middle;")
+                    .attr("font-size", 2 * textsize + "px");
+
+                g.append("text")
+                    .attr("x", xScale(record.quartile[2]))
+                    .attr("y", height / 2 + 15 + barWidth / 2)
+                    .text(format(record.quartile[2].toFixed(2)))
+                    .attr("style", "text-anchor: middle;")
+                    .attr("font-size", 2 * textsize + "px");
+
+                g.append("text")
+                    .attr("x", xScale(record.whiskers[1]))
+                    .attr("y", height / 2 + 15)
+                    .text(format(record.whiskers[1].toFixed(2)))
+                    .attr("style", "text-anchor: middle;")
+                    .attr("font-size", 2 * textsize + "px");
+
+                g.append("text")
+                    .attr("x", xScale(record.whiskers[0]))
+                    .attr("y", height / 2 + 15)
+                    .text(format(record.whiskers[0].toFixed(2)))
+                    .attr("style", "text-anchor: middle;")
+                    .attr("font-size", 2 * textsize + "px");
+
+                g.append("text")
                     .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate(" + (this._width / 2) + "," + (this._height) + ")")  // centre below axis
+                    .attr("transform", "translate(" + (self._width / 3) + "," + 0 + ")")  // centre below axis
                     .attr("font-size", 2 * textsize + "px")
                     .text(attr[i]);
 
@@ -982,28 +1022,46 @@ export class Selected {
         }
     }
 
-    histogramPlot() {
-        for (let i = 0; i < this._totaldata.length; i++) {
-            this.updatesize();
+    histogramPlot(newid) {
+        for (let iii = 0; iii<newid.length; iii++) {
+            drawhist(iii,this)
+        }
+        function drawhist(iii,self) {
+            let format = d3.format(".3g");
+            self.updatesize();
             //let data = this._data;
-            let data = this._totaldata[i];//this._data;
+            let data = self._totaldata[newid[iii]];//this._data;
             //let margin = this._margin;
-            let height = this._height;
-            let width = this._width;
-            this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
-            let margin = this._margin;
+            let height = self._height;
+            let width = self._width;
+            self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
+            let margin = self._margin;
 
             //let newplot = this._plot;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
-            let barWidth = this._barWidth;
-            let textsize = this._textsize;
+            //let newplot = self._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+
+            let newplot = self._plot.selectAll("div")
+                .data([newid[iii]],d=>{return d;});
+
+            let barWidth = self._barWidth;
+            let textsize = self._textsize;
+
+            let size = height,
+                padding = (margin.left + margin.right) / 3;
+            //load data as array
 
             //load data as array
             let attr = data.columns;
+            let n = attr.length;
             let datacol = attr.length;
             let datarow = data.length;
 
             //let numOfBins = 10;
+            let svg = newplot.append("svg")
+                .attr("width", width + padding)
+                .attr("height", size * n + padding)
+                //.append("g")
+                .attr("transform", "translate(" + padding + "," + padding + ")");
 
             for (let i = 0; i < datacol; i++) {
                 let curData = [];
@@ -1038,14 +1096,13 @@ export class Selected {
                     return d.length;
                 })]);
 
-                let svg = newplot.append("svg")
-                //.attr("height", this._height)
-                //.attr("width", this._width);
-                    .attr("height", height)
-                    .attr("width", width);
+                let g = svg
+                    .append('g')
+                    .attr('id', "histPlot" + i)
+                    .attr("transform", "translate(" + [padding, i * size+padding] + ")");
 
-                let g = svg.append('g')
-                    .attr('id', "boxPlot" + i);
+                //let g = svg.append('g')
+                //    .attr('id', "boxPlot" + i);
                 //.attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
                 g.selectAll("rect")
@@ -1071,7 +1128,7 @@ export class Selected {
                 g
                     .append('g')
                     .attr('id', "xAxis" + i)
-                    .call(d3.axisBottom(x).tickValues(tickrange))
+                    .call(d3.axisBottom(x).tickValues(tickrange).tickFormat(d3.format(".2g")))
                     .attr("font-size", 2 * textsize + "px")
                     //.attr("transform", "translate(" + [0, height] + ")");
                     .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
@@ -1079,17 +1136,17 @@ export class Selected {
                 g
                     .append('g')
                     .attr('id', "yAxis" + i)
-                    .call(d3.axisLeft(y).ticks(5))
+                    .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(".2g")))
                     .attr("font-size", 2 * textsize + "px")
                     .attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
 
-                svg
+                g
                     .append("text")
                     .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("font-size", 2 * textsize + "px")
                     //.attr("transform", "translate("+ (width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
-                    .attr("transform", "translate(" + (width / 2) + "," + (height) + ")")  // centre below axis
+                    .attr("transform", "translate(" + (width / 2) + "," + padding/2 + ")")  // centre below axis
                     .text(attr[i]);
                 // svg
                 //     .append("text")

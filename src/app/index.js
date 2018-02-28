@@ -10,14 +10,14 @@ import {Info} from '../Info';
 import {Tree,TreeLevel} from '../Structure';
 import {Slider} from '../Slider';
 import * as pubsub from '../PubSub';
-import {Partition} from '../Process';
+//import {Partition} from '../Process';
 import {rangefilter} from "../Slider/rangefilter";
 
 
 let pInter;
 let sizeInter;
 let tree;
-let partition;
+//let partition;
 let loaddata;
 let cnode;
 let treelevel;
@@ -34,11 +34,11 @@ let filterdata;
 let dataarray;
 
 
-// select('#LoadFile')
-// .on('click', () =>  load());
-
+ select('#catalog')
+ .on('click', () =>  {load("waste_Am")});
+/*
 select('#catalog')
-    .on('change', function () { load(this.value); });
+    .on('change', function () { load(this.value);});
 
 fetch('/catalog')
     .then( response => response.json() )
@@ -51,7 +51,7 @@ fetch('/catalog')
             .attr('value', d => d)
             .text(d => d);
     });
-
+*/
 function load(dataset){
     csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
@@ -76,9 +76,8 @@ function load(dataset){
             //will be updated later
 
 
-            csv('data/Final_Tree.csv', treedata=>{
-
-                json('data/Base_Partition.json', function (error, basedata) {
+            csv(`data/${dataset}/Final_Tree.csv`, treedata=>{
+                json(`data/${dataset}/Base_Partition.json`, function (error, basedata) {
                     // Convert rawdata to floats in the beginning
                     rawdata.forEach(d=>{
                         for (let i = rawdata.columns.length-1; i>= 0; i--){
@@ -86,7 +85,6 @@ function load(dataset){
                         }
                     });
                     dataarray = {};
-
                     // Convert data into arrays that will be used later
                     for (let j = 0; j < rawdata.columns.length; j++) {
                         dataarray[rawdata.columns[j]] = [];
@@ -94,7 +92,6 @@ function load(dataset){
                             dataarray[rawdata.columns[j]].push(rawdata[i][rawdata.columns[j]]);
                         }
                     }
-
 
                     measure = rawdata.columns[rawdata.columns.length-1];
                     // Initialize Range Filter
@@ -114,22 +111,18 @@ function load(dataset){
 
                     // Data View Constructor
                     loaddata = new Info();
-                    let [maxp, minp] = loaddata.create(data, pInter, sizeInter,measure, dataarray);
-
-                    // Partition
-                    partition = new Partition();
-                    partition.initialPartition(data);
+                    // Persistence Array
+                    let parr = loaddata.create(data, pInter, sizeInter,measure, dataarray);
 
                     // Tree
-                    tree = new Tree(treedata, partition, basedata);
+                    tree = new Tree(treedata, data, basedata);
                     treelevel = new TreeLevel();
                     tree.updateTree(pInter, sizeInter);
                     treelevel.plotLevel(tree);
 
                     pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
 
-                    let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
-                    //plots.storedata(tree._root);
+                    let plots = new Selected(rawdata, width, height, yattr, plottype,check,band,dataarray);
 
                     // Slider Event
 
@@ -139,18 +132,13 @@ function load(dataset){
 
                     // Everytime this gets updated, tree should get updated, plot should get updated
 
-
                     let newslider = new Slider(select("#treeslider"));
-                    let slider = newslider.createslider([minp, maxp],150);
-
+                    let slider = newslider.createslider([parr[0], parr[parr.length-1]],150);
                     let x = scaleLinear()
-                        .domain([minp, maxp])
+                        .domain([parr[0], parr[parr.length-1]])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
-
                     slider.handle.attr("cx", x(pInter));
-                    //let kslider = new Slider(select("#kernelslider"));
-                    //let slider2 = kslider.createslider([0.0001, 1],150);
 
                     slider.curslide.call(drag()
                             .on("start drag", function () {
@@ -169,18 +157,14 @@ function load(dataset){
                                 treelevel.plotLevel(tree);
                             })
                     );
-
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
-
                     select(".ppbar").call(drag()
                         .on("start drag", ()=>{
                             select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
                             pInter = pb.xScale.invert(event.x)-Number.EPSILON;
-
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
-
                             slider.handle.attr("cx", x(pInter));
                             treelevel.plotLevel(tree);
 
@@ -214,7 +198,6 @@ function load(dataset){
                                     plots.removedata();
                                     plots.storedata(nodeinfo);
                                 }
-                                //console.log(nodeinfo);
 
                                 let timer;
                                 clicks++;  //count clicks
@@ -222,9 +205,8 @@ function load(dataset){
                                 if(clicks === 1) {
 
                                     timer = setTimeout(function() {
-                                        let clicked = plots.getdata();
-
-                                        tree.mark(clicked);
+                                        let selectedNodes = plots.getdata();
+                                        tree.mark(selectedNodes);
                                         plots.updatediv();
                                         cnode = nodeinfo;
 

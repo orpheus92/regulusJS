@@ -12,24 +12,22 @@ export class Tree{
     /**
      * Creates a Tree Object
      */
-    constructor(pc_relation,partition,basedata) {
-        //console.log(partition);
-        //console.log(partition);
+    constructor(pc_relation,p_data,basedata) {
+
         this._maxsize = 0;
         this.treewidth = 470;
         this.treelength =250;
         this.translatex = 30;
         this.translatey = 70;
 
-        let totalpers = [];
+        let totalpers = Object.keys(p_data).sort(function(b,a){return parseFloat(a)-parseFloat(b)}).map(x=>parseFloat(x));
+        let pstring = Object.keys(p_data).sort(function(b,a){return parseFloat(b)-parseFloat(a)});
         let allsaddle = [];
-        partition.pers.map(function(item) {
-            totalpers.push(parseFloat(item));
-            allsaddle.push(parseInt(partition.data[item][partition.data[item].length-1]));
+        pstring.map(function(item) {
+            allsaddle.push(parseInt(p_data[item][p_data[item].length-1]));
         });
-        this.saddle = allsaddle;
-        //console.log(pc_relation);
 
+        this.saddle = allsaddle;
         this.pers = totalpers;
 
         pc_relation.forEach(d=> {
@@ -46,10 +44,7 @@ export class Tree{
             .id(d => d.id)
             .parentId(d => d.par === ", , 0" ? '' : d.par)
             (pc_relation);
-        //console.log(this._root.descendants());
         let accum;
-        //console.log("oldL",this._root.descendants().length);
-        //console.log(this._root.descendants());
 
         this._root.descendants().forEach(d=>{
             //console.log(d);
@@ -100,13 +95,14 @@ export class Tree{
                 return node};
 
         }
-
         this._activenode = this._root.descendants();
         // Default
+        //console.log(this._activenode)
         this.Level = "tLevel";
         this.Scale = "linear";
-        this._curselection = [];
+        this._curselection = {};
         //console.log(this);
+        //console.log(this._root)
         pubsub.subscribe("levelchange2", this.updatelevel);
 
     }
@@ -118,12 +114,8 @@ export class Tree{
         self.render();
     }
     updateTree(ppp,sss) {
-        //console.log("updateTree")
         this.pInter = ppp;
-        //console.log(this.pInter);
-        //console.log(this.pShow);
         this.sizeInter = sss;
-
         this.updatemodel();
         this.layout("P");
         this.render('update');
@@ -377,34 +369,14 @@ export class Tree{
 
     mark(clicked) {
         //console.log(clicked);
+
         if (clicked != undefined) {
-        this._curselection.push(clicked);
-        //console.log(clicked)
-        d3.select("#tree").selectAll("text").remove();
-        d3.select("#tree").selectAll("text")
-            .data(clicked, d=>{return d.id})
-            .enter()
-            .append("text")
-            .attr("x", d => {
-                return d.x;
-            })
-            .attr("y", d => {
-                return d.y;
-            })
-            .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
-            .attr("dy", "-1em")
-            .text((d) => {
-                return d.id;
-            });
 
-        }
-        else {
-            for (let i = 0; i < this._curselection.length; i++)
-            {
-
-            d3.select("#tree").selectAll("text").remove();
+            for (let clicki =0;clicki<clicked.length;clicki++){
+                this._curselection[clicked[clicki].id] = clicked[clicki];
+            }
             d3.select("#tree").selectAll("text")
-                .data(this._curselection[i], d=>{return d.id})
+                .data(clicked, d=>{return d.id})
                 .enter()
                 .append("text")
                 .attr("x", d => {
@@ -416,12 +388,33 @@ export class Tree{
                 .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
                 .attr("dy", "-1em")
                 .text((d) => {
-                    //console.log(d);
-                    //console.log(this.pShow);
+                    return d.id;
+                });
+            d3.select("#tree").selectAll("text")
+                .data(clicked, d=>{return d.id})
+                .exit().remove();
+        }
+
+        else {
+            d3.select("#tree").selectAll("text")
+                .data(Object.values(this._curselection), d=>{
+                return d.id})
+                .enter()
+                .append("text")
+                .attr("x", d => {
+                    return d.x;
+                })
+                .attr("y", d => {
+                    return d.y;
+                })
+                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
+                .attr("dy", "-1em")
+                .text((d) => {
+
                     if(d.parent!=null && d.parent.children!=undefined &&d.data._persistence>=this.pShow)
                     return d.id;
                 });
-        }
+        //}
         }
     }
 

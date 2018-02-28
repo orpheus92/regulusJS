@@ -41,15 +41,13 @@ export class Info {
         dims.exit().remove();
 
         // Use P_Partition to fetch persistence value
-        let totalper = Object.keys(data).sort(function(b,a){return parseFloat(b)-parseFloat(a)});
-        this.maxP = totalper[totalper.length-1];
-        this.minP = totalper[0];
+        let totalper = Object.keys(data).sort(function(b,a){return parseFloat(b)-parseFloat(a)}).map(x=>parseFloat(x));
 
-        d3.select('#persistence').text(`[${format(this.minP)}, ${format(this.maxP)}]`);
+        d3.select('#persistence').text(`[${format(totalper[0])}, ${format(totalper[totalper.length-1])}]`);
         d3.select('#filter_persistent').text(format(cpInter));
         d3.select('#filter_size').text(csInter);
 
-        return([this.maxP, this.minP]);
+        return(totalper);
     }
 
     update(channel,self,cpInter,csInter){
