@@ -138,21 +138,6 @@ function load(dir){
                             })
                     );
 
-
-                    let kval = 0.1;
-                    /*
-                    slider2.curslide.call(drag()
-                        .on("start drag", function () {
-
-                            slider2.handle.attr("cx", x(kval)); //initial position for the slider
-                            kval = x.invert(event.x);
-                            plots._bandwidth = kval;
-                            pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
-
-
-                        })
-                    );
-                    */
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
 
@@ -187,7 +172,6 @@ function load(dir){
                         selectAll(".node")
                             .on("click", (nodeinfo)=>{
 
-                                //console.log("node",nodeinfo);
                                 console.log(event.altKey, event, this, nodeinfo);
 
                                 if (event.altKey)
@@ -288,33 +272,10 @@ function load(dir){
                     });
 
 
-                    document.getElementById("attrcontent").onmouseover = function(event) {
-                        console.log(event);
-                        if (event.altKey){
-                            console.log("Alt Pressed")
-                        }
-                    }
-                    document.addEventListener('keydown', (event) => {
-                        const keyName = event.key;
-
-                        if (keyName === 'Control') {
-                            return;
-                        }
-
-                        if (event.ctrlKey) {
-                            // Even though event.key is not 'Control' (i.e. 'a' is pressed),
-                            // event.ctrlKey may be true if Ctrl key is pressed at the time.
-                            alert(`Combination of ctrlKey + ${keyName}`);
-                        } else {
-                            alert(`Key pressed ${keyName}`);
-                        }
-                    }, false);
-
                     select("#SetRange").on('click',()=>{
 
                         //console.log('Clicked event');
                         let filterattr = document.getElementById('RangeAttr').value;
-
                         let min = parseFloat(document.getElementById("mymin").value);
                         let max = parseFloat(document.getElementById("mymax").value);
                         let range = [min,max];
