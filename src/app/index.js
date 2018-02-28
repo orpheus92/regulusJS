@@ -34,9 +34,9 @@ let filterdata;
 let dataarray;
 
 
- select('#catalog')
- .on('click', () =>  {load("waste_Am")});
-/*
+// select('#catalog')
+// .on('click', () =>  {load("waste_Am")});
+
 select('#catalog')
     .on('change', function () { load(this.value);});
 
@@ -51,7 +51,7 @@ fetch('/catalog')
             .attr('value', d => d)
             .text(d => d);
     });
-*/
+
 function load(dataset){
     csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
@@ -230,10 +230,14 @@ function load(dataset){
                                 //loaddata.select(nodeinfo,document.getElementById('CompAttr').value);
                                 pubsub.publish("infoselect", loaddata, nodeinfo.data, document.getElementById('CompAttr').value);
                                 if (cnode===undefined)
-                                    cnode = nodeinfo;
+                                {cnode = nodeinfo;
+                                    //console.log(nodeinfo);
+                                }
                             })
-                            .on("mouseout", ()=>{
-                                //loaddata.select(cnode,document.getElementById('CompAttr').value);
+                            .on("mouseout", (nodeinfo)=>{
+                                if (cnode===undefined)
+                                {cnode = nodeinfo;
+                                }
                                 pubsub.publish("infoselect", loaddata, cnode.data, document.getElementById('CompAttr').value);
 
                             });
@@ -299,6 +303,7 @@ function load(dataset){
                             tree.updatefilter(filterindex);
                             tree.layout();
                             tree.render();
+                        plots.updatediv();
                         //}
                     });
 
@@ -308,6 +313,7 @@ function load(dataset){
                             tree.updatefilter(filterindex);
                             tree.layout();
                             tree.render();
+                        plots.updatediv();
                     });
 
                     /*

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import './style.css';
 import * as pubsub from '../PubSub';
-
+//import {on} from "d3-selection"
 import * as kernel from '../Process/kernel';
 
 import {myBrush} from '../customd3';
@@ -352,6 +352,7 @@ export class Selected {
                 //Later
 
                 xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
+                xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
                 yAxis.tickSize(-size).tickFormat(d3.format(".3g"));
                 let brush = myBrush()
                     .on("start", brushstart)
@@ -585,6 +586,9 @@ export class Selected {
                     .text(self._stored[iii].id)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
+
+                svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
+                    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
             }
 
         }
@@ -614,7 +618,9 @@ export class Selected {
             let textsize = self._textsize;
             let reg = self._reg;
             let pxs, px, py, f_hat, regy, f_hat2, std;
-            let [ymin, ymax] = self._objrange[self._y_attr];
+            let [ymin, ymax] = [Math.min(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]})), Math.max(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]}))]
+            //let  = self._objrange[self._y_attr];
+
             if (reg === true) {
                 [px, py] = parseObj(data);
                 f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, self._bandwidth * (ymax - ymin));
@@ -863,6 +869,9 @@ export class Selected {
                     .text(self._stored[iii].id)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
+
+                svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
+                    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
             }
 
         }
@@ -1164,11 +1173,18 @@ export class Selected {
     highlight() {
         //console.log(this._brushNum);
         this._selected = [];
-        d3.select("#div" + this._brushNum.index).select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d) => {
+        let newplot = this._plot.selectAll("div").data([this._brushNum.index],d=>{return d;})
+        newplot.select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d) => {
             this._selected.push(d);
         });
-        //console.log("highlight")
-        return [this._selected, this._stored[this._brushNum.index]];
+
+        let snode;
+        //console.log(this._stored)
+        this._stored.forEach(d=>{//console.log(d);
+            if(d.id === this._brushNum.index)
+                snode = d;
+        });
+        return [this._selected, snode];
 
     }
 

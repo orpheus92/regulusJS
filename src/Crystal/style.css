@@ -10,13 +10,7 @@ svg {
     /*font-weight: bold;*/
 
 }
-/*
-.axis,
-.frame {
-    shape-rendering: crispEdges;
 
-}
-*/
 
 .axis line {
     stroke: #ddd;
@@ -38,11 +32,7 @@ svg {
     fill: none;
     stroke: #aaa;
 }
-/*
-circle {
-    fill-opacity: .7;
-}
-*/
+
 circle.hidden {
     fill: #ccc !important;
 }

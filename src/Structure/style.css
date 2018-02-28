@@ -45,6 +45,16 @@
   stroke: purple;
 }
 
+.node.selected{
+  stroke: black;
+  stroke-width: 2px;}
+.node.highlight{
+  r: 8;
+
+}
+
+
+
 .node:hover {
   /*fill: blue;*/
   stroke: blue;

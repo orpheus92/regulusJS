@@ -104,7 +104,8 @@ export class Tree{
         //console.log(this);
         //console.log(this._root)
         pubsub.subscribe("levelchange2", this.updatelevel);
-
+        pubsub.subscribe("HighlightNode", highlightnd);
+        pubsub.subscribe("UnHighlightNode", unhighlightnd);
     }
 
     updatelevel(channel,self,level,scale){
@@ -254,7 +255,7 @@ export class Tree{
         {
             this._nodegroup.selectAll(".node").data(this._activenode, d=>{return d.id})
             .enter().append("circle").attr("class", 'node')
-            .attr("r",/*5 / Math.sqrt(this._circlesize) + */3)
+            .attr("r",/*5 / Math.sqrt(this._circlesize) + */4)
             .attr("transform", function (d) {
                 if (d.parent != null)
                     if (d.parent.oldx != null) {
@@ -263,7 +264,7 @@ export class Tree{
             });
 
         t.selectAll('.node')
-            .attr("r", /*5 / Math.sqrt(this._circlesize) + */3)
+            .attr("r", /*5 / Math.sqrt(this._circlesize) + */4)
             .attr('fill', (d) => {
                 if (d.data._size >= this.sizeInter && d.data._persistence >= this.pInter)
                     return this._color(d.data._size);
@@ -373,8 +374,13 @@ export class Tree{
         if (clicked != undefined) {
 
             for (let clicki =0;clicki<clicked.length;clicki++){
+                if(this._curselection[clicked[clicki].id]!=undefined){
+                    delete this._curselection[clicked[clicki].id];
+                }
+                else
                 this._curselection[clicked[clicki].id] = clicked[clicki];
             }
+
             d3.select("#tree").selectAll("text")
                 .data(clicked, d=>{return d.id})
                 .enter()
@@ -388,14 +394,33 @@ export class Tree{
                 .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
                 .attr("dy", "-1em")
                 .text((d) => {
+                    this._curselection[d.id] = d;
                     return d.id;
                 });
             d3.select("#tree").selectAll("text")
                 .data(clicked, d=>{return d.id})
-                .exit().remove();
+                .exit().text(d => {
+
+                d3.select("#tree").selectAll(".node")
+                    .data([d], d=>{return d.id})
+                    .classed("selected", false);
+
+                    delete this._curselection[d.id]
+
+                })
+                .remove();
+
+            d3.select("#tree").selectAll(".node")
+                .data(Object.values(this._curselection), d=>{return d.id})
+                .classed("selected", true);
+
+
+
+
         }
 
         else {
+
             d3.select("#tree").selectAll("text")
                 .data(Object.values(this._curselection), d=>{
                 return d.id})
@@ -410,10 +435,10 @@ export class Tree{
                 .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
                 .attr("dy", "-1em")
                 .text((d) => {
-
                     if(d.parent!=null && d.parent.children!=undefined &&d.data._persistence>=this.pShow)
                     return d.id;
                 });
+
         //}
         }
     }
@@ -504,10 +529,8 @@ export class Tree{
         this._filter = filter;
     }
     searchchildren(selectdata, selectnode){
-        //let size = [];
-        //console.log(selectdata);
-        //let checkset = new Set(selectdata);
-        //console.log(selectnode);
+
+
         this._nodegroup.selectAll(".node").data(selectnode.descendants(), d=>{return d.id}).attr("id", d=>{
             //console.log(d);
             let intersection = new Set([...selectdata].filter(x => d.data._total.has(x)));
@@ -517,6 +540,16 @@ export class Tree{
         });
 
     }
+
+}
+function highlightnd(msg,nd){
+    d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",true);
+    console.log("Highlight ND", nd);
+
+}
+function unhighlightnd(msg,nd){
+    d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false);
+    console.log("UnHighlight ND", nd);
 
 }
 export function getbaselevelInd(node, accum) {
@@ -699,9 +732,7 @@ export function layoutdfs(node,value){
         node.xx = value;
         //console.log(node,value);
         node.y = node.depth;
-        //console.log(value);
-        //value = value + 1;
-        //Problem here
+
         return Math.max.apply(Math,node.descendants().map(function(o){return o.xx;}));//value;
     }
     else if(node.children.length==2)
