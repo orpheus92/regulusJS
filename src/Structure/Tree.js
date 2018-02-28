@@ -491,16 +491,17 @@ export class Tree{
             let p = range[0];
             let s = range[1];
             if (p>=this.pInter)
-            {for (let i=this.pers.length-1; i>=0; i--) {
+            {this.pInter = p;
+                for (let i=this.pers.length-1; i>=0; i--) {
                 if(this.pers[i]>p){
                     this.pInter = this.pers[i+1];
                     this.pShow = (i+2>0) ?this.pers[i+2]:this.pers[0];
                     break;
                 }
-            }}
-            //slided p < pInter
-
-            else{for (let i=1; i<this.pers.length; i++) {
+            }
+            }
+            else{this.pInter = p;
+                for (let i=0; i<this.pers.length; i++) {
                 if(this.pers[i]<=p){
                     this.pInter = this.pers[i];
                     this.pShow = (i+1<this.pers.length-1) ?this.pers[i+1]:this.pers[this.pers.length-1]//this.pers[i];
@@ -544,13 +545,12 @@ export class Tree{
 }
 function highlightnd(msg,nd){
     d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",true);
-    console.log("Highlight ND", nd);
+    //console.log("Highlight ND", nd);
 
 }
 function unhighlightnd(msg,nd){
     d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false);
-    console.log("UnHighlight ND", nd);
-
+    //console.log("UnHighlight ND", nd);
 }
 export function getbaselevelInd(node, accum) {
     let i;

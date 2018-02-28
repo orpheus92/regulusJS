@@ -164,6 +164,7 @@ function load(dataset){
                             select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
                             pInter = pb.xScale.invert(event.x)-Number.EPSILON;
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
                             slider.handle.attr("cx", x(pInter));
                             treelevel.plotLevel(tree);
@@ -173,7 +174,7 @@ function load(dataset){
                         select(".pbar").call(drag()
                             .on("start drag", ()=>{
                             select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x-pb.padding+2)));
-                            sizeInter = parseInt(pb.xScale2.invert(event.x));
+                            sizeInter = parseInt(pb.xScale2.invert(event.x-pb.padding+2));
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
                             treelevel.plotLevel(tree);
