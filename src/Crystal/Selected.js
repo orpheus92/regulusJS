@@ -338,8 +338,8 @@ export class Selected {
                     .domain(rangeByTrait);
                 //Later
 
-                xAxis.tickSize(-size).tickFormat(d3.format(".1g"));
-                yAxis.tickSize(-size).tickFormat(d3.format(".1g"));
+                xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
+                yAxis.tickSize(-size).tickFormat(d3.format(".3g"));
                 let brush = myBrush()
                     .on("start", brushstart)
                     .on("brush", brushmove)
@@ -643,9 +643,8 @@ export class Selected {
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
 
-                xAxis.tickSize(padding / 4).tickFormat(d3.format(".1g")).tickPadding(size * n - padding / 4);
-                yAxis.tickSize(-padding / 4).tickFormat(d3.format(".1g")).tickPadding(-padding / 4);
-
+                xAxis.tickSize(padding / 4).tickFormat(d3.format(".3g")).tickPadding(size * n - padding / 4);
+                yAxis.tickSize(-padding / 4).tickFormat(d3.format(".3g")).tickPadding(-padding / 4);
 
                 // Size of SVG declared here
 

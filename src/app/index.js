@@ -29,16 +29,31 @@ let level;
 let scale;
 let band;
 let measure;
+
 let filterdata;
 let dataarray;
 
-select('#LoadFile')
-.on('click', () =>  load());
 
-function load(dir){
+// select('#LoadFile')
+// .on('click', () =>  load());
 
-    csv('data/data.csv', rawdata=> {
+select('#catalog')
+    .on('change', function () { load(this.value); });
 
+fetch('/catalog')
+    .then( response => response.json() )
+    .then( catalog => {
+        catalog.unshift("");
+        let l = select('#catalog').selectAll('options')
+            .data(catalog);
+        l.enter().append('option')
+            .merge(l)
+            .attr('value', d => d)
+            .text(d => d);
+    });
+
+function load(dataset){
+    csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             selectAll("#y_attr")
@@ -56,9 +71,10 @@ function load(dir){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-        json('data/P_Partition.json', function (error, data) {
+        json(`data/${dataset}/P_Partition.json`, function (error, data) {
             if (error) throw error;
             //will be updated later
+
 
             csv('data/Final_Tree.csv', treedata=>{
 
@@ -78,6 +94,7 @@ function load(dir){
                             dataarray[rawdata.columns[j]].push(rawdata[i][rawdata.columns[j]]);
                         }
                     }
+
 
                     measure = rawdata.columns[rawdata.columns.length-1];
                     // Initialize Range Filter
@@ -188,8 +205,7 @@ function load(dir){
                             .on("click", (nodeinfo)=>{
 
                                 console.log(event.altKey, event, this, nodeinfo);
-
-                                if (event.altKey)
+                                if (!event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
                                 }
