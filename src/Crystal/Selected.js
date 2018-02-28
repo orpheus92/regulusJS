@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as d3Tip from 'd3-tip';
 import './style.css';
 import * as pubsub from '../PubSub';
 
@@ -43,23 +42,14 @@ export class Selected {
                 obj[attr[j]].push(parseFloat(this._data[i][attr[j]]));
             }
         }
-        /*
-        for (let j = 0; j < datacol; j++)
-        {   //console.log(obj[attr[j]]);
-            objrange[attr[j]].push(Math.min(...obj[attr[j]]));
-            objrange[attr[j]].push(Math.max(...obj[attr[j]]));
-        }
-        */
-        //console.log(objrange);
+
         this._obj = obj;
         this._attr = attr;
         pubsub.subscribe("plotupdateattr", this.updateattr);
         pubsub.subscribe("plottypechange", this.updateplot);
 
 
-        //console.log(this);
     }
-
     updatesize() {
 
         let width = this._width;
@@ -73,19 +63,54 @@ export class Selected {
     // Reconstruct the plot info
     reconstruct() {
 
-
     }
 
-    // Update divs based on input data
-    updatediv(inputnode) {
+    storedata(data) {
 
+        if (this._stored.length === 0) {
+            this._stored.push(data);
+            if (data.data._saddleind != undefined && data.data._saddleind != -1)
+                data.data._saddleinfo = this._rawdata[data.data._saddleind];
+        }
+        else {
+            // Check which node needs to be removed
+            let remove = -1;
+            for (let i = 0; i < this._stored.length; i++) {
+                if (this._stored[i].id === data.id) {
+                    remove = i;
+                }
+            }
+            // No stored data needs to be removed, it needs to be added to the stored
+            if (remove === -1) {
+                this._stored.push(data);
+                if (data.data._saddleind != undefined && data.data._saddleind != -1)
+                    data.data._saddleinfo = this._rawdata[data.data._saddleind];
+            }
+            // Remove the selection from stored
+            else {
+                this._stored.splice(remove, 1);
+            }
+        }
+    }
+
+    removedata() {
+        this._stored = [];
+    }
+
+    getdata() {
+        return this._stored;
+    }
+
+
+    // Update divs based on input data
+    updatediv(/*inputnode*/) {
         let selected;
-        if (inputnode === undefined) {
-            selected = this._stored;
+        //if (inputnode === undefined) {
+        selected = this._stored;
+        /*
         }
         else if (inputnode.length != undefined) {
             selected = inputnode;
-            //console.log(inputnode.data)
             if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
                 inputnode.data._saddleinfo = this._rawdata[inputnode.data._saddleind];
         }
@@ -95,19 +120,18 @@ export class Selected {
             if (inputnode.data._saddleind != undefined && inputnode.data._saddleind != -1)
                 inputnode.data._saddleinfo = this._rawdata[inputnode.data._saddleind];
         }
-        this._totaldata = [];
+        */
+
+        this._totaldata = {};
         this._objrange = {};
-        //this._ind = [];
+
         for (let i = 0; i < selected.length; i++) {
-            //this._ind.push(i);
             let nodeinfo = selected[i];
             let selectdata = [];
             nodeinfo.data._total.forEach(d => {
                 selectdata.push(this._rawdata[d]);
             });
-            //this._data = selectdata;
             selectdata.columns = this._rawdata.columns;
-
             let attr = selectdata.columns;
             let datacol = attr.length;
             let datarow = selectdata.length;
@@ -126,7 +150,6 @@ export class Selected {
                 objrange[attr[j]].push(Math.min(...obj[attr[j]]));
                 objrange[attr[j]].push(Math.max(...obj[attr[j]]));
             }
-            //this._obj = obj;
             if (Object.keys(this._objrange).length === 0 && this._objrange.constructor === Object) {
                 this._objrange = objrange;
             }
@@ -137,12 +160,10 @@ export class Selected {
                 }
             }
             this._attr = attr;
-            this._totaldata.push(selectdata);
-
+            //this._totaldata.push(selectdata);
+            this._totaldata[nodeinfo.id] = selectdata;
         }
-        //console.log(this);
         this.updateplot();
-
     }
 
     // remove all divs in it
@@ -158,23 +179,18 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
-        //console.log(self);
         let plottype;
         if (self === undefined) {
+            /*
             if (this._totaldata === undefined) {   //console.log(this._totaldata)
                 this.updatediv(this._stored[0]);
             }
+            */
             if (option != undefined)
                 this._plottype = option;
             plottype = this._plottype;
-            this.removediv();
-            //let dataFile = option;//document.getElementById('dataset').value;
+            //this.removediv();
             switch (plottype) {
-                case "Coordinate": {
-                    //this.clearPlots();
-                    this.rawDataPlot(option);
-                    break;
-                }
                 case "BoxPlot": {
                     //this.clearPlots();
                     this.boxPlot(option);
@@ -183,11 +199,6 @@ export class Selected {
                 case "Histogram": {
                     //this.clearPlots();
                     this.histogramPlot(option);
-                    break;
-                }
-                case "Pairwise": {
-                    //this.clearPlots();
-                    this.PairwisePlot(option);
                     break;
                 }
                 case "ScatterMat": {
@@ -208,20 +219,17 @@ export class Selected {
             }
         }
         else {
-            if (self._totaldata === undefined) {   //console.log(this._totaldata)
+            /*
+            if (self._totaldata === undefined) {
                 self.updatediv(self._stored[0]);
             }
+            */
             if (option != undefined)
                 self._plottype = option;
             plottype = self._plottype;
-            self.removediv();
-            //let dataFile = option;//document.getElementById('dataset').value;
+            //self.removediv();
+
             switch (plottype) {
-                case "Coordinate": {
-                    //this.clearPlots();
-                    self.rawDataPlot(option);
-                    break;
-                }
                 case "BoxPlot": {
                     //this.clearPlots();
                     self.boxPlot(option);
@@ -230,11 +238,6 @@ export class Selected {
                 case "Histogram": {
                     //this.clearPlots();
                     self.histogramPlot(option);
-                    break;
-                }
-                case "Pairwise": {
-                    //this.clearPlots();
-                    self.PairwisePlot(option);
                     break;
                 }
                 case "ScatterMat": {
@@ -259,315 +262,22 @@ export class Selected {
 
     // Update all the plots based on attr selection
     updateattr(channel, self, yattr) {
-
         self._y_attr = yattr;
         self.updateplot();
-
     }
 
-    //pairwisePlot
-    PairwisePlot() {
-        d3.selectAll('#plottip').remove();
-        for (let i = 0; i < this._totaldata.length; i++) {
-            let data = this._totaldata[i];//this._data;
-            let margin = this._margin;
-            //let height = this._height - margin.top - margin.bottom;
-            //let width = this._width - margin.left - margin.right;
-            let height = this._height;
-            let width = this._width;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
-            let textsize = this._textsize;
 
-            //load data as array
-            let attr = data.columns;
-            let datacol = attr.length;
-            let datarow = data.length;
-
-
-            for (let i = 0; i < datacol; i++) {
-                for (let i_2 = i + 1; i_2 < datacol; i_2++) {
-                    if (attr[i] != this._y_attr && attr[i_2] != this._y_attr) {
-                        let curData = [];
-                        for (let j = 0; j < datarow; j++) {
-                            let curPoint = {};
-                            curPoint.x = parseFloat(data[j][attr[i]]);
-                            curPoint.y = parseFloat(data[j][attr[i_2]]);
-                            curPoint.z = parseFloat(data[j][this._y_attr]);
-                            curData.push(curPoint);
-                        }
-
-                        let x_minVal = d3.min(curData, function (d) {
-                            return d.x;
-                        });
-                        let x_maxVal = d3.max(curData, function (d) {
-                            return d.x;
-                        });
-                        let y_minVal = d3.min(curData, function (d) {
-                            return d.y;
-                        });
-                        let y_maxVal = d3.max(curData, function (d) {
-                            return d.y;
-                        });
-                        let z_minVal = d3.min(curData, function (d) {
-                            return d.z;
-                        });
-                        let z_maxVal = d3.max(curData, function (d) {
-                            return d.z;
-                        });
-
-
-                        let x = d3.scaleLinear()
-                            .domain([x_minVal, x_maxVal])
-                            //.range([0, width])
-                            .range([0, width - margin.left - margin.right])
-                            .nice();
-                        let y = d3.scaleLinear()
-                            .domain([y_minVal, y_maxVal])
-                            //.range([0, height])
-                            .range([height - margin.top - margin.bottom, 0])
-                            .nice();
-
-                        let colorScale = d3.scaleLinear()
-                            .range(['blue', 'red'])
-                            .domain([z_minVal, z_maxVal]);
-
-                        let svg = newplot.append("svg")
-                            .attr("height", height)
-                            .attr("width", width);
-                        let g = svg
-                            .append('g')
-                            .attr('id', "pairwisePlot" + i);
-
-                        g.selectAll("circle")
-                            .data(curData)
-                            .enter()
-                            .append("circle")
-                            .attr("r", 2)
-                            .attr("cx", function (d) {
-                                return x(d.x);
-                            })
-                            .attr("cy", function (d) {
-                                return y(d.y);
-                            })
-                            .attr("transform", "translate(" + [margin.left, margin.top] + ")")
-                            .attr('fill', function (d) {
-                                return colorScale(d.z);
-                            }).attr("class", "scattercolor");
-
-                        let tip = d3Tip().attr('class', 'd3-tip').attr('id', 'plottip')
-                            .direction('se')
-                            .offset(function () {
-                                return [0, 0];
-                            })
-                            .html((d, ind) => {
-                                return this.tooltip_render(d, ind);
-
-                            });
-                        //console.log(curscatter);
-                        //this._curscatter = curscatter;
-                        g.selectAll("circle").call(tip)
-                            .on('mouseover', tip.show)
-                            .on('mouseout', tip.hide);
-
-                        g
-                            .append('g')
-                            .attr('id', "xAxis" + i)
-                            .call(d3.axisBottom(x).scale(x))
-                            .attr("font-size", textsize + "px")
-                            .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
-
-                        g
-                            .append('g')
-                            .attr('id', "yAxis" + i)
-                            .call(d3.axisLeft(y).scale(y))//;
-                            .attr("font-size", textsize + "px")
-                            .attr("transform", "translate(" + [margin.left, margin.top] + ")");
-
-
-                        svg
-                            .append("text")
-                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                            .attr("font-size", textsize + "px")
-                            //.attr("transform", "translate("+ (this._width/2) +","+(this._height-margin.bottom/3)+")")  // centre below axis
-                            .attr("transform", "translate(" + (width / 2) + "," + (height) + ")")  // centre below axis
-                            .text(attr[i]);
-                        svg
-                            .append("text")
-                            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                            .attr("font-size", textsize + "px")
-                            //.attr("transform", "translate("+ (margin.left/3) +","+(this._height/2)+")rotate(-90)")
-                            .attr("transform", "translate(" + (textsize) + "," + (height / 2) + ")rotate(-90)")
-                            .text(attr[i_2]);
-                    }
-
-
-                }
-            }
-        }
+    increase() {
+        this._width = this._width * 1.1;
+        this._height = this._height * 1.1;
+        this.updateplot();
     }
-
-    tooltip_render(d, ind) {
-        let text = "";
-        for (let i = 0; i < this._attr.length; i++) {
-            //console.log(d3.select("#plot" + i).selectAll("circle"));
-            text += "<li>" + this._attr[i] + ": " + this._obj[this._attr[i]][ind];
-        }
-        return text;
+    decrease() {
+        this._width = this._width * 0.9;
+        this._height = this._height * 0.9;
+        this.updateplot();
     }
-
-    //rawDataPlot
-    rawDataPlot() {
-        d3.selectAll('#plottip').remove();
-        for (let i = 0; i < this._totaldata.length; i++) {
-            let data = this._totaldata[i];//this._data;
-            let margin = this._margin;
-            let height = this._height;
-            let width = this._width;
-            //let newplot = this._plot;
-            let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
-            let textsize = this._textsize;
-            //load data as array
-            let attr = data.columns;
-            let datacol = attr.length;
-            let datarow = data.length;
-            let obj = {};
-            for (let j = 0; j < datacol; j++)
-                obj[attr[j]] = [];
-            for (let i = 0; i < datarow; i++) {
-                for (let j = 0; j < datacol; j++) {
-                    obj[attr[j]].push(parseFloat(data[i][attr[j]]));
-                }
-            }
-            //this._obj = obj;
-            //this._attr = attr;
-            let value = function (d) {
-                return d;
-            }; // data -> value
-
-            let minVal = d3.min(obj[this._y_attr], value);
-            let maxVal = d3.max(obj[this._y_attr], value);
-
-            let yScale = d3.scaleLinear()
-                    .range([height - margin.top - margin.bottom, 0])
-                    .nice(), // value -> display
-                yAxis = d3.axisLeft(yScale);
-            let xScale = d3.scaleLinear()
-                    .range([0, width - margin.left - margin.right])
-                    .domain([minVal, maxVal])
-                    .nice(), // value -> display
-                xAxis = d3.axisBottom(xScale);
-            let colorScale = d3.scaleLinear()
-                .range(['blue', 'red'])
-                .domain([minVal, maxVal]);
-
-
-            let curplot;
-
-            for (let i = 0; i < datacol; i++) {
-                if (attr[i] != this._y_attr) {
-                    yScale.domain([d3.min(obj[attr[i]], value), d3.max(obj[attr[i]], value)]);
-                    let curplot = newplot.append("svg")
-                        .attr('id', "plot" + i);
-                    curplot.data([{
-                        x: obj[this._y_attr],//d3.range(n).map(function(i) { return i / n; }),
-                        y: obj[attr[i]]//d3.range(n).map(function(i) { return Math.sin(4 * i * Math.PI / n) + (Math.random() - .5) / 5; })
-                    }]);
-
-                    curplot.attr("height", height)
-                        .attr("width", width);
-
-                    curplot.append('g').attr('id', "xAxis" + i);
-                    curplot.append('g').attr('id', "yAxis" + i);
-                    //d3.selectAll("#plottip").remove();
-                    let curscatter = curplot.selectAll("circle")
-                    //.data(obj[attr[i]])
-                        .data(function (d) {
-                            return d3.zip(d.x, d.y);
-                        })
-                        .enter()
-                        .append("circle")
-                        .attr("r", 2)
-                        .attr("cx", function (d) {
-                            return xScale(d[0]);
-                        })
-                        .attr("cy", function (d) {
-                            return yScale(d[1]);
-                        })
-                        //.attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")")
-                        .attr("transform", "translate(" + [margin.left, margin.top] + ")")
-                        .attr('fill', function (d) {
-                            return colorScale(d[0]);
-                        }).attr("class", "scattercolor");
-
-                    let tip = d3Tip().attr('class', 'd3-tip').attr('id', 'plottip')
-                        .direction('se')
-                        .offset(function () {
-                            return [0, 0];
-                        })
-                        .html((d, ind) => {
-                            return this.tooltip_render(d, ind);
-
-                        });
-                    //console.log(curscatter);
-                    //this._curscatter = curscatter;
-                    curscatter.call(tip);
-                    //console.log(this._node);
-                    //console.log(curscatter.on('mouseover', tip.show));
-                    curscatter.on('mouseover', tip.show)//.attr('class',d=>{
-                    //console.log("Mouse Over");
-                    //return "highlighted";})
-                        .on('mouseout', tip.hide);//.attr('fill', function (d) {
-                    //return colorScale(d[0]);
-                    //});
-
-                    //.on("mouseover", function(d,ind){tipMouseover(d,ind,attr,obj);})
-                    //.on("mouseout", tipMouseout);
-
-                    xAxis.scale(xScale);
-                    yAxis.scale(yScale);
-
-                    curplot.select("#xAxis" + i)
-                        .call(xAxis)
-                        .attr("font-size", textsize + "px")
-                        .attr("transform", "translate(" + [margin.left, height - margin.bottom] + ")");//.attr("class","label");
-                    //Translate for y_val will be modified later
-                    curplot.select("#yAxis" + i)
-                        .call(yAxis)
-                        .attr("font-size", textsize + "px")
-                        .attr("transform", "translate(" + [margin.left, margin.top] + ")");
-
-                    curplot
-                        .append("text")
-                        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                        .attr("transform", "translate(" + (width / 2) + "," + (height) + ")")  // centre below axis
-                        .attr("font-size", textsize + "px")
-                        .text(this._y_attr);
-                    curplot
-                        .append("text")
-                        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                        .attr("transform", "translate(" + (textsize) + "," + (height / 2) + ")rotate(-90)")
-                        .attr("font-size", textsize + "px")
-                        .text(attr[i]);
-
-
-                    /*
-                    .append("text")
-                    .classed("label", true)
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", margin.left)
-                    .attr("dy", ".71em")
-                    .style("text-anchor", "end")
-                    .text("Ylabel");//.attr("class","label");
-                    */
-                }
-
-
-            }
-        }
-    }
-
     scatterMat(option) {
-        //d3.selectAll('#plottip').remove();
 
         for (let iii = 0; iii < this._totaldata.length; iii++) {
             this.updatesize();
@@ -576,11 +286,9 @@ export class Selected {
             let height = this._height;
             this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = this._margin;
-
             let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = this._textsize;
 
-            //load data as array
             {
                 //width = 960;
                 let size = height,
@@ -638,21 +346,13 @@ export class Selected {
                     .on("end", brushend)
                     .extent([[padding / 2, padding / 2], [size - padding / 2, size - padding / 2]]);
 
-                // Size of SVG declared here
-                /*
-                let svg = newplot.append("svg")
-                    .attr("width", width+padding)
-                    .attr("height", size * n + padding)
-                    .append("g")
-                    .attr("transform", "translate(" + padding + "," + padding  + ")");
-                */
                 let svg = newplot.append("svg")
                     .attr("width", (size + padding) * (n - 1) + 4 * padding)
                     .attr("height", (size + padding) * (n - 1) + 4 * padding)//size * n + padding)
                     .append("g")
                     .attr("transform", "translate(" + 4 * padding + "," + 0 + ")");
 
-                //console.log(halfcross(traits,traits))
+
                 let totalblocks = halfcross(traits, traits).length;
                 svg.selectAll(".x.axis")
                     .data(halfcross(traits, traits))
@@ -664,11 +364,9 @@ export class Selected {
                         return "translate(" + ( d.i ) * (size + padding) + "," + ((d.j - 1) * (size + padding) + size) + ")";
                     })
                     .each(function (d) {
-                        //console.log(d)
-                        //console.log(totalblocks)
+
                         if (d.j === (traits.length - 1)) {
 
-                            //console.log(d.j);
                             x.domain(domainByTrait[d.x]);
                             xAxis.tickValues(domainByTrait[d.x]);
                             d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate(" + (-padding) + "," + padding * 2 + ") rotate(-90)");
@@ -685,7 +383,6 @@ export class Selected {
                         return "translate(" + ( d.i ) * (size + padding) + "," + (d.j - 1) * (size + padding) + ")";
                     })
                     .each(function (d, i) {
-                        //console.log(i)
                         if (d.i === 0) {
 
                             yAxis.tickValues(domainByTrait[d.y]);
@@ -695,13 +392,12 @@ export class Selected {
                     });
                 svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
                 let p_arr;
-// Attach index to each data;
+                // Attach index to each data;
                 p_arr = Array.from(this._stored[iii].data._total);
 
                 let dataind = [];
-                //console.log(data);
-                data.forEach((obj, i) => {
 
+                data.forEach((obj, i) => {
                     dataind[i] = Object.assign({}, obj);
                     dataind[i].index = p_arr[i];
                 });
@@ -881,49 +577,34 @@ export class Selected {
         }
 
     }
-
-    increase() {
-        this._width = this._width * 1.1;
-        this._height = this._height * 1.1;
-        this.updateplot();
-    }
-
-    decrease() {
-        this._width = this._width * 0.9;
-        this._height = this._height * 0.9;
-        this.updateplot();
-    }
-
     multiscatter() {
-        //d3.selectAll('#plottip').remove();
+        for (let iii = 0;iii<Object.entries(this._totaldata).length; iii++ )
+        {
+            drawscatter(iii,this);
+        }
+        function drawscatter(iii, self){
 
-        for (let iii = 0; iii < this._totaldata.length; iii++) {
-            let data = this._totaldata[iii];
-            this.updatesize();
-            //console.log(data);
-            //console.log(this);
-            //let margin = this._margin;
-            let height = this._height;
-            let width = this._width;
-            this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
-            let margin = this._margin;
+            let data = self._totaldata[Object.entries(self._totaldata)[iii][0]];
+            self.updatesize();
 
-            let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
-            let textsize = this._textsize;
-            let reg = this._reg;
+            let height = self._height;
+            let width = self._width;
+            self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
+            let margin = self._margin;
+
+            let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
+            let textsize = self._textsize;
+            let reg = self._reg;
             let pxs, px, py, f_hat, regy, f_hat2, std;
-            let [ymin, ymax] = this._objrange[this._y_attr];
+            let [ymin, ymax] = self._objrange[self._y_attr];
             if (reg === true) {
                 [px, py] = parseObj(data);
-                f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, this._bandwidth * (ymax - ymin));
+                f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, self._bandwidth * (ymax - ymin));
                 regy = linspace(ymin, ymax, 100);
-                f_hat2 = kernel.averageStd(px, py, kernel.fun.gaussian, this._bandwidth * (ymax - ymin));
+                f_hat2 = kernel.averageStd(px, py, kernel.fun.gaussian, self._bandwidth * (ymax - ymin));
                 pxs = f_hat(regy);
-                //console.log([regy,pxs])
                 std = f_hat2(regy, pxs);
             }
-            //console.log(pxs);
-            //console.log(f_hat);
 
             {
                 //width = 960;
@@ -947,31 +628,21 @@ export class Selected {
                 let domainByTrait = {},
                     rangeByTrait = [],
                     traits = d3.keys(data[0]).filter(d => {
-                        return d != this._y_attr;
+                        return d != self._y_attr;
                     }),
-                    ztrait = this._y_attr,
+                    ztrait = self._y_attr,
                     n = traits.length;
 
                 traits.forEach(trait => {
-                    domainByTrait[trait] = this._objrange[trait];
-                    /*
-                    d3.extent(data, function (d) {
-                    return parseFloat(d[trait]);
+                    domainByTrait[trait] = self._objrange[trait];
+
                 });
-                */
-                });
-                rangeByTrait = this._objrange[ztrait];
-                /*
-                d3.extent(data, function (d) {
-                return parseFloat(d[ztrait]);
-            });
-            */
+                rangeByTrait = self._objrange[ztrait];
+
                 let colorScale = d3.scaleLinear()
                     .range(['blue', 'red'])
                     .domain(rangeByTrait);
-                //xAxis.tickSize(size *n).tickFormat(d3.format(".1e"));
-                //yAxis.tickSize(-size * n).tickFormat(d3.format(".1e"));
-//
+
                 xAxis.tickSize(padding / 4).tickFormat(d3.format(".1g")).tickPadding(size * n - padding / 4);
                 yAxis.tickSize(-padding / 4).tickFormat(d3.format(".1g")).tickPadding(-padding / 4);
 
@@ -1005,18 +676,15 @@ export class Selected {
                         y.domain(domainByTrait[d]);
                         d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
                     })
-                //console.log(svg.selectAll(".tick").selectAll("line"))
                 svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
 
-                let p_arr = Array.from(this._stored[iii].data._total);
+                let p_arr = Array.from(self._stored[iii].data._total);
                 let dataind = [];
-                //console.log(data);
                 data.forEach((obj, i) => {
 
                     dataind[i] = Object.assign({}, obj);
                     dataind[i].index = p_arr[i];
                 });
-                //console.log(traits);
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
@@ -1038,14 +706,11 @@ export class Selected {
                 cell.append("text")
                     .attr("x", width / 2 - padding)
                     .attr("y", size + padding / 3)
-                    //.attr("dy", ".71em")
                     .text(d => {
                         if (d === traits[traits.length - 1]) return ztrait;
                     })
                     .attr("font-size", 2 * textsize + "px");
-
                 function plot(p, di) {
-                    //console.log(di);
                     let cell = d3.select(this);
 
                     x.domain(rangeByTrait);
@@ -1057,10 +722,6 @@ export class Selected {
                         .attr("y", padding / 2)
                         .attr("width", width - padding)
                         .attr("height", size - padding);
-                    //console.log(dataind);
-
-                    //console.log(dataind);
-                    //console.log(py);
 
                     if (pxs != undefined) {
                         let area = d3.area()
@@ -1083,33 +744,7 @@ export class Selected {
                             .y((d, i) => {
                                 return y(pxs[i][di]);
                             });
-                        /*
-                        let line2 = d3.line()
-                            .x((d,i)=> { return x(regy[i]); })
-                            .y((d,i)=> { return y(pxs[i][di]+std[i][di]/2); });
 
-                        let line3 = d3.line()
-                            .x((d,i)=> { return x(regy[i]); })
-                            .y((d,i)=> { return y(pxs[i][di]-std[i][di]/2); });
-                            */
-                        /*
-                        let regpath = cell.selectAll("path")
-                            .data(py,(d,i)=>{return d[i]})
-                            .enter().append("path");
-                        console.log(regpath);
-                            regpath
-                                */
-
-                        /*
-                        cell.append("path")
-                            .datum(regy).attr("fill", "none")
-                            .attr("stroke", "#d3d3d3")
-                            .attr("stroke-linejoin", "round")
-                            .attr("stroke-linecap", "round")
-                            .attr("stroke-width", 1)
-                            //.attr("stroke-opacity", 0.2)
-                            .attr("d", line2);
-                        */
                         cell.insert("path")
                             .datum(regy).attr("fill", "#f1f1f1")
                             .attr("stroke", "#f1f1f1")
@@ -1127,8 +762,8 @@ export class Selected {
                             .attr("stroke-opacity", 0.7)
                             .attr("d", line);
 
-
                     }
+
                     cell.selectAll("circle")
                         .data(dataind)
                         .enter().append("circle")
@@ -1158,105 +793,12 @@ export class Selected {
                 let brushes = [];
 
                 let brushCell;
-                /*
-                function newBrush(p) {
-                    console.log(p);
-                    let brush = myBrush()
-                        .on("start", brushstart)
-                        .on("brush", brushed)
-                        .on("end", brushend)
-                        .extent([[0, 0], [width, size]]);
 
-                    //if(p===undefined)
-                        brushes.push({id: brushes.length, brush: brush});
-                    //else
-                        //p.call(brush);
-                    //brushes.push({id: brushes.length, brush: brush});
-
-                    function brushstart(p) {
-                        //console.log(this);
-                        // your stuff here
-                        //console.log(p);
-                        //if (brushCell !== this) {
-                            //d3.select(brushCell).call(brush.move, null);
-                            //brushCell = this;
-                            x.domain(rangeByTrait);
-                            y.domain(domainByTrait[p]);
-                        //}
-                    };
-
-                    function brushed() {
-                        // your stuff here
-                    }
-
-                    function brushend() {
-
-                        // Figure out if our latest brush has a selection
-                        let lastBrushID = brushes[brushes.length - 1].id;
-                        let lastBrush = document.getElementById('brush-' + lastBrushID);
-                        let selection = d3.brushSelection(lastBrush);
-
-                        // If it does, that means we need another one
-
-                        if (selection && selection[0] !== selection[1]) {
-                            //newBrush();
-                            p.call(newBrush);
-                            //console.log(brushes);
-                        }
-
-                        // Always draw brushes
-                        drawBrushes(p);
-                    }
-
-                }
-
-                function drawBrushes(p) {
-
-                    let brushSelection = gBrushes
-                        .selectAll('.brush')
-                        .data(brushes, function (d){return d.id});
-
-                    // Set up new brushes
-                    brushSelection.enter()
-                        .insert("g", '.brush')
-                        .attr('class', 'brush')
-                        .attr('id', function(brush){ return "brush-" + brush.id; })
-                        .each(function(brushObject) {
-                            //call the brush
-                            brushObject.brush(d3.select(this));
-                        });
-
-
-                    brushSelection
-                        .each(function (brushObject){
-                            d3.select(this)
-                                .attr('class', 'brush')
-                                .selectAll('.overlay')
-                                .style('pointer-events', function() {
-                                    let brush = brushObject.brush;
-                                    if (brushObject.id === brushes.length-1 && brush !== undefined) {
-                                        return 'all';
-                                    } else {
-                                        return 'none';
-                                    }
-                                });
-                        })
-
-                    brushSelection.exit()
-                        .remove();
-                }
-                */
-                let brushind = this._brushNum;
+                let brushind = self._brushNum;
                 cell.call(brush, brushes);
 
-                //let brushCell;
-
-                // Clear the previously-active brush, if any.
-
                 function brushstart(p) {
-                    //console.log(brushes);
-                    //console.log("Staret");
-                    //brushCell = this;
+
                     if (brushCell != this) {
                         d3.select(brushCell).call(brush.move, null);
                         brushCell = this;//
@@ -1267,9 +809,7 @@ export class Selected {
 
                 // Highlight the selected circles.
                 function brushmove(p) {
-                    //console.log(p);
                     let e = d3.brushSelection(this);
-
                     svg.selectAll("circle").classed("hidden", function (d) {
                         return !e
                             ? false
@@ -1278,38 +818,12 @@ export class Selected {
                                 || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
                             );
                     });
-
-                    /*
-                    if (brushes.length!=0) {
-                        //console.log('visible',svg.selectAll('#visible'))
-                        svg.selectAll("#visible").classed("hidden", function (d) {
-                            return !e
-                                ? false
-                                : (
-                                    e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
-                                    || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
-                                );
-                        });
-                    }
-                    else{
-                        svg.selectAll("circle").classed("hidden", function (d) {
-                            return !e
-                                ? false
-                                : (
-                                    e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
-                                    || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
-                                );
-                        });
-                    }
-                    */
                 }
 
                 // If the brush is empty, select all circles.
                 function brushend(p) {
                     brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
-                    //console.log(brushind);
                     let e = d3.brushSelection(this);
-                    //brushind.index = this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
                     brushes.push(e);
                     svg.selectAll("#visible").attr("id", null);
                     svg.selectAll(".hidden").attr("id", "visible");//"visible");
@@ -1317,21 +831,20 @@ export class Selected {
                         svg.selectAll(".hidden").classed("hidden", false)
                         brushes = [];
                     }
-                    ;
+
                 }
 
                 svg.append("text")
                     .attr("x", width / 2 - 3 * padding)
                     .attr("y", 0)
-                    .text(this._stored[iii].id)
+                    .text(self._stored[iii].id)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
 
             }
+
         }
-
     }
-
     //BoxPlot
     boxPlot() {
         for (let i = 0; i < this._totaldata.length; i++) {
@@ -1591,43 +1104,6 @@ export class Selected {
         }
     }
 
-    storedata(data) {
-        //console.log(data);
-        if (this._stored.length === 0) {
-            //console.log(data);
-            this._stored.push(data);
-            if (data.data._saddleind != undefined && data.data._saddleind != -1)
-                data.data._saddleinfo = this._rawdata[data.data._saddleind];
-        }
-        else {
-            let remove = -1;
-            for (let i = 0; i < this._stored.length; i++) {
-
-                if (this._stored[i].id === data.id) {
-                    //this._stored.splice(i,1);
-                    remove = i;
-                }
-
-            }
-            if (remove == -1) {
-                this._stored.push(data);
-                if (data.data._saddleind != undefined && data.data._saddleind != -1)
-                    data.data._saddleinfo = this._rawdata[data.data._saddleind];
-            }
-            else {
-                this._stored.splice(remove, 1);
-            }
-        }
-        //console.log(this._stored);
-    }
-
-    removedata() {
-        this._stored = [];
-    }
-
-    getdata() {
-        return this._stored;
-    }
 
     highlight() {
         //console.log(this._brushNum);

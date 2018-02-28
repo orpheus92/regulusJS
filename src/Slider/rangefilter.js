@@ -4,18 +4,17 @@ import './style.css';
 //Persistence Barcode
 
 export class rangefilter{
-   constructor(rawdata)
-   {
+   constructor(dataarray)
+   {    // Range for all the attributes
+
        this.range = {};
        this.crange = {};
-       for (let i = rawdata.columns.length-1; i>= 0; i--)
+       let attrs = Object.keys(dataarray);
+       for (let i = 0; i<attrs.length; i++)
        {
-           this.range[rawdata.columns[i]] = [Math.min.apply(Math,rawdata.map(function(o){return o[rawdata.columns[i]];})),Math.max.apply(Math,rawdata.map(function(o){return o[rawdata.columns[i]];}))];
-           this.crange[rawdata.columns[i]] = [Math.min.apply(Math,rawdata.map(function(o){return o[rawdata.columns[i]];})),Math.max.apply(Math,rawdata.map(function(o){return o[rawdata.columns[i]];}))];
-
+           this.range[attrs[i]] = [Math.min(...dataarray[attrs[i]]),Math.max(...dataarray[attrs[i]])];
+           this.crange[attrs[i]] = [Math.min(...dataarray[attrs[i]]),Math.max(...dataarray[attrs[i]])];
        }
-
-       //his.crange = Object.assign({},this.range);
    }
    // Should return a set of index in the range
    updaterange(yattr, range, rawdata) {

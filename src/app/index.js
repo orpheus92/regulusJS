@@ -30,6 +30,7 @@ let scale;
 let band;
 let measure;
 let filterdata;
+let dataarray;
 
 select('#LoadFile')
 .on('click', () =>  load());
@@ -40,8 +41,6 @@ function load(dir){
 
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
-            // Should have only output measures
-            //console.log(rawdata)
             selectAll("#y_attr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
@@ -62,14 +61,32 @@ function load(dir){
             //will be updated later
 
             csv('data/Final_Tree.csv', treedata=>{
-                //console.log(treedata);
-                //console.log(rawdata);
-                json('data/Base_Partition.json', function (error, basedata) {
-                    measure = rawdata.columns[rawdata.columns.length-1];
 
-                    let rfilter = new rangefilter(rawdata);
+                json('data/Base_Partition.json', function (error, basedata) {
+                    // Convert rawdata to floats in the beginning
+                    rawdata.forEach(d=>{
+                        for (let i = rawdata.columns.length-1; i>= 0; i--){
+                            d[rawdata.columns[i]] = parseFloat(d[rawdata.columns[i]])
+                        }
+                    });
+                    dataarray = {};
+
+                    // Convert data into arrays that will be used later
+                    for (let j = 0; j < rawdata.columns.length; j++) {
+                        dataarray[rawdata.columns[j]] = [];
+                        for (let i = 0; i < rawdata.length; i++) {
+                            dataarray[rawdata.columns[j]].push(rawdata[i][rawdata.columns[j]]);
+                        }
+                    }
+
+                    measure = rawdata.columns[rawdata.columns.length-1];
+                    // Initialize Range Filter
+                    let rfilter = new rangefilter(dataarray);
+
+                    // Will be changed later such that i did not depend on the DOM
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
+
                     // Plot View Constructor
                     // Plot SIZE
                     let width = 150;
@@ -78,11 +95,9 @@ function load(dir){
                     sizeInter = 25;
                     band = 0.1;
 
-                    let selectplot = new SelectP(rawdata, width, height);
-
                     // Data View Constructor
                     loaddata = new Info();
-                    let [maxp, minp] = loaddata.create(data, rawdata, pInter, sizeInter,measure);
+                    let [maxp, minp] = loaddata.create(data, pInter, sizeInter,measure, dataarray);
 
                     // Partition
                     partition = new Partition();
@@ -97,7 +112,7 @@ function load(dir){
                     pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
 
                     let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
-                    plots.storedata(tree._root);
+                    //plots.storedata(tree._root);
 
                     // Slider Event
 
@@ -192,12 +207,12 @@ function load(dir){
 
                                     timer = setTimeout(function() {
                                         let clicked = plots.getdata();
-                                        //console.log(clicked);
+
                                         tree.mark(clicked);
                                         plots.updatediv();
                                         cnode = nodeinfo;
-                                        //loaddata.select(cnode,document.getElementById('CompAttr').value );
-                                        pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+
+                                        pubsub.publish("infoselect", loaddata, cnode.data, document.getElementById('CompAttr').value);
                                         clicks = 0;             //after action performed, reset counter
 
                                     }, DELAY);
@@ -215,12 +230,13 @@ function load(dir){
                             })
                             .on("mouseover", (nodeinfo)=>{
                                 //loaddata.select(nodeinfo,document.getElementById('CompAttr').value);
-                                pubsub.publish("infoselect", loaddata, nodeinfo, document.getElementById('CompAttr').value);
-
+                                pubsub.publish("infoselect", loaddata, nodeinfo.data, document.getElementById('CompAttr').value);
+                                if (cnode===undefined)
+                                    cnode = nodeinfo;
                             })
                             .on("mouseout", ()=>{
                                 //loaddata.select(cnode,document.getElementById('CompAttr').value);
-                                pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+                                pubsub.publish("infoselect", loaddata, cnode.data, document.getElementById('CompAttr').value);
 
                             });
 
@@ -252,7 +268,7 @@ function load(dir){
 
                     select("#CompAttr").on('change',()=> {
                         if (cnode != undefined) {
-                        pubsub.publish("infoselect", loaddata, cnode, document.getElementById('CompAttr').value);
+                        pubsub.publish("infoselect", loaddata, cnode.data, document.getElementById('CompAttr').value);
                         }
                     });
 
@@ -329,7 +345,7 @@ function load(dir){
                             // Will use this for now
                             pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                         });
-
+                    /*
                     select('#createPlot')
                         .on('click', () =>  {
                             let selectP = document.getElementById('selectP').value ;
@@ -344,6 +360,8 @@ function load(dir){
                         });
 
                     select("#selectP").on('change',()=>{selectplot.updatediv(document.getElementById('selectP').value)});//updateAttribute();});
+
+                    */
                     select("#plus").on('click',()=>{
                         plots.increase();
                     })

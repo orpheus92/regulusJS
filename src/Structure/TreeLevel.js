@@ -5,16 +5,11 @@ import * as pubsub from '../PubSub';
 
 export class TreeLevel {
     constructor(){
-        //this.svgBounds = d3.select("#treesvg").node().getBoundingClientRect();
-        //this.xAxisWidth = 100;
-        //this.yAxisHeight = 70;
-        //this.g = d3.select("#treelevel");
+
         this.yScale = d3.scaleLinear().nice();
-        //this.yScale2 = d3.scalePow().nice();
         this.yScale2 = d3.scaleLog().nice();
         d3.select("#treelevel").append("rect").attr("class", "bar");
         d3.select("#treelevel").append("text").attr("class", "levellabel");
-        //console.log(d3.select("#treelevel"))
 
         this.Level = "tLevel";
         this.Scale = "linear";
