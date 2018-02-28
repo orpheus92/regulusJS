@@ -30,12 +30,26 @@ let scale;
 let band;
 let measure;
 
+// select('#LoadFile')
+// .on('click', () =>  load());
 
-select('#LoadFile')
-.on('click', () =>  load());
+select('#catalog')
+    .on('change', function () { load(this.value); });
 
-function load(dir){
-    csv('data/data.csv', rawdata=> {
+fetch('/catalog')
+    .then( response => response.json() )
+    .then( catalog => {
+        catalog.unshift("");
+        let l = select('#catalog').selectAll('options')
+            .data(catalog);
+        l.enter().append('option')
+            .merge(l)
+            .attr('value', d => d)
+            .text(d => d);
+    });
+
+function load(dataset){
+    csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
@@ -55,14 +69,14 @@ function load(dir){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-        json('data/P_Partition.json', function (error, data) {
+        json(`data/${dataset}/P_Partition.json`, function (error, data) {
             if (error) throw error;
             //will be updated later
 
-            csv('data/Final_Tree.csv', treedata=>{
+            csv(`data/${dataset}/Final_Tree.csv1`, treedata=>{
                 //console.log(treedata);
                 //console.log(rawdata);
-                json('data/Base_Partition.json', function (error, basedata) {
+                json(`data/${dataset}/Base_Partition.json`, function (error, basedata) {
                     measure = rawdata.columns[rawdata.columns.length-1];
                     //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
 
@@ -187,7 +201,7 @@ function load(dir){
                             .on("click", (nodeinfo)=>{
                                 //console.log("node",nodeinfo);
                                 console.log(event.altKey, event, this, nodeinfo);
-                                if (event.altKey)
+                                if (!event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
                                 }
