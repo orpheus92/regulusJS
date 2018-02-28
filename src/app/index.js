@@ -78,8 +78,8 @@ function load(dataset){
                 //console.log(rawdata);
                 json(`data/${dataset}/Base_Partition.json`, function (error, basedata) {
                     measure = rawdata.columns[rawdata.columns.length-1];
-                    //let func = kernel.multipleRegression(outx, outy, kernel.fun.gaussian, 0.5);
 
+                    let rfilter = new rangefilter(rawdata);
                     let yattr = document.getElementById('y_attr').value;
                     let plottype = document.getElementById('plottype').value;
                     // Plot View Constructor
@@ -111,7 +111,7 @@ function load(dataset){
                     let plots = new Selected(rawdata, width, height, yattr, plottype,check,band);
                     plots.storedata(tree._root);
 
-                    //Slider Event
+                    // Slider Event
 
                     // Filterindex will get updated later during interaction
 
@@ -127,7 +127,6 @@ function load(dataset){
                         .domain([minp, maxp])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
-
 
                     slider.handle.attr("cx", x(pInter));
                     //let kslider = new Slider(select("#kernelslider"));
@@ -151,27 +150,12 @@ function load(dataset){
                             })
                     );
 
-
-                    let kval = 0.1;
-                    /*
-                    slider2.curslide.call(drag()
-                        .on("start drag", function () {
-
-                            slider2.handle.attr("cx", x(kval)); //initial position for the slider
-                            kval = x.invert(event.x);
-                            plots._bandwidth = kval;
-                            pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
-
-
-                        })
-                    );
-                    */
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
 
                     select(".ppbar").call(drag()
                         .on("start drag", ()=>{
-                            select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x)));
+                            select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
                             pInter = pb.xScale.invert(event.x)-Number.EPSILON;
 
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
@@ -184,7 +168,7 @@ function load(dataset){
 
                         select(".pbar").call(drag()
                             .on("start drag", ()=>{
-                            select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x)));
+                            select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x-pb.padding+2)));
                             sizeInter = parseInt(pb.xScale2.invert(event.x));
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
@@ -196,10 +180,10 @@ function load(dataset){
 
                     //Separate clicking from double clicking
                     document.getElementById("tree").onmouseover = function(event) {
-                        //let totalnode = [];
+
                         selectAll(".node")
                             .on("click", (nodeinfo)=>{
-                                //console.log("node",nodeinfo);
+
                                 console.log(event.altKey, event, this, nodeinfo);
                                 if (!event.altKey)
                                 {
@@ -298,35 +282,29 @@ function load(dataset){
                         slider.handle.attr("cx", x(pInter));
                     });
 
+
                     select("#SetRange").on('click',()=>{
 
                         //console.log('Clicked event');
                         let filterattr = document.getElementById('RangeAttr').value;
-                        let min = document.getElementById("mymin").value;
-                        let max = document.getElementById("mymax").value;
-                        //console.log(filterattr, min, max)
-                        if (filterattr!=undefined&&min!=undefined&&max!=undefined&&min < max) {
-                            //console.log("Filter Set")
-                            let range = [min,max];//[1,35];
-                                // Use attr specified by plot for now, will have its own attr later;
-                            let rfilter = new rangefilter();
+                        let min = parseFloat(document.getElementById("mymin").value);
+                        let max = parseFloat(document.getElementById("mymax").value);
+                        let range = [min,max];
+                            // Use attr specified by plot for now, will have its own attr later;
                             // Return set of index that will be used during update model to update _total, _size
-                            let filterindex = rfilter.updaterange(filterattr, range, rawdata);
+                        let filterindex = rfilter.updaterange(filterattr, range, rawdata);
                             tree.updatefilter(filterindex);
                             tree.layout();
                             tree.render();
-                        }
-
-
+                        //}
                     });
 
                     select("#RemoveRange").on('click',()=>{
-                        console.log(plots);
-                            let filterindex = tree._root.data._totalinit;
+                        let filterattr = document.getElementById('RangeAttr').value;
+                        let filterindex = rfilter.removefilter(filterattr,rawdata);
                             tree.updatefilter(filterindex);
                             tree.layout();
                             tree.render();
-
                     });
 
                     /*
@@ -367,7 +345,6 @@ function load(dataset){
                         .on('click', () =>  {
                             let selectP = document.getElementById('selectP').value ;
                             [cur_selection,cur_node] = plots.highlight();
-                            //selectindex = new Set(cur_selection.map(obj=>obj.index));
 
                             if(cur_selection!=undefined)
                             {selectplot.removedata();
@@ -383,10 +360,8 @@ function load(dataset){
                     })
 
                     select("#minus").on('click',()=>{
-                        //plots._height = plots._height*0.9;
-                        //plots._width = plots._width*0.9;
+
                         plots.decrease();
-                        //pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                     })
                 });
             });
