@@ -73,7 +73,7 @@ function load(dataset){
             if (error) throw error;
             //will be updated later
 
-            csv(`data/${dataset}/Final_Tree.csv1`, treedata=>{
+            csv(`data/${dataset}/Final_Tree.csv`, treedata=>{
                 //console.log(treedata);
                 //console.log(rawdata);
                 json(`data/${dataset}/Base_Partition.json`, function (error, basedata) {
