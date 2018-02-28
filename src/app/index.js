@@ -32,13 +32,12 @@ let measure;
 let filterdata;
 
 select('#LoadFile')
-.on('click', () =>  {
-    load('../data/full/full/excess/');
-});
+.on('click', () =>  load());
 
 function load(dir){
-    csv(dir.concat('data.csv'), rawdata=> {
-        filterdata = rawdata;
+
+    csv('data/data.csv', rawdata=> {
+
         for (let i = rawdata.columns.length-1; i>= 0; i--)
         {
             // Should have only output measures
@@ -58,14 +57,14 @@ function load(dir){
                 .attr("value", rawdata.columns[i])
                 .text(rawdata.columns[i]);
         }
-        json(dir.concat('P_Partition.json'), function (error, data) {
+        json('data/P_Partition.json', function (error, data) {
             if (error) throw error;
             //will be updated later
 
-            csv(dir.concat('Final_Tree.csv'), treedata=>{
+            csv('data/Final_Tree.csv', treedata=>{
                 //console.log(treedata);
                 //console.log(rawdata);
-                json(dir.concat('Base_Partition.json'), function (error, basedata) {
+                json('data/Base_Partition.json', function (error, basedata) {
                     measure = rawdata.columns[rawdata.columns.length-1];
 
                     let rfilter = new rangefilter(rawdata);
@@ -187,6 +186,10 @@ function load(dir){
 
                         selectAll(".node")
                             .on("click", (nodeinfo)=>{
+
+                                //console.log("node",nodeinfo);
+                                console.log(event.altKey, event, this, nodeinfo);
+
                                 if (event.altKey)
                                 {
                                     plots.storedata(nodeinfo);
