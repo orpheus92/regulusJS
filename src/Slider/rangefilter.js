@@ -45,7 +45,7 @@ export class rangefilter{
            }
        }
        //console.log("range", this.range)
-        return outindex;
+        return [outindex,this.crange];
    }
 
     removefilter(yattr,rawdata){

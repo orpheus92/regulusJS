@@ -85,6 +85,10 @@ export class Tree{
         this._linkgroup = svg.append('g');
         this._nodegroup = svg.append('g');
 
+        let uid = 0;
+        this._root.descendants().forEach(d=>{
+            d.uid = uid++;
+        });
         function getlowestleaf(node)
         {
             if(node.children!=undefined&&node.children.length===1&&node._children===undefined)//node.parent.data.index===node.data.index)
@@ -106,6 +110,8 @@ export class Tree{
         pubsub.subscribe("levelchange2", this.updatelevel);
         pubsub.subscribe("HighlightNode", highlightnd);
         pubsub.subscribe("UnHighlightNode", unhighlightnd);
+        pubsub.subscribe("RMNode", rmnd);
+        //console.log(this._activenode);
     }
 
     updatelevel(channel,self,level,scale){
@@ -391,11 +397,13 @@ export class Tree{
                 .attr("y", d => {
                     return d.y;
                 })
-                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
+                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-2em"})
                 .attr("dy", "-1em")
                 .text((d) => {
                     this._curselection[d.id] = d;
-                    return d.id;
+                    //return d.id;
+                    return ""+d.uid+","+d.depth+"";
+
                 });
             d3.select("#tree").selectAll("text")
                 .data(clicked, d=>{return d.id})
@@ -432,11 +440,11 @@ export class Tree{
                 .attr("y", d => {
                     return d.y;
                 })
-                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-5em"})
+                .attr("dx", d=>{return (parseFloat(d.x)<parseFloat(this.treewidth-this.translatex))?"0em":"-2em"})
                 .attr("dy", "-1em")
                 .text((d) => {
                     if(d.parent!=null && d.parent.children!=undefined &&d.data._persistence>=this.pShow)
-                    return d.id;
+                    return ""+d.uid+","+d.depth+"";
                 });
 
         //}
@@ -552,6 +560,14 @@ function unhighlightnd(msg,nd){
     d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false);
     //console.log("UnHighlight ND", nd);
 }
+
+function rmnd(msg,nd){
+    d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false)
+        .classed("selected",false);
+    d3.select("#tree").selectAll("text").data([nd],d=>{return d.id}).remove();
+    //console.log("UnHighlight ND", nd);
+}
+
 export function getbaselevelInd(node, accum) {
     let i;
     if (node.children != null) {

@@ -58,7 +58,6 @@
     pointer-events: stroke;
     stroke-width: 50px;
     stroke: transparent;
-    cursor: crosshair;
 }
 .domain{
     stroke-width: 1px;

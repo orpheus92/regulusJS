@@ -35,7 +35,7 @@ let dataarray;
 
 
 // select('#catalog')
-// .on('click', () =>  {load("waste_Am")});
+// .on('click', () =>  {load("waste_Pu")});
 
 select('#catalog')
     .on('change', function () { load(this.value);});
@@ -103,8 +103,8 @@ function load(dataset){
 
                     // Plot View Constructor
                     // Plot SIZE
-                    let width = 150;
-                    let height = 50;
+                    let width = 225;
+                    let height = 75;
                     pInter = 0.2;
                     sizeInter = 25;
                     band = 0.1;
@@ -300,11 +300,11 @@ function load(dataset){
                         let range = [min,max];
                             // Use attr specified by plot for now, will have its own attr later;
                             // Return set of index that will be used during update model to update _total, _size
-                        let filterindex = rfilter.updaterange(filterattr, range, rawdata);
+                        let [filterindex,crange] = rfilter.updaterange(filterattr, range, rawdata);
                             tree.updatefilter(filterindex);
                             tree.layout();
                             tree.render();
-                        plots.updatediv();
+                        plots.updatediv(crange);
                         //}
                     });
 

@@ -22,11 +22,13 @@ export class Selected {
         this._stored = [];
         this._selected = [];
         //this._brushes = [];
+        this._newid;
         this._reg = check;
         this._brushNum = {"index": 0};
         this._plottype = plottype;
         this._bandwidth = band;
         // This part is necessary when people try to call update attribute before selecting partition
+        this._allrange;
         let attr = data.columns;
         this._obj = dataarray;
 
@@ -94,9 +96,9 @@ export class Selected {
 
 
     // Update divs based on input data
-    updatediv(/*inputnode*/) {
+    updatediv(crange) {
         let selected;
-
+        this._allrange = crange;
         // this._stored got updated based on selection
         // Plots should also get updated in the same way
         selected = this._stored;
@@ -170,13 +172,15 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
+        //console.log(this._totaldata);
+        //console.log(this._stored);
         //console.log(option)
         let newplot = [];
         let plottype;
+
         if (self === undefined) {
             if(option!=this._plottype)
                 this._plot.selectAll("div").remove();
-
 
             this._plot.selectAll("div")
                 .data(Object.keys(this._totaldata),d=>{return d})
@@ -189,6 +193,8 @@ export class Selected {
                 .data(Object.keys(this._totaldata),d=>{return d})
                 .exit()
                 .remove();
+
+
 
             if (option != undefined)
                 this._plottype = option;
@@ -358,12 +364,12 @@ export class Selected {
                     .on("start", brushstart)
                     .on("brush", brushmove)
                     .on("end", brushend)
-                    .extent([[padding / 2, padding / 2], [size - padding / 2, size - padding / 2]]);
+                    .extent([[padding / 3, padding / 3], [size - padding / 3, size - padding / 3]]);
 
                 let svg = newplot.append("svg")
                     .attr("width", (size + padding) * (n - 1) + 4 * padding)
                     .attr("height", (size + padding) * (n - 1) + 4 * padding)//size * n + padding)
-                    .append("g")
+                    //.append("g")
                     .attr("transform", "translate(" + 4 * padding + "," + 0 + ")");
 
 
@@ -581,14 +587,23 @@ export class Selected {
 
                 //console.log(this);
                 svg.append("text")
-                    .attr("x", size * n / 2 - 3 * padding)
+                    .attr("x", size * n / 3 -  padding)
                     .attr("y", 0)
-                    .text(self._stored[iii].id)
+                    .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
 
-                svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
+                svg.on("mouseover", ()=>{
+                    addbutton(svg, (n-1)*size, 0, padding*2, "red", "deletebutton",[1]);
+                    svg.selectAll(".deletebutton").on("click",()=>{
+                        svg.remove();//console.log("I got clicked")
+                        pubsub.publish("RMNode",self._stored[iii]);
+                        });//.classed("deletebutton", true);
+                        pubsub.publish("HighlightNode",self._stored[iii])})
+                    .on("mouseleave", ()=>{
+                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",self._stored[iii]);
+                        });
             }
 
         }
@@ -611,23 +626,33 @@ export class Selected {
             let margin = self._margin;
 
             let newplot = self._plot.selectAll("div")
-                .data([newid[iii]],d=>{return d;});
+                .data([newid[iii]],d=>{return d;});//.enter();
 
+            console.log(newplot);
 
             //let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = self._textsize;
             let reg = self._reg;
             let pxs, px, py, f_hat, regy, f_hat2, std;
+            //console.log(self);
+            //if (this._allrange!=undefined){
+            //    let [ymin, ymax]
+            //}
+            //else
+            //console.log(newplot);
             let [ymin, ymax] = [Math.min(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]})), Math.max(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]}))]
+            console.log(self);
             //let  = self._objrange[self._y_attr];
-
+            console.log(ymin,ymax);
             if (reg === true) {
+                if (ymax>ymin){
                 [px, py] = parseObj(data);
                 f_hat = kernel.ImultipleRegression(px, py, kernel.fun.gaussian, self._bandwidth * (ymax - ymin));
                 regy = linspace(ymin, ymax, 100);
                 f_hat2 = kernel.averageStd(px, py, kernel.fun.gaussian, self._bandwidth * (ymax - ymin));
                 pxs = f_hat(regy);
                 std = f_hat2(regy, pxs);
+                }
             }
 
             {
@@ -675,7 +700,7 @@ export class Selected {
                 let svg = newplot.append("svg")
                     .attr("width", width + padding)
                     .attr("height", size * n + padding)
-                    .append("g")
+                    //.append("g")
                     .attr("transform", "translate(" + padding + "," + padding + ")");
 
                 /*
@@ -820,7 +845,7 @@ export class Selected {
                     .on("start", brushstart)
                     .on("brush", brushmove)
                     .on("end", brushend)
-                    .extent([[padding / 2, padding / 2], [width - padding / 2, size - padding / 2]]);
+                    .extent([[padding / 3, padding / 3], [width - padding / 3, size - padding / 3]]);
 
                 let brushes = [];
 
@@ -864,16 +889,29 @@ export class Selected {
                     }
                 }
                 svg.append("text")
-                    .attr("x", width / 2 - 3 * padding)
+                    .attr("x", width / 3 -  padding)
                     .attr("y", 0)
-                    .text(self._stored[iii].id)
+                    //.text(self._stored[iii].id)
+                    .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
 
-                svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
-            }
+                //svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
+                //    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
 
+                svg.on("mouseover", ()=>{
+                    addbutton(svg, width-padding*2, 0, padding, "red", "deletebutton",[1]);
+                    svg.selectAll(".deletebutton").on("click",()=>{
+                        svg.remove();//console.log("I got clicked")
+                        pubsub.publish("RMNode",self._stored[iii]);
+                    });
+                    pubsub.publish("HighlightNode",self._stored[iii])})
+                    .on("mouseleave", ()=>{
+                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",self._stored[iii]);
+                    });
+            }
+            //newplot.merge(self._plot.selectAll("div"))
         }
     }
     //BoxPlot
@@ -897,7 +935,7 @@ export class Selected {
             //let newplot = this._plot;
             //let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
             let newplot = self._plot.selectAll("div")
-                .data([newid[iii]],d=>{return d;});
+                .data([newid[iii]],d=>{return d;});//.enter();
 
             let barWidth = self._barWidth;
             let textsize = self._textsize;
@@ -1020,7 +1058,13 @@ export class Selected {
 
 
             }
-
+            svg.append("text")
+                .attr("x", width / 3 -  padding)
+                .attr("y", 0)
+                //.text(self._stored[iii].id)
+                .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                .attr("font-weight", "bold")
+                .attr("font-size", 2 * textsize + "px");
             function boxQuartiles(d) {
                 return [
                     d3.quantile(d, .25),
@@ -1050,7 +1094,7 @@ export class Selected {
             //let newplot = self._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
 
             let newplot = self._plot.selectAll("div")
-                .data([newid[iii]],d=>{return d;});
+                .data([newid[iii]],d=>{return d;});//.enter();
 
             let barWidth = self._barWidth;
             let textsize = self._textsize;
@@ -1166,12 +1210,20 @@ export class Selected {
 
 
             }
+
+            svg.append("text")
+                .attr("x", width / 3 - padding)
+                .attr("y", 0)
+                //.text(self._stored[iii].id)
+                .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                .attr("font-weight", "bold")
+                .attr("font-size", 2 * textsize + "px");
         }
     }
 
 
     highlight() {
-        //console.log(this._brushNum);
+
         this._selected = [];
         let newplot = this._plot.selectAll("div").data([this._brushNum.index],d=>{return d;})
         newplot.select(".cell").selectAll('circle').filter("*:not(.hidden)").each((d) => {
@@ -1248,4 +1300,193 @@ function linspace(a, b, n) {
         ret[i] = (i * b + (n - i) * a) / n;
     }
     return ret;
+}
+
+function d3CloseButton () {
+
+    var size = 20,
+        x = 0,
+        y = 0,
+        rx = 0,
+        ry = 0,
+        isCircle = false,
+        isBorderShown = false,
+        borderStrokeWidth = 1.5,
+        crossStrokeWidth = 1.5,
+        g,
+        event;
+
+    function button (selection) {
+
+        //Styling for the border of the button
+        var buttonStyle = {
+                "fill-opacity": 0,
+                "stroke-width": borderStrokeWidth,
+                "stroke": (isBorderShown)? "none" : "red" },
+            //for the cross
+            crossStyle = {
+                "stroke-width": crossStrokeWidth,
+                "stroke": "red"
+            },
+            r = size / 2,
+            ofs = size / 6,
+            cross;
+
+        g = selection.append("g").on("click", event);
+        cross = g.append("g");
+
+        if (isCircle) {
+            g.append("circle")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", r)
+                .style(buttonStyle);
+
+            cross.append("line")
+                .attr("x1", x - r + ofs)
+                .attr("y1", y)
+                .attr("x2", x + r - ofs)
+                .attr("y2", y);
+
+            cross.append("line")
+                .attr("x1", x)
+                .attr("y1", y - r + ofs)
+                .attr("x2", x)
+                .attr("y2", y + r - ofs);
+
+            // Make '+' to 'x'
+            cross.attr("transform", "rotate (45," + x + "," + y + ")");
+
+        } else {
+            g.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("rx", rx)
+                .attr("ry", ry)
+                .attr("width", size)
+                .attr("height", size)
+                .style(buttonStyle);
+
+            cross.append("line")
+                .attr("x1", x + ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", (x + size) - ofs)
+                .attr("y2", (y + size) - ofs);
+
+            cross.append("line")
+                .attr("x1", (x + size) - ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", x + ofs)
+                .attr("y2", (y + size) - ofs);
+        }
+
+        cross.style(crossStyle)
+
+    }
+
+    button.x = function (val) {
+        x = val;
+        return button;
+    }
+
+    button.y = function (val) {
+        y = val;
+        return button;
+    }
+
+    button.size = function (val) {
+        size = val;
+        return button;
+    }
+
+    button.rx = function (val) {
+        rx = val;
+        return button;
+    }
+
+    button.ry = function (val) {
+        ry = val;
+        return button;
+    }
+
+    button.borderStrokeWidth = function (val) {
+        borderStrokeWidth = val;
+        return button;
+    }
+
+    button.crossStrokeWidth = function (val) {
+        crossStrokeWidth = val;
+        return button;
+    }
+
+    //If true, the border of the button becomes a circle instead of a rectangle
+    button.isCircle = function (val) {
+        isCircle = val;
+        return button;
+    }
+
+    button.isBorderShown = function (val) {
+        isBorderShown = val;
+        return button;
+    }
+
+    button.clickEvent = function (val) {
+        event = val;
+        return button;
+    }
+
+    //Remove the whole button if one already exists
+    button.remove = function () {
+        if (g) {
+            g.remove();
+            g = undefined;
+        }
+
+        return button;
+    }
+
+    return button;
+}
+
+function addbutton(svg, x, y, size,color, cname,data){
+
+    svg.selectAll("."+cname).data(data,d=>{return d;}).enter()
+        .append("rect").attr("class", cname)
+        .attr("x", x)
+        .attr("y", y)
+        .attr("width", size)
+        .attr("height", size).attr("fill", "transparent").attr("stroke",color);
+
+    svg.selectAll("."+cname).data(data+1,d=>{return d;}).enter().append("line").attr("class", cname)
+        .attr("x1", x+ size/4)
+        .attr("y1", y + size/4)
+        .attr("x2", x + size - size/4)
+        .attr("y2", (y + size) - size/4).attr("stroke",color);
+
+    svg.selectAll("."+cname).data(data+2,d=>{return d;}).enter().append("line").attr("class", cname)
+        .attr("x1", (x + size) - size/4)
+        .attr("y1", y + size/4)
+        .attr("x2", x + size/4)
+        .attr("y2", (y + size) - size/4).attr("stroke",color);
+
+    /*
+    svg.append("rect").attr("class", "deletebutton")
+        .attr("x", (n-1)*size)
+        .attr("y", 0)
+        .attr("width", padding*2)
+        .attr("height", padding*2).attr("fill", "transparent").attr("stroke","red");
+
+    svg.append("line").attr("class", "deletebutton")
+        .attr("x1", (n-1)*size + padding/4)
+        .attr("y1", 0 + padding/4)
+        .attr("x2", ((n-1)*size + padding*2) - padding/4)
+        .attr("y2", (0 + padding*2) - padding/4).attr("stroke","red");
+
+    svg.append("line").attr("class", "deletebutton")
+        .attr("x1", ((n-1)*size + padding*2) - padding/4)
+        .attr("y1", 0 + padding/4)
+        .attr("x2", (n-1)*size + padding/4)
+        .attr("y2", (0 + padding*2) - padding/4).attr("stroke","red");
+    */
+
 }
