@@ -101,8 +101,7 @@ export class Selected {
     updatediv(crange) {
         let selected;
         this._allrange = crange;
-        // this._stored got updated based on selection
-        // Plots should also get updated in the same way
+
         selected = this._stored;
         /*
         }
@@ -174,29 +173,43 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
-        /
+
         let newplot = [];
         let plottype;
 
         if (self === undefined) {
-            if(option!=this._plottype)
+            if(((option!=undefined)&&(option!=this._plottype))||channel!=undefined)
                 this._plot.selectAll("div").remove();
 
-            this._plot.selectAll("div")
-                .data(Object.keys(this._totaldata),d=>{return d})
+            //console.log(this._plot.selectAll("div"));
+            //console.log(this._plot.selectAll(".crystaldiv")
+            //    .data(Object.keys(this._totaldata),(d)=>{console.log(d);return d}))
+            let alldiv = this._plot.selectAll("div").data(Object.keys(this._totaldata),(d,i)=>{return d;});
+            //console.log(alldiv)
+            alldiv.enter()
+                .append("div")
+                .attr("class",d=>{newplot.push(d); return "crystaldiv"}).merge(alldiv);
+            alldiv.exit().remove()
+
+            //console.log("total Now",this._totaldata)
+            //console.log("stored", this._stored)
+            //console.log("Mew",newplot)
+            //console.log(this._plot.selectAll("div"))
+            /*
+            this._plot.selectAll(".crystaldiv")
+                .data(Object.keys(this._totaldata),(d)=>{console.log(d);return d})
                 .enter()
                 .append("div")
-                .attr("class", "crystaldiv")
-                .attr("id", d=>{newplot.push(d);});
+                .attr("class",d=>{newplot.push(d)
+                return "crystaldiv"}).merge(alldiv);
 
-            this._plot.selectAll("div")
-                .data(Object.keys(this._totaldata),d=>{return d})
+            //this._plot.selectAll(".crystaldiv")
+                alldiv.data(Object.keys(this._totaldata),d=>{return d})
                 .exit()
                 .remove();
+            */
 
-
-
-            if (option != undefined)
+            if ((option!=undefined)&&(option!=this._plottype))
                 this._plottype = option;
             plottype = this._plottype;
             //this.removediv();
@@ -229,23 +242,23 @@ export class Selected {
             }
         }
         else {
-            if(option!=self._plottype)
+            if((option!=undefined)&&(option!=self._plottype))
                 self._plot.selectAll("div").remove();
 
             self._plot.selectAll("div")
                 .data(Object.keys(self._totaldata),d=>{return d})
                 .enter()
                 .append("div")
-                .attr("class", "crystaldiv")
-                .attr("id", d=>{newplot.push(d);});
+                .attr("class", d=>{newplot.push(d);
+                return "crystaldiv"});
 
             self._plot.selectAll("div")
                 .data(Object.keys(self._totaldata),d=>{return d})
                 .exit()
                 .remove();
 
-            if (option != undefined)
-                self._plottype = option;
+            //if (option != undefined)
+            self._plottype = option;
             plottype = self._plottype;
             //self.removediv();
 
@@ -283,25 +296,26 @@ export class Selected {
     // Update all the plots based on attr selection
     updateattr(channel, self, yattr) {
         self._y_attr = yattr;
-        self.updateplot();
+        self.updateplot("RemoveOld");
     }
 
 
     increase() {
         this._width = this._width * 1.1;
         this._height = this._height * 1.1;
-        this.updateplot();
+        this.updateplot("RemoveOld");
     }
     decrease() {
         this._width = this._width * 0.9;
         this._height = this._height * 0.9;
-        this.updateplot();
+        this.updateplot("RemoveOld");
     }
     scatterMat(newid) {
         for (let iii = 0; iii<newid.length; iii++) {
             drawscatter(iii,this)
         }
             function drawscatter(iii,self){
+                let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
 
 
             self.updatesize();
@@ -311,8 +325,10 @@ export class Selected {
             self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = self._margin;
             //let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
+                //console.log(self._plot.selectAll("div"));
                 let newplot = self._plot.selectAll("div")
                     .data([newid[iii]],d=>{return d;});
+                //console.log(self._plot.selectAll("div"));
                 let textsize = self._textsize;
             {
                 //width = 960;
@@ -366,7 +382,7 @@ export class Selected {
 
                 let p_arr;
                 // Attach index to each data;
-                p_arr = Array.from(self._stored[iii].data._total);
+                p_arr = Array.from(cur_node.data._total);
 
                 let dataind = [];
 
@@ -639,47 +655,57 @@ export class Selected {
                 svg.append("text")
                     .attr("x", size * n / 3 -  padding)
                     .attr("y", 0)
-                    .text("id: "+"("+self._stored[iii].uid+","+self._stored[iii].depth+")  "+" Size: "+self._stored[iii].data._size)
+                    .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
 
-                svg.on("mouseover", ()=>{
-                    addbutton(svg, (n-1)*(size+padding), 0, padding*2, "red", "deletebutton",[1]);
-                    svg.selectAll(".deletebutton").on("click",()=>{
+                svg.on("mouseover", (cursvg)=>{
+                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                    addbutton(svg, (size-padding)*n-5*padding, 0, 2*padding, "red", "deletebutton",[1]);
 
-                        svg.remove();//console.log("I got clicked")
-                        pubsub.publish("RMNode",self._stored[iii]);
-                        self.stored.splice(iii,1);
-                        });//.classed("deletebutton", true);
-                        pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseleave", ()=>{
-                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",self._stored[iii]);
-                        });
+                    d3.selectAll(".deletebutton").on("click",()=>{
+                        newplot.remove();
+                        pubsub.publish("RMNode",ndtoremove);
+                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                        delete self._totaldata[cursvg];
+                    });
+                    pubsub.publish("HighlightNode",ndtoremove)})
+
+                    .on("mouseleave", (cursvg)=>{
+                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",ndtohlight);
+                    });
             }
 
         }
 
     }
     multiscatter(newid) {
-        //console.log(newid);
+        //console.log("NEWID", newid);
+        //console.log("totaldata", this._totaldata);
         for (let iii = 0; iii<newid.length; iii++){
             drawscatter(iii,this)
         }
 
         function drawscatter(iii,self){
             let data = self._totaldata[newid[iii]];
+            //console.log("iii",iii)
+            //console.log(newid[iii])
             //console.log(data)
+
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
             self.updatesize();
 
             let height = self._height;
             let width = self._width;
             self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = self._margin;
-
+        //console.log(self._plot.selectAll("div"))
             let newplot = self._plot.selectAll("div")
-                .data([newid[iii]],d=>{return d;});//.enter();
-
+                .data([newid[iii]],(d,i)=>{return d;});//.enter();
+            //console.log(self._plot.selectAll("div"))
 
             //let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = self._textsize;
@@ -743,7 +769,7 @@ export class Selected {
 
                 // Size of SVG declared here
 
-                let p_arr = Array.from(self._stored[iii].data._total);
+                let p_arr = Array.from(cur_node.data._total);
                 let dataind = [];
                 data.forEach((obj, i) => {
 
@@ -983,25 +1009,30 @@ export class Selected {
                     .attr("x", width / 3 -  padding)
                     .attr("y", 0)
                     //.text(self._stored[iii].id)
-                    .text("id: "+"("+self._stored[iii].uid+","+self._stored[iii].depth+")  "+" Size: "+self._stored[iii].data._size)
+                    .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
                 //console.log(header)
                 //svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
                 //    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
 
-                svg.on("mouseover", ()=>{
+                svg.on("mouseover", (cursvg)=>{
+                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
                     addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
+
                     d3.selectAll(".deletebutton").on("click",()=>{
-                        svg.remove();
-                        //console.log("I got clicked");
-                        pubsub.publish("RMNode",self._stored[iii]);
-                        self.stored.splice(iii,1);
+                        newplot.remove();
+                        pubsub.publish("RMNode",ndtoremove);
+                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                        delete self._totaldata[cursvg];
                     });
-                    pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseleave", ()=>{
-                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",self._stored[iii]);
+                    pubsub.publish("HighlightNode",ndtoremove)})
+
+                    .on("mouseleave", (cursvg)=>{
+                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",ndtohlight);
                     });
             }
             //newplot.merge(self._plot.selectAll("div"))
@@ -1009,11 +1040,15 @@ export class Selected {
     }
     //BoxPlot
     boxPlot(newid) {
+        //console.log(newid)
+        //console.log(this._totaldata);
         for (let iii = 0; iii<newid.length; iii++) {
             drawbox(iii,this)
         }
 
         function drawbox(iii,self){
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
+
             let format = d3.format('.3g');
             //let data = this._data;
             self.updatesize();
@@ -1027,8 +1062,10 @@ export class Selected {
 
             //let newplot = this._plot;
             //let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+           // console.log(self._plot.selectAll("div"))
             let newplot = self._plot.selectAll("div")
                 .data([newid[iii]],d=>{return d;});//.enter();
+            //console.log(self._plot.selectAll("div"))
 
             let barWidth = self._barWidth;
             let textsize = self._textsize;
@@ -1155,21 +1192,27 @@ export class Selected {
                 .attr("x", width / 3 -  padding)
                 .attr("y", 0)
                 //.text(self._stored[iii].id)
-                .text("id: "+"("+self._stored[iii].uid+","+self._stored[iii].depth+")  "+" Size: "+self._stored[iii].data._size)
+                .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
                 .attr("font-size", 2 * textsize + "px");
 
-            svg.on("mouseover", ()=>{
-                addbutton(svg, width-padding, 0, padding, "red", "deletebutton",[1]);
-                svg.selectAll(".deletebutton").on("click",()=>{
-                    svg.remove();//console.log("I got clicked")
-                    pubsub.publish("RMNode",self._stored[iii]);
-                    self.stored.splice(iii,1);
+            svg.on("mouseover", (cursvg)=>{
+                let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
+
+                d3.selectAll(".deletebutton").on("click",()=>{
+                    newplot.remove();
+                    pubsub.publish("RMNode",ndtoremove);
+                    self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                    delete self._totaldata[cursvg];
                 });
-                pubsub.publish("HighlightNode",self._stored[iii])})
-                .on("mouseleave", ()=>{
-                    svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                    pubsub.publish("UnHighlightNode",self._stored[iii]);
+                pubsub.publish("HighlightNode",ndtoremove)})
+
+                .on("mouseleave", (cursvg)=>{
+                    let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                    svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                    pubsub.publish("UnHighlightNode",ndtohlight);
                 });
 
             function boxQuartiles(d) {
@@ -1188,6 +1231,8 @@ export class Selected {
             drawhist(iii,this)
         }
         function drawhist(iii,self) {
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
+
             let format = d3.format(".3g");
             self.updatesize();
             //let data = this._data;
@@ -1323,21 +1368,27 @@ export class Selected {
                 .attr("x", width / 3 - padding)
                 .attr("y", 0)
                 //.text(self._stored[iii].id)
-                .text("id: "+"("+self._stored[iii].uid+","+self._stored[iii].depth+")  "+" Size: "+self._stored[iii].data._size)
+                .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
                 .attr("font-size", 2 * textsize + "px");
 
-            svg.on("mouseover", ()=>{
+            svg.on("mouseover", (cursvg)=>{
+                let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
                 addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
-                svg.selectAll(".deletebutton").on("click",()=>{
-                    svg.remove();//console.log("I got clicked")
-                    pubsub.publish("RMNode",self._stored[iii]);
-                    self.stored.splice(iii,1);
+
+                d3.selectAll(".deletebutton").on("click",()=>{
+                    newplot.remove();
+                    pubsub.publish("RMNode",ndtoremove);
+                    self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                    delete self._totaldata[cursvg];
                 });
-                pubsub.publish("HighlightNode",self._stored[iii])})
-                .on("mouseleave", ()=>{
-                    svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                    pubsub.publish("UnHighlightNode",self._stored[iii]);
+                pubsub.publish("HighlightNode",ndtoremove)})
+
+                .on("mouseleave", (cursvg)=>{
+                    let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                    svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                    pubsub.publish("UnHighlightNode",ndtohlight);
                 });
 
         }
