@@ -34,9 +34,9 @@ let filterdata;
 let dataarray;
 
 
- select('#catalog')
- .on('click', () =>  {load("waste_Pu")});
-/*
+// select('#catalog')
+// .on('click', () =>  {load("waste_Pu")});
+
 select('#catalog')
     .on('change', function () { load(this.value);});
 
@@ -51,7 +51,7 @@ fetch('/catalog')
             .attr('value', d => d)
             .text(d => d);
     });
-*/
+
 function load(dataset){
     csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)

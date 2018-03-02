@@ -174,9 +174,7 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
-        //console.log(this._totaldata);
-        //console.log(this._stored);
-        //console.log(option)
+        /
         let newplot = [];
         let plottype;
 
