@@ -103,9 +103,9 @@ export class TreeLevel {
                             //this.clearPlots();
                             //console.log("Draw Log");
                             if (ctree.pShow == undefined)
-                                this.yScale2.domain([ctree.pInter, 1]);
+                                this.yScale2.domain([ctree.pInter+Number.EPSILON, 1+Number.EPSILON]);
                             else
-                                this.yScale2.domain([ctree.pShow, 1]);
+                                this.yScale2.domain([ctree.pShow+Number.EPSILON, 1+Number.EPSILON]);
 
                             // Draw Axis
                             let yAxis = d3.axisLeft()
@@ -115,7 +115,7 @@ export class TreeLevel {
                                 .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
                                 .call(yAxis);
                             //Draw Current Level
-                            clevel = ctree.pInter;
+                            clevel = ctree.pInter+Number.EPSILON;
                             //console.log(clevel);
 
                             let cy = this.yScale2(clevel);
