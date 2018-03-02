@@ -8,7 +8,6 @@ from pathlib import Path
 from topopy.MorseSmaleComplex import MorseSmaleComplex as MSC
 
 
-
 class PostMSC(object):
     def load(self, hierarchy, base):
         self.hierarchy = np.genfromtxt(hierarchy, delimiter=",")
