@@ -24,6 +24,8 @@ export class Selected {
         //this._brushes = [];
         this._newid;
         this._reg = check;
+        this._canvas = true;
+        this._svg = false;
         this._brushNum = {"index": 0};
         this._plottype = plottype;
         this._bandwidth = band;
@@ -99,8 +101,7 @@ export class Selected {
     updatediv(crange) {
         let selected;
         this._allrange = crange;
-        // this._stored got updated based on selection
-        // Plots should also get updated in the same way
+
         selected = this._stored;
         /*
         }
@@ -172,31 +173,43 @@ export class Selected {
 
     // Update all the plots based on plot selection
     updateplot(channel, self, option) {
-        //console.log(this._totaldata);
-        //console.log(this._stored);
-        //console.log(option)
+
         let newplot = [];
         let plottype;
 
         if (self === undefined) {
-            if(option!=this._plottype)
+            if(((option!=undefined)&&(option!=this._plottype))||channel!=undefined)
                 this._plot.selectAll("div").remove();
 
-            this._plot.selectAll("div")
-                .data(Object.keys(this._totaldata),d=>{return d})
+            //console.log(this._plot.selectAll("div"));
+            //console.log(this._plot.selectAll(".crystaldiv")
+            //    .data(Object.keys(this._totaldata),(d)=>{console.log(d);return d}))
+            let alldiv = this._plot.selectAll("div").data(Object.keys(this._totaldata),(d,i)=>{return d;});
+            //console.log(alldiv)
+            alldiv.enter()
+                .append("div")
+                .attr("class",d=>{newplot.push(d); return "crystaldiv"}).merge(alldiv);
+            alldiv.exit().remove()
+
+            //console.log("total Now",this._totaldata)
+            //console.log("stored", this._stored)
+            //console.log("Mew",newplot)
+            //console.log(this._plot.selectAll("div"))
+            /*
+            this._plot.selectAll(".crystaldiv")
+                .data(Object.keys(this._totaldata),(d)=>{console.log(d);return d})
                 .enter()
                 .append("div")
-                .attr("class", "crystaldiv")
-                .attr("id", d=>{newplot.push(d);});
+                .attr("class",d=>{newplot.push(d)
+                return "crystaldiv"}).merge(alldiv);
 
-            this._plot.selectAll("div")
-                .data(Object.keys(this._totaldata),d=>{return d})
+            //this._plot.selectAll(".crystaldiv")
+                alldiv.data(Object.keys(this._totaldata),d=>{return d})
                 .exit()
                 .remove();
+            */
 
-
-
-            if (option != undefined)
+            if ((option!=undefined)&&(option!=this._plottype))
                 this._plottype = option;
             plottype = this._plottype;
             //this.removediv();
@@ -229,23 +242,23 @@ export class Selected {
             }
         }
         else {
-            if(option!=self._plottype)
+            if((option!=undefined)&&(option!=self._plottype))
                 self._plot.selectAll("div").remove();
 
             self._plot.selectAll("div")
                 .data(Object.keys(self._totaldata),d=>{return d})
                 .enter()
                 .append("div")
-                .attr("class", "crystaldiv")
-                .attr("id", d=>{newplot.push(d);});
+                .attr("class", d=>{newplot.push(d);
+                return "crystaldiv"});
 
             self._plot.selectAll("div")
                 .data(Object.keys(self._totaldata),d=>{return d})
                 .exit()
                 .remove();
 
-            if (option != undefined)
-                self._plottype = option;
+            //if (option != undefined)
+            self._plottype = option;
             plottype = self._plottype;
             //self.removediv();
 
@@ -283,25 +296,28 @@ export class Selected {
     // Update all the plots based on attr selection
     updateattr(channel, self, yattr) {
         self._y_attr = yattr;
-        self.updateplot();
+        self.updateplot("RemoveOld");
     }
 
 
     increase() {
         this._width = this._width * 1.1;
         this._height = this._height * 1.1;
-        this.updateplot();
+        this.updateplot("RemoveOld");
     }
     decrease() {
         this._width = this._width * 0.9;
         this._height = this._height * 0.9;
-        this.updateplot();
+        this.updateplot("RemoveOld");
     }
     scatterMat(newid) {
         for (let iii = 0; iii<newid.length; iii++) {
             drawscatter(iii,this)
         }
             function drawscatter(iii,self){
+                let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
+
+
             self.updatesize();
             let data = self._totaldata[newid[iii]];
             let width = self._width;
@@ -309,8 +325,10 @@ export class Selected {
             self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = self._margin;
             //let newplot = this._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
+                //console.log(self._plot.selectAll("div"));
                 let newplot = self._plot.selectAll("div")
                     .data([newid[iii]],d=>{return d;});
+                //console.log(self._plot.selectAll("div"));
                 let textsize = self._textsize;
             {
                 //width = 960;
@@ -360,7 +378,63 @@ export class Selected {
                 xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
                 xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
                 yAxis.tickSize(-size).tickFormat(d3.format(".3g"));
-                let brush = myBrush()
+
+
+                let p_arr;
+                // Attach index to each data;
+                p_arr = Array.from(cur_node.data._total);
+
+                let dataind = [];
+
+                data.forEach((obj, i) => {
+                    dataind[i] = Object.assign({}, obj);
+                    dataind[i].index = p_arr[i];
+                });
+
+                if(self._canvas===true) {
+
+                    let totalplts = halfcross(traits, traits);
+                    let ctx = newplot.append("canvas")
+                        .attr("width", (size + padding) * (n - 1) + 10 * padding)
+                        .attr("height", (size + padding) * (n - 1) + 8 * padding)
+                        .node().getContext("2d");
+
+                    ctx.translate(9 * padding, 2 * padding);
+                    //console.log(totalplts)
+                    for (let index = 0; index < totalplts.length; index++) {
+                        let cblx = totalplts[index]
+                        let transx = cblx.i;
+                        let transy = cblx.j-1;
+                        ctx.translate(transx*(size+padding), transy*(size+padding));
+                        //let py = totalplts[index].y;
+                        y.domain(domainByTrait[cblx.y]);
+                        x.domain(domainByTrait[cblx.x])
+                        dataind.forEach(d => {
+                            //console.log(x(d[ztrait]),colorScale((d[ztrait])))
+                            createplt(d, ctx, 1, cblx.x,cblx.y)
+                        })//,colorScale(d[ztrait]));
+                        //console.log(traits[index])
+                        ctx.translate(-transx*(size+padding), -transy*(size+padding));
+                    }
+
+                    function createplt(point, context, r, px,py) {
+
+                        let cx = x(point[px]);
+                        let cy = y(point[py]);
+                        let cl = colorScale(point[ztrait]);
+                        //console.log(colorScale(cx));
+
+                        context.fillStyle = cl;
+                        context.beginPath();
+                        context.arc(cx, cy, r, 0, 2 * Math.PI);
+                        context.fill();
+                        //ctx.fillRect(cx,cy,cx+r,cy+r)
+                    }
+
+                }
+
+
+                    let brush = myBrush()
                     .on("start", brushstart)
                     .on("brush", brushmove)
                     .on("end", brushend)
@@ -381,7 +455,7 @@ export class Selected {
                     .attr("font-size", textsize + "px")
                     .attr("transform", function (d) {
 
-                        return "translate(" + ( d.i ) * (size + padding) + "," + ((d.j - 1) * (size + padding) + size) + ")";
+                        return "translate(" + (( d.i ) * (size + padding)+padding*3) + "," + ((d.j - 1) * (size + padding) + size) + ")";
                     })
                     .each(function (d) {
 
@@ -400,7 +474,7 @@ export class Selected {
                     .attr("font-size", textsize + "px")
                     .attr("transform", function (d) {
 
-                        return "translate(" + ( d.i ) * (size + padding) + "," + (d.j - 1) * (size + padding) + ")";
+                        return "translate(" + (( d.i ) * (size + padding)+padding*3) + "," + (d.j - 1) * (size + padding) + ")";
                     })
                     .each(function (d, i) {
                         if (d.i === 0) {
@@ -411,23 +485,14 @@ export class Selected {
                         }
                     });
                 svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
-                let p_arr;
-                // Attach index to each data;
-                p_arr = Array.from(self._stored[iii].data._total);
 
-                let dataind = [];
-
-                data.forEach((obj, i) => {
-                    dataind[i] = Object.assign({}, obj);
-                    dataind[i].index = p_arr[i];
-                });
                 let cell = svg.selectAll(".cell")
                     .data(halfcross(traits, traits))
                     .enter().append("g")
                     .attr("class", "cell")
                     .attr("transform", function (d) {
                         //console.log(d);
-                        return "translate(" + ( d.i ) * (size + padding) + "," + (d.j - 1) * (size + padding) + ")";
+                        return "translate(" + (( d.i ) * (size + padding)+padding*3) + "," + (d.j - 1) * (size + padding) + ")";
                     })
                     .each(plot);
 
@@ -446,7 +511,8 @@ export class Selected {
                         .attr("width", size - padding)
                         .attr("height", size - padding);
 
-
+                    if(self._svg === true)
+                    {
                     cell.selectAll("circle")
                         .data(dataind)
                         .enter().append("circle")
@@ -461,6 +527,8 @@ export class Selected {
 
                             return colorScale(d[ztrait]);
                         });
+                    }
+
                     // Xlable
                     cell.append("text")
                         .attr("x", size / 3)
@@ -475,9 +543,7 @@ export class Selected {
 
                     // Ylable
                     cell.append("text")
-                    //.attr("x", -20)//size-15)
-                    //.attr("y", 5)//size+10)
-                    //.attr("dy", ".71em")
+
                         .attr("x", -size * 2 / 3)//-padding)
                         .attr("y", -padding)
                         .attr("dy", ".71em").attr("transform", "rotate(-90)")
@@ -589,61 +655,67 @@ export class Selected {
                 svg.append("text")
                     .attr("x", size * n / 3 -  padding)
                     .attr("y", 0)
-                    .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                    .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
 
-                svg.on("mouseover", ()=>{
-                    addbutton(svg, (n-1)*size, 0, padding*2, "red", "deletebutton",[1]);
-                    svg.selectAll(".deletebutton").on("click",()=>{
-                        svg.remove();//console.log("I got clicked")
-                        pubsub.publish("RMNode",self._stored[iii]);
-                        });//.classed("deletebutton", true);
-                        pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseleave", ()=>{
-                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",self._stored[iii]);
-                        });
+                svg.on("mouseover", (cursvg)=>{
+                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                    addbutton(svg, (size-padding)*n-5*padding, 0, 2*padding, "red", "deletebutton",[1]);
+
+                    d3.selectAll(".deletebutton").on("click",()=>{
+                        newplot.remove();
+                        pubsub.publish("RMNode",ndtoremove);
+                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                        delete self._totaldata[cursvg];
+                    });
+                    pubsub.publish("HighlightNode",ndtoremove)})
+
+                    .on("mouseleave", (cursvg)=>{
+                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",ndtohlight);
+                    });
             }
 
         }
 
     }
     multiscatter(newid) {
-        //console.log(newid);
+        //console.log("NEWID", newid);
+        //console.log("totaldata", this._totaldata);
         for (let iii = 0; iii<newid.length; iii++){
             drawscatter(iii,this)
         }
 
         function drawscatter(iii,self){
             let data = self._totaldata[newid[iii]];
+            //console.log("iii",iii)
+            //console.log(newid[iii])
             //console.log(data)
+
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
             self.updatesize();
 
             let height = self._height;
             let width = self._width;
             self._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
             let margin = self._margin;
-
+        //console.log(self._plot.selectAll("div"))
             let newplot = self._plot.selectAll("div")
-                .data([newid[iii]],d=>{return d;});//.enter();
-
-            console.log(newplot);
+                .data([newid[iii]],(d,i)=>{return d;});//.enter();
+            //console.log(self._plot.selectAll("div"))
 
             //let newplot = self._plot.append("div").attr("id", "div" + iii).attr("class", "crystaldiv");
             let textsize = self._textsize;
             let reg = self._reg;
             let pxs, px, py, f_hat, regy, f_hat2, std;
-            //console.log(self);
-            //if (this._allrange!=undefined){
-            //    let [ymin, ymax]
-            //}
-            //else
-            //console.log(newplot);
+
             let [ymin, ymax] = [Math.min(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]})), Math.max(...self._totaldata[newid[iii]].map(x=>{return x[self._y_attr]}))]
-            console.log(self);
+            //console.log(self);
             //let  = self._objrange[self._y_attr];
-            console.log(ymin,ymax);
+            //console.log(ymin,ymax);
             if (reg === true) {
                 if (ymax>ymin){
                 [px, py] = parseObj(data);
@@ -697,76 +769,68 @@ export class Selected {
 
                 // Size of SVG declared here
 
-                let svg = newplot.append("svg")
-                    .attr("width", width + padding)
-                    .attr("height", size * n + padding)
-                    //.append("g")
-                    .attr("transform", "translate(" + padding + "," + padding + ")");
-
-                /*
-                d3.selectAll(".crystaldiv")
-                    .enter()
-                    .append("svg")
-                    .attr("width", width + padding)
-                    .attr("height", size * n + padding)
-                    .append("g")
-                    .attr("transform", "translate(" + padding + "," + padding + ")");
-                */
-                x.domain(rangeByTrait);
-
-                svg.selectAll(".x.axis")
-                    .data([ztrait])
-                    .enter().append("g")
-                    .attr("class", "x axis")
-                    .attr("font-size", textsize + "px")
-                    .call(xAxis.tickValues(rangeByTrait));
-
-                svg.selectAll(".y.axis")
-                    .data(traits)
-                    .enter().append("g")
-                    .attr("class", "y axis")
-                    .attr("font-size", textsize + "px")
-                    .attr("transform", function (d, i) {
-                        return "translate(0," + i * size + ")";
-                    })
-                    .each(function (d) {
-                        y.domain(domainByTrait[d]);
-                        d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
-                    })
-                svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
-
-                let p_arr = Array.from(self._stored[iii].data._total);
+                let p_arr = Array.from(cur_node.data._total);
                 let dataind = [];
                 data.forEach((obj, i) => {
 
                     dataind[i] = Object.assign({}, obj);
                     dataind[i].index = p_arr[i];
                 });
+
+                x.domain(rangeByTrait);
+
+                if (self._canvas === true) {
+
+                let ctx = newplot.append("canvas")
+                    .attr("width", width + 3 * padding)
+                    .attr("height", size * n + padding)
+                    .node().getContext("2d");
+
+                ctx.translate(3 * padding, 7 / 4 * padding);
+
+                for (let index = 0; index < n; index++) {
+                    //console.log(dataind)
+                    y.domain(domainByTrait[traits[index]]);
+                    dataind.forEach(d => {
+                        //console.log(x(d[ztrait]),colorScale((d[ztrait])))
+                        createplt(d, ctx, 1, traits[index])
+                    })//,colorScale(d[ztrait]));
+                    //console.log(traits[index])
+                    ctx.translate(0, size);
+                }
+
+                function createplt(point, context, r, p) {
+
+                    let cx = x(point[ztrait]);
+                    let cy = y(point[p]);
+                    let cl = colorScale(point[ztrait]);
+                    //console.log(colorScale(cx));
+
+                    context.fillStyle = cl
+                    context.beginPath();
+                    context.arc(cx, cy, r, 0, 2 * Math.PI);
+                    context.fill();
+                    //ctx.fillRect(cx,cy,cx+r,cy+r)
+                }
+
+                }
+                let svg = newplot.append("svg")
+                    .attr("width", width + padding)
+                    .attr("height", size * n + padding)
+                    //.append("g")
+                    .attr("transform", "translate(" + padding + "," + 0 + ")");
+
+
                 let cell = svg.selectAll(".cell")
                     .data(traits)
                     .enter().append("g")
+                    .attr("width", width - padding)
+                    .attr("height", size - padding)
                     .attr("class", "cell")
                     .attr("transform", function (d, i) {
-                        return "translate(0," + i * size + ")";
+                        return "translate("+padding+"," + ((i * size)+3/4*padding)+ ")";
                     })
                     .each(plot);
-
-                cell.append("text")
-                    .attr("x", -size * 2 / 3)//-padding)
-                    .attr("y", -padding / 3)
-                    .attr("dy", ".71em").attr("transform", "rotate(-90)")
-                    .text(function (d) {
-                        return d;
-                    })
-                    .attr("font-size", 2 * textsize + "px");
-
-                cell.append("text")
-                    .attr("x", width / 2 - padding)
-                    .attr("y", size + padding / 3)
-                    .text(d => {
-                        if (d === traits[traits.length - 1]) return ztrait;
-                    })
-                    .attr("font-size", 2 * textsize + "px");
                 function plot(p, di) {
                     let cell = d3.select(this);
 
@@ -820,26 +884,79 @@ export class Selected {
                             .attr("d", line);
 
                     }
+                    if (self._svg === true){
 
-                    cell.selectAll("circle")
-                        .data(dataind)
-                        .enter().append("circle")
-                        .attr("cx", function (d) {
-                            return x(d[ztrait]);
-                        })
-                        .attr("cy", function (d) {
-                            return y(d[p]);
+                        cell.selectAll("circle")
+                            .data(dataind)
+                            .enter().append("circle")
+                            .attr("cx", function (d) {
+                                return x(d[ztrait]);
+                            })
+                            .attr("cy", function (d) {
+                                return y(d[p]);
 
-                        })
-                        .attr("r", width / 200)
-                        .style("fill", function (d) {
+                            })
+                            .attr("r", width / 200)
+                            .style("fill", function (d) {
 
-                            return colorScale(d[ztrait]);
-                        });
+                                return colorScale(d[ztrait]);
+                            });
 
+                    }
+                    //newplot.append("canvas")
+/*
+
+    */
                     // If regression is turned on
 
                 }
+
+
+
+
+                svg.selectAll(".x.axis")
+                    .data([ztrait])
+                    .enter().append("g")
+                    .attr("class", "x axis").attr("transform", "translate(" + padding + "," + padding + ")")
+                    .attr("font-size", textsize + "px")
+                    .attr("transform", function (d, i) {
+                        return "translate("+padding+"," + (3/4*padding)+ ")";
+                    })
+                    .call(xAxis.tickValues(rangeByTrait));
+
+                svg.selectAll(".y.axis")
+                    .data(traits)
+                    .enter().append("g")
+                    .attr("class", "y axis")
+                    .attr("font-size", textsize + "px")
+                    .attr("transform", function (d, i) {
+                        return "translate("+padding+"," + (i * size +3/4*padding)+ ")";
+                    })
+                    .each(function (d) {
+                        y.domain(domainByTrait[d]);
+                        d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
+                    })
+                svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
+
+
+
+
+                cell.append("text")
+                    .attr("x", -size * 2 / 3)//-padding)
+                    .attr("y", -padding / 3)
+                    .attr("dy", ".71em").attr("transform", "rotate(-90)")
+                    .text(function (d) {
+                        return d;
+                    })
+                    .attr("font-size", 2 * textsize + "px");
+
+                cell.append("text")
+                    .attr("x", width / 2 - padding)
+                    .attr("y", size + padding / 3)
+                    .text(d => {
+                        if (d === traits[traits.length - 1]) return ztrait;
+                    })
+                    .attr("font-size", 2 * textsize + "px");
 
                 let brush = myBrush()
                     .on("start", brushstart)
@@ -892,23 +1009,30 @@ export class Selected {
                     .attr("x", width / 3 -  padding)
                     .attr("y", 0)
                     //.text(self._stored[iii].id)
-                    .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                    .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                     .attr("font-weight", "bold")
                     .attr("font-size", 2 * textsize + "px");
-
+                //console.log(header)
                 //svg.on("mouseover", ()=>{pubsub.publish("HighlightNode",self._stored[iii])})
                 //    .on("mouseout", ()=>{pubsub.publish("UnHighlightNode",self._stored[iii])});
 
-                svg.on("mouseover", ()=>{
-                    addbutton(svg, width-padding*2, 0, padding, "red", "deletebutton",[1]);
-                    svg.selectAll(".deletebutton").on("click",()=>{
-                        svg.remove();//console.log("I got clicked")
-                        pubsub.publish("RMNode",self._stored[iii]);
+                svg.on("mouseover", (cursvg)=>{
+                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                    addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
+
+                    d3.selectAll(".deletebutton").on("click",()=>{
+                        newplot.remove();
+                        pubsub.publish("RMNode",ndtoremove);
+                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                        delete self._totaldata[cursvg];
                     });
-                    pubsub.publish("HighlightNode",self._stored[iii])})
-                    .on("mouseleave", ()=>{
-                        svg.selectAll(".deletebutton").remove()//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",self._stored[iii]);
+                    pubsub.publish("HighlightNode",ndtoremove)})
+
+                    .on("mouseleave", (cursvg)=>{
+                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                        pubsub.publish("UnHighlightNode",ndtohlight);
                     });
             }
             //newplot.merge(self._plot.selectAll("div"))
@@ -916,11 +1040,15 @@ export class Selected {
     }
     //BoxPlot
     boxPlot(newid) {
+        //console.log(newid)
+        //console.log(this._totaldata);
         for (let iii = 0; iii<newid.length; iii++) {
             drawbox(iii,this)
         }
 
         function drawbox(iii,self){
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
+
             let format = d3.format('.3g');
             //let data = this._data;
             self.updatesize();
@@ -934,8 +1062,10 @@ export class Selected {
 
             //let newplot = this._plot;
             //let newplot = this._plot.append("div").attr("id", "div" + i).attr("class", "crystaldiv");
+           // console.log(self._plot.selectAll("div"))
             let newplot = self._plot.selectAll("div")
                 .data([newid[iii]],d=>{return d;});//.enter();
+            //console.log(self._plot.selectAll("div"))
 
             let barWidth = self._barWidth;
             let textsize = self._textsize;
@@ -1062,9 +1192,29 @@ export class Selected {
                 .attr("x", width / 3 -  padding)
                 .attr("y", 0)
                 //.text(self._stored[iii].id)
-                .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
                 .attr("font-size", 2 * textsize + "px");
+
+            svg.on("mouseover", (cursvg)=>{
+                let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
+
+                d3.selectAll(".deletebutton").on("click",()=>{
+                    newplot.remove();
+                    pubsub.publish("RMNode",ndtoremove);
+                    self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                    delete self._totaldata[cursvg];
+                });
+                pubsub.publish("HighlightNode",ndtoremove)})
+
+                .on("mouseleave", (cursvg)=>{
+                    let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                    svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                    pubsub.publish("UnHighlightNode",ndtohlight);
+                });
+
             function boxQuartiles(d) {
                 return [
                     d3.quantile(d, .25),
@@ -1073,6 +1223,7 @@ export class Selected {
                 ];
             }
         }
+
     }
 
     histogramPlot(newid) {
@@ -1080,6 +1231,8 @@ export class Selected {
             drawhist(iii,this)
         }
         function drawhist(iii,self) {
+            let cur_node = self._stored.filter(d=>d.id===newid[iii])[0];//newid[iii];
+
             let format = d3.format(".3g");
             self.updatesize();
             //let data = this._data;
@@ -1189,7 +1342,7 @@ export class Selected {
                 g
                     .append('g')
                     .attr('id', "yAxis" + i)
-                    .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(".2g")))
+                    .call(d3.axisLeft(y).ticks(4).tickFormat(d3.format(".2g")))
                     .attr("font-size", 2 * textsize + "px")
                     .attr("transform", "translate(" + [margin.left, margin.top] + ")");
 
@@ -1215,9 +1368,29 @@ export class Selected {
                 .attr("x", width / 3 - padding)
                 .attr("y", 0)
                 //.text(self._stored[iii].id)
-                .text("Partition ID: "+self._stored[iii].uid+","+self._stored[iii].depth+"  "+" Size: "+self._stored[iii].data._size)
+                .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
                 .attr("font-size", 2 * textsize + "px");
+
+            svg.on("mouseover", (cursvg)=>{
+                let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
+                addbutton(svg, width, 0, padding, "red", "deletebutton",[1]);
+
+                d3.selectAll(".deletebutton").on("click",()=>{
+                    newplot.remove();
+                    pubsub.publish("RMNode",ndtoremove);
+                    self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
+                    delete self._totaldata[cursvg];
+                });
+                pubsub.publish("HighlightNode",ndtoremove)})
+
+                .on("mouseleave", (cursvg)=>{
+                    let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
+
+                    svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                    pubsub.publish("UnHighlightNode",ndtohlight);
+                });
+
         }
     }
 
@@ -1454,6 +1627,7 @@ function addbutton(svg, x, y, size,color, cname,data){
         .append("rect").attr("class", cname)
         .attr("x", x)
         .attr("y", y)
+        //.attr("dy",".9em")
         .attr("width", size)
         .attr("height", size).attr("fill", "transparent").attr("stroke",color);
 

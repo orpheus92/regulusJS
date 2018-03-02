@@ -162,10 +162,13 @@ function load(dataset){
                     select(".ppbar").call(drag()
                         .on("start drag", ()=>{
                             select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
-                            pInter = pb.xScale.invert(event.x)-Number.EPSILON;
+                            pInter = pb.xScale.invert(event.x-pb.padding+2)-Number.EPSILON;
+                            //console.log("Pinter from Event", pInter)
                             pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
 
                             [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                            //console.log("Pinter from Tree", pInter)
+
                             slider.handle.attr("cx", x(pInter));
                             treelevel.plotLevel(tree);
 
@@ -347,6 +350,14 @@ function load(dataset){
                         .on('click', () =>  {
                             plots._reg = !plots._reg;
 
+                            // Will use this for now
+                            pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
+                        });
+
+                    select('#usesvg')
+                        .on('click', () =>  {
+                            plots._canvas = !plots._canvas;
+                            plots._svg = !plots._svg;
                             // Will use this for now
                             pubsub.publish("plotupdateattr", plots,document.getElementById('y_attr').value);
                         });

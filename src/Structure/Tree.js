@@ -107,10 +107,13 @@ export class Tree{
         this._curselection = {};
         //console.log(this);
         //console.log(this._root)
+        let self = this;
+        //let cbtest = self.test();
+        //this.cb = rmnd.bind(self);
         pubsub.subscribe("levelchange2", this.updatelevel);
         pubsub.subscribe("HighlightNode", highlightnd);
         pubsub.subscribe("UnHighlightNode", unhighlightnd);
-        pubsub.subscribe("RMNode", rmnd);
+        pubsub.subscribe("RMNode", self.test.bind(self))//rmnd);
         //console.log(this._activenode);
     }
 
@@ -373,7 +376,16 @@ export class Tree{
         }
     }
 
+    test(msg,nd){
+       //console.log("Inside This FUnc",msg,nd)
+        //console.log(this);
+        d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false)
+            .classed("selected",false);
+        //console.log(d3.select("#tree").selectAll("text"))
+        d3.select("#tree").selectAll("text").data([nd],d=>{return d.id}).remove();
+        delete this._curselection[nd.id];
 
+    }
     mark(clicked) {
         //console.log(clicked);
 
@@ -561,10 +573,16 @@ function unhighlightnd(msg,nd){
     //console.log("UnHighlight ND", nd);
 }
 
-function rmnd(msg,nd){
+function rmnd(msg,nd,self){//console.log(msg,nd,self)
+    //console.log(nd)
     d3.select("#tree").selectAll(".node").data([nd],d=>{return d.id}).classed("highlight",false)
         .classed("selected",false);
+    //console.log(d3.select("#tree").selectAll("text"))
     d3.select("#tree").selectAll("text").data([nd],d=>{return d.id}).remove();
+
+
+    //delete this._curselection[clicked[clicki].id];
+    //console.log(d3.select("#tree").selectAll("text"))
     //console.log("UnHighlight ND", nd);
 }
 

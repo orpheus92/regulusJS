@@ -32,7 +32,14 @@ svg {
     fill: none;
     stroke: #aaa;
 }
-
+/*
+.crystaldiv canvas {
+    position: absolute;
+    */
+    /*top: 800px;*/
+/*    left: 0;
+}
+*/
 circle.hidden {
     fill: #ccc !important;
 }

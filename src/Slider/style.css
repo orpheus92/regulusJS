@@ -52,7 +52,11 @@
 }
 
 
+canvas{
 
+position: absolute;
+
+}
 
 .track-overlay {
     pointer-events: stroke;
