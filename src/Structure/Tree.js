@@ -224,7 +224,7 @@ export class Tree{
                         }
                         this._root.descendants().forEach(d => {
                             d.x = scalex(d.xx);
-                            d.y = (d.data._persistence!=0)?scalelg(d.data._persistence+Number.EPSILON):scalelg(this.pers[this.pers.length-1]+Number.EPSILON);
+                            d.y = scalelg(d.data._persistence+Number.EPSILON);
                             if (this._filter!=undefined){
                                 d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
                                 d.data._size = d.data._total.size;
