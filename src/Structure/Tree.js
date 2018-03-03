@@ -206,12 +206,12 @@ export class Tree{
                     break;
                 }
                     case "log": {
-                        let scaleexp = d3.scaleLog().nice();
-                        scaleexp.range([this.treelength, 0]);
+                        let scalelg = d3.scaleLog().nice();
+                        scalelg.range([this.treelength, 0]);
                         if (this.pShow === undefined) {
                             for (let i = 0; i < this.pers.length; i++) {
                                 if (this.pInter > this.pers[i]) {
-                                    scaleexp.domain([this.pers[i], 1]);
+                                    scalelg.domain([this.pers[i]+Number.EPSILON, 1+Number.EPSILON]);
                                     //console.log(this.pers[i]);
                                     break;
                                 }
@@ -219,12 +219,12 @@ export class Tree{
                         }
                         else {
                             let plow =(this.pers[parseInt(getKeyByValue(this.pers, this.pShow))]!=undefined)?this.pers[parseInt(getKeyByValue(this.pers, this.pShow))]:this.pers[this.pers.length-1];
-                            scaleexp.domain([plow, 1]);
+                            scalelg.domain([plow+Number.EPSILON, 1+Number.EPSILON]);
                             //console.log(plow);
                         }
                         this._root.descendants().forEach(d => {
                             d.x = scalex(d.xx);
-                            d.y = (d.data._persistence!=0)?scaleexp(d.data._persistence):scaleexp(this.pers[this.pers.length-1]);
+                            d.y = scalelg(d.data._persistence+Number.EPSILON);
                             if (this._filter!=undefined){
                                 d.data._total = new Set([...this._filter].filter(x=>d.data._totalinit.has(x)));
                                 d.data._size = d.data._total.size;
@@ -250,9 +250,18 @@ export class Tree{
                 newlink.enter().insert("path")
                 .attr("class", "link").attr("d", d => {
                     if (d.parent != null)
-                        if (d.parent.oldx != null) {
-                            return diagonal(d.parent.oldx, d.parent.oldy, d.parent.oldx, d.parent.oldy)
-                        }
+                    {
+
+                    if (d.parent.oldx != undefined) {
+                        return diagonal(d.parent.oldx, d.parent.oldy, d.parent.oldx, d.parent.oldy)
+                    }
+                    else if (d.parent.x != undefined)
+                        return diagonal(d.parent.x, d.parent.y, d.parent.x, d.parent.y)
+                        else
+                            return diagonal(d.x, d.y, d.x, d.y)
+                    }
+                    else
+                        return diagonal(d.x, d.y, d.x, d.y)
                 });
             newlink.exit().remove();
             t.selectAll('.link')
@@ -267,7 +276,7 @@ export class Tree{
             .attr("r",/*5 / Math.sqrt(this._circlesize) + */4)
             .attr("transform", function (d) {
                 if (d.parent != null)
-                    if (d.parent.oldx != null) {
+                    if (d.parent.oldx != undefined) {
                         return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
                 }
             });
