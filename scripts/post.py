@@ -82,7 +82,7 @@ class Post(object):
         self.prepare()
         for merge in self.merges:
             if merge.src == merge.dest:
-                print('degenerate', merge.level, merge.is_max, merge.src, merge.dest)
+                # print('degenerate', merge.level, merge.is_max, merge.src, merge.dest)
                 continue
 
             if merge.is_max:
@@ -91,25 +91,23 @@ class Post(object):
                 self.update(merge, self.min_map, lambda item: item.max_idx)
 
         if len(self.active) != 1:
-            print('build error: no single root')
-            exit(255)
+            raise RuntimeError('Error: found {} roots'.format(len(self.active)))
 
         self.root = self.active.pop()
         self.root.extrema.extend([self.root.min_idx, self.root.max_idx])
+        self.visit(self.root, 0)
         return self
 
-    def rearrange(self):
-        idx = self.visit(self.root, 0)
-        return self
-
-    def save(self, filename):
+    def save(self, path, name):
         partitions = []
         self.collect(self.root, partitions)
         tree = {
+            'name': name,
             'partitions': partitions,
             'pts': self.pts
         }
-        with open(filename, 'w') as f:
+        filename = name + ".json"
+        with open(path / filename, 'w') as f:
             json.dump(tree, f)
 
     # Private functions
@@ -221,15 +219,47 @@ def post(args=None):
     p.add_argument('-n', '--norm', default='feature', help='norm')
     p.add_argument('-g', '--gradient', default='steepest', help='gradient')
     p.add_argument('-G', '--graph', default='relaxed beta skeleton', help='graph')
-    ns = p.parse_args(args)
 
+    p.add_argument('-d', '--dims', type=int, default=None, help='number of input dimensions')
+    p.add_argument('-m', '--measure', default=None, help='measure name')
+    p.add_argument('-c', '--col', type=int, default=-1, help='measure column index starting at 0')
+    p.add_argument('-a', '--all', action='store_true', help='process all measures')
+
+    ns = p.parse_args(args)
     path = Path(ns.filename).parent
 
-    msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
-    msc.LoadData(ns.filename)
+    with open(ns.filename) as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        data = [[float(x) for x in row] for row in reader]
 
-    Post().data(msc.base_partitions, msc.hierarchy).build().rearrange().save(path / 'msc.json')
+    dims = ns.dims if ns.dims is not None else len(header) - 1
+    data = np.array(data)
+    x = data[:, 0:dims]
 
+    measures = []
+    if ns.all:
+        measures = range(dims, len(header))
+    elif ns.measure:
+        if ns.measure in header:
+            measures = [header.index(ns.measure)]
+        else:
+            print('unknown measure:', ns.measure)
+            exit(255)
+    else:
+        measures = [ns.col]
+
+    for measure in measures:
+        try:
+            print('post ', header[measure])
+            y = data[:, measure]
+            msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
+            msc.Build(X=x, Y=y, names=header[:dims]+[header[measure]])
+            Post().data(msc.base_partitions, msc.hierarchy).build().save(path, header[measure])
+        except RuntimeError as error:
+            print(error)
+
+    # msc.LoadData(ns.filename)
     # msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
     # Post().load(path).build().rearrange().save(path / 'msc.json')
 
