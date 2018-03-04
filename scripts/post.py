@@ -249,15 +249,31 @@ def post(args=None):
     else:
         measures = [ns.col]
 
+    catalog_path = path / 'catalog.json'
+    if catalog_path.exists():
+        with open(catalog_path) as f:
+            catalog = json.load(f)
+    else:
+        catalog = {
+            'data': Path(ns.filename).name,
+            'dims': dims,
+            'msc': []
+        }
+
     for measure in measures:
         try:
-            print('post ', header[measure])
+            name = header[measure]
+            print('post ', name)
             y = data[:, measure]
             msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
-            msc.Build(X=x, Y=y, names=header[:dims]+[header[measure]])
-            Post().data(msc.base_partitions, msc.hierarchy).build().save(path, header[measure])
+            msc.Build(X=x, Y=y, names=header[:dims]+[name])
+            Post().data(msc.base_partitions, msc.hierarchy).build().save(path, name)
+            catalog['msc'].append(name)
         except RuntimeError as error:
             print(error)
+
+    with open(catalog_path, 'w') as f:
+        json.dump(catalog, f, indent=2)
 
     # msc.LoadData(ns.filename)
     # msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
