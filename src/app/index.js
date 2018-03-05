@@ -160,19 +160,33 @@ function load(dataset){
                     let pb = new pBar(tree,data,basedata);
                     pb.updateBar(pInter,sizeInter);
                     select(".ppbar").call(drag()
-                        .on("start drag", ()=>{
-                            select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
-                            pInter = pb.xScale.invert(event.x-pb.padding+2)-Number.EPSILON;
-                            //console.log("Pinter from Event", pInter)
-                            pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+                        .on("start drag", () => {
 
-                            [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
-                            //console.log("Pinter from Tree", pInter)
-
-                            slider.handle.attr("cx", x(pInter));
-                            treelevel.plotLevel(tree);
+                            //function updateP(event) {
+                                //return new Promise(resolve => {
+                                    select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
+                                    pInter = pb.xScale.invert(event.x-pb.padding+2)-Number.EPSILON;
+                                    slider.handle.attr("cx", x(pInter));
+                                //    setTimeout(() => {
+                                //        resolve(event);
+                                //    }, 200);
+                                //});
+                            //}
+                            //setTimeout(() => {
+                                        //resolve();
+                            //        }, 400);
+                            //async function f1(event) {
+                            //    let mythen= await updateP(event);
+                                //console.log("finish"); // 10
+                                pubsub.publish("infoupdate", loaddata, pInter, sizeInter);
+                                [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                                //console.log("Pinter from Treea", pInter)
+                                treelevel.plotLevel(tree);
+                            //}
+                            //    f1(event);
 
                         }));
+                        //.on("end", ()=>{console.log("Finish")})
 
                         select(".pbar").call(drag()
                             .on("start drag", ()=>{
