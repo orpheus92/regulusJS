@@ -52,7 +52,7 @@ class Partition(object):
 
 
 class Post(object):
-    def __init__(self):
+    def __init__(self, debug=False):
         self.base = None
         self.merges = []
         self.min_map = defaultdict(set)
@@ -61,6 +61,7 @@ class Post(object):
         self.root = None
         self.pts = []
         self.original_pts = set()
+        self.debug = debug
 
     def load(self, path):
         with open(path / 'Base_Partition.json') as f:
@@ -96,6 +97,8 @@ class Post(object):
         self.root = self.active.pop()
         self.root.extrema.extend([self.root.min_idx, self.root.max_idx])
         self.visit(self.root, 0)
+        if self.debug:
+            self.statistics()
         return self
 
     def save(self, path, name):
@@ -111,6 +114,25 @@ class Post(object):
             json.dump(tree, f)
 
     # Private functions
+
+    def statistics(self):
+        levels = defaultdict(list)
+        self.stat(self.root, levels)
+        n = 0
+        b = 0
+        for level in levels.keys():
+            if level > 0:
+                n += len(levels[level])
+            else:
+                b = len(levels[level])
+        print('statistics: {} levels {} base, {} new'.format(len(levels), b, n))
+        for level in sorted(levels.keys()):
+            print("{:.2g} {}".format(level, len(levels[level])))
+
+    def stat(self, node, levels):
+        levels[node.persistence].append(node)
+        for child in node.children:
+            self.stat(child, levels)
 
     def prepare(self):
         for key, value in self.base.items():
@@ -225,6 +247,8 @@ def post(args=None):
     p.add_argument('-c', '--col', type=int, default=-1, help='measure column index starting at 0')
     p.add_argument('-a', '--all', action='store_true', help='process all measures')
 
+    p.add_argument('--debug', action='store_true', help='process all measures')
+
     ns = p.parse_args(args)
     path = Path(ns.filename).parent
 
@@ -267,7 +291,7 @@ def post(args=None):
             y = data[:, measure]
             msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
             msc.Build(X=x, Y=y, names=header[:dims]+[name])
-            Post().data(msc.base_partitions, msc.hierarchy).build().save(path, name)
+            Post(ns.debug).data(msc.base_partitions, msc.hierarchy).build().save(path, name)
             catalog['msc'].append(name)
         except RuntimeError as error:
             print(error)
