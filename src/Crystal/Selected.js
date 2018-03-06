@@ -630,9 +630,9 @@ export class Selected {
                     y.domain(domainByTrait[p.y]);
 
                     let sel_ind = getindex(e,dataind,p.x,p.y,x,y,mypad);
-                    //cleardraw(ctx,size*n,padding,n,size*n);
+                    cleardraw(ctx,size*n,padding,n,size*n);
 
-                    //drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
+                    drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
 
                     /*
                     svg.selectAll("circle").classed("hidden", function (d) {
