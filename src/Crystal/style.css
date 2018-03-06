@@ -3,14 +3,20 @@
     stroke: black;
 }
 
+#hdPlot{
+    position: relative;
+}
 
 svg {
+    position: relative;
     font: 10px sans-serif;
-    padding: 10px;
+    /*padding: 10px;*/
     /*font-weight: bold;*/
 
 }
-
+div{
+    position: relative;
+}
 
 .axis line {
     stroke: #ddd;
@@ -41,8 +47,16 @@ svg {
 }
 */
 circle.hidden {
+    position: relative;
     fill: #ccc !important;
+    /*fill-opacity: .5;*/
 }
+
+circle {
+    position: relative;
+
+}
+
 circle.highlight{
     stroke: black
 }
@@ -54,7 +68,7 @@ circle.highlight{
 
 .crystaldiv {
     float:left;
-
+    position: relative;
 }
 .ticks{
     color: #1B2733;

@@ -34,9 +34,8 @@ let filterdata;
 let dataarray;
 
 
-// select('#catalog')
-// .on('click', () =>  {load("waste_Pu")});
-
+select('#catalog').on('click', () =>  {load("waste_Pu")});
+/*
 select('#catalog')
     .on('change', function () { load(this.value);});
 
@@ -51,7 +50,7 @@ fetch('/catalog')
             .attr('value', d => d)
             .text(d => d);
     });
-
+*/
 function load(dataset){
     csv(`data/${dataset}/data.csv`, rawdata=> {
         for (let i = rawdata.columns.length-1; i>= 0; i--)
@@ -347,8 +346,7 @@ function load(dataset){
                         .on('click', () =>  {
                             //clear();
                             [cur_selection,cur_node] = plots.highlight();
-
-                            selectindex = new Set(cur_selection.map(obj=>obj.index));
+                            selectindex = new Set(cur_selection);//cur_selection.map(obj=>obj.index));
                             if(selectindex!= undefined)
                             tree.searchchildren(selectindex, cur_node);
                             else

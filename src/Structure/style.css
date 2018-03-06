@@ -53,7 +53,13 @@
 
 }
 
+#treesvg {
+  position: relative;
+  font: 10px sans-serif;
+  padding: 10px;
+  /*font-weight: bold;*/
 
+}
 
 .node:hover {
   /*fill: blue;*/
