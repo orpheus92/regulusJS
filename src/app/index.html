@@ -2,14 +2,12 @@
 <html>
 <header>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-  <title>Regulus - High Dimensional Data Analysis using MSC</title>
+  <title>Regulus</title>
 </header>
 <body>
 <div class="container">
   <header>
     <h1>Regulus</h1>
-    <!-- - High Dimensional Data Analysis using MSC</h1>-->
-    <!--button id="LoadFile">Load File</button-->
     <label>Dataset</label> <select id="catalog"></select><br>
   </header>
 
@@ -24,9 +22,6 @@
       </div>
       <label class="item">Dimensions:</label>
       <ul id="dims"></ul>
-      <!--<div id="allattr">-->
-        <!--<div id="attrcontent"></div>-->
-      <!--</div>-->
     </div>
     <h3>Persistence</h3>
     <div class="group">
@@ -38,17 +33,17 @@
       <label>Persistence:</label> <label id="filter_persistent"></label><br>
       <label>Size:</label><label id="filter_size"></label><br>
     </div>
-    <!--<span id="cper"></span>-->
-    <!--<span id="csize"></span>-->
+
     <h3>Selected Partition </h3>
     <div class="group">
       <label id="selected">Measure:</label><select id="CompAttr"></select><br>
       <label>Size:</label> <label id="selected_size"></label><br>
       <label>Range:</label> <label id="selected_range"></label><br>
-      <label>Persistence:</label> <label id="selected_persistent"></label><br>
+      <label>Persistence:</label> <label id="selected_persistence"></label><br>
     </div>
 
   </div>
+
   <div id="treePlot" class="view">
     <h2>Tree View</h2>
     <div id = "TreeLevel">
@@ -63,7 +58,6 @@
         <option value="log">Log</option>
       </select>
       <div>
-        <!--input name="Submit"  type="submit" value="Set Range Filter" -->
         <button id="SetRange">Set Range Filter</button>
         <select id="RangeAttr">
         </select>
@@ -80,18 +74,12 @@
         <g id="treelevel"></g>
         <g id="tree"></g>
 
-
       </svg>
     </div>
     <div id = "pBarcode">
     </div>
-    <!--button id="decrease">Decrease Persistence</button-->
-    <!--button-- id="increase">Increase Persistence</button-->
-    <!--button id="decreaseS">Decrease Partition Size</button-->
-    <!--button id="increaseS">Increase Partition Size</button-->
-
-
   </div>
+
   <div id="Crystal" class="view">
     <h2 class="">Plot</h2>
     <div id="plot-selector">

@@ -8,17 +8,18 @@ from pathlib import Path
 from topopy.MorseSmaleComplex import MorseSmaleComplex as MSC
 
 
-
 class PostMSC(object):
     def load(self, hierarchy, base):
         self.hierarchy = np.genfromtxt(hierarchy, delimiter=",")
 
         with open(base) as data_file:
             self.base = json.load(data_file)
+
     def addnoise(self,hsorted):
         for i in range(len(hsorted)):
             hsorted[i,0] = hsorted[i,0] + i*np.finfo(float).eps
         return hsorted
+
     def compute(self):
         hierarchy_sorted = self.hierarchy[np.argsort(self.hierarchy[:, 0])]
         p_max = hierarchy_sorted[-1, 0]
