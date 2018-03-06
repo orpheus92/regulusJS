@@ -383,7 +383,7 @@ export class Selected {
                     dataind[i].index = p_arr[i];
                 });
 
-                if(self._canvas===true) {
+                //if(self._canvas===true) {
 
                     let totalplts = halfcross(traits, traits);
                     let ctx = newplot.append("canvas")
@@ -425,7 +425,7 @@ export class Selected {
                         context.fill();
                         //ctx.fillRect(cx,cy,cx+r,cy+r)
                     }
-                }
+                //}
 
 
 
@@ -630,8 +630,9 @@ export class Selected {
                     y.domain(domainByTrait[p.y]);
 
                     let sel_ind = getindex(e,dataind,p.x,p.y,x,y,mypad);
+                    //cleardraw(ctx,size*n,padding,n,size*n);
 
-                    drawwithind(dataind,ctx, 1, x, colorScale,[ztrait, traits],sel_ind,size,size,padding,domainByTrait);
+                    //drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
 
                     /*
                     svg.selectAll("circle").classed("hidden", function (d) {
@@ -671,20 +672,19 @@ export class Selected {
                 }
 
                 // If the brush is empty, select all circles.
-                function brushend() {
+                function brushend(p) {
                     let e = d3.brushSelection(this);
-                    brushind.index = newid[iii];//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    //this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    let mypad = padding/4;
+                    x.domain(domainByTrait[p.x]);
+                    y.domain(domainByTrait[p.y]);
 
-                    //brushes.push(e);
-                    //console.log(brushes);
-                    //console.log('hidden',svg.selectAll('.hidden'));
-                    svg.selectAll("#visible").attr("id", null);
-                    svg.selectAll(".hidden").attr("id", "visible");//"visible");
-                    if (e === null) {
-                        svg.selectAll(".hidden").classed("hidden", false);
-                        //brushes = [];
-                    }
-                    ;
+                    let sel_ind = getindex(e,dataind,p.x,p.y,x,y,mypad);
+                    cleardraw(ctx,size*n,padding,n,n*size);
+
+                    drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
+                    brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                    selectind.index = sel_ind;
                 }
 
                 //console.log(this);
@@ -699,7 +699,7 @@ export class Selected {
 
                 svg.on("mouseover", (cursvg)=>{
                     let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
-                    addbutton(svg, (size-padding)*n-5*padding, 0, 2*padding, "red", "deletebutton",[1]);
+                    addbutton(svg, (size-padding)*n, padding/4, padding, "red", "deletebutton",[1]);
 
                     d3.selectAll(".deletebutton").on("click",()=>{
                         newplot.remove();
@@ -1303,7 +1303,7 @@ export class Selected {
                 .attr("width", width + padding)
                 .attr("height", size * n + padding)
                 //.append("g")
-                .attr("transform", "translate(" + padding + "," + padding + ")");
+                .attr("transform", "translate(" + padding + "," + 0 + ")");
 
             for (let i = 0; i < datacol; i++) {
                 let groupCount = obj[attr[i]];
@@ -1329,7 +1329,7 @@ export class Selected {
                 let g = svg
                     .append('g')
                     .attr('id', "boxPlot" + i)
-                    .attr("transform", "translate(" + [padding, i * size+padding] + ")");
+                    .attr("transform", "translate(" + [padding, i * size+2*padding] + ")");
 
                 g.append("line")
                     .attr("x1", xScale(record.whiskers[0]))
@@ -1404,11 +1404,11 @@ export class Selected {
             }
             svg.append("text")
                 .attr("x", width / 3 -  padding)
-                .attr("y", 0)
+                .attr("y", padding)
                 //.text(self._stored[iii].id)
                 .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
-                .attr("font-size", 2 * textsize + "px");
+                .attr("font-size", 3 * textsize + "px");
 
             svg.on("mouseover", (cursvg)=>{
                 let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
@@ -1519,7 +1519,7 @@ export class Selected {
                 let g = svg
                     .append('g')
                     .attr('id', "histPlot" + i)
-                    .attr("transform", "translate(" + [padding, i * size+padding] + ")");
+                    .attr("transform", "translate(" + [padding, i * size+2*padding] + ")");
 
                 //let g = svg.append('g')
                 //    .attr('id', "boxPlot" + i);
@@ -1573,11 +1573,11 @@ export class Selected {
 
             svg.append("text")
                 .attr("x", width / 3 - padding)
-                .attr("y", 0)
+                .attr("y", padding)
                 //.text(self._stored[iii].id)
                 .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
                 .attr("font-weight", "bold")
-                .attr("font-size", 2 * textsize + "px");
+                .attr("font-size", 3 * textsize + "px");
 
             svg.on("mouseover", (cursvg)=>{
                 let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
@@ -1788,23 +1788,26 @@ function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yra
 
     let yy = d3.scaleLinear()
         .range([size - padding, 0]);
+    let xx = d3.scaleLinear()
+        .range([0, size - padding]);
     let indset = new Set(ind);
     let notset = data.filter((dd) => {return !indset.has(dd.index)});//.map(d=>d.index);
     let inset = data.filter((dd) => {return indset.has(dd.index)});
 
     dataattr[1].forEach(d=>{
+        context.save()
+        context.translate(d.i*size, (d.j-1)*size);
         context.rect(0, 0, width - padding, size - padding);
-        //context.strokeStyle = "#DCDCDC";
         context.strokeStyle = "#A9A9A9";
         context.lineWidth = 0.5;
         context.stroke();
         let lx,ly,lz;
-        lx = dataattr[0];
-        ly = d;
+        lx = d.x;
+        ly = d.y;
         lz = dataattr[0];
-
+        //console.log(d.x,d.y)
         yy.domain(yrange[ly]);
-
+        xx.domain(yrange[lx]);
         notset.forEach(dd=>{
             //console.log()
             let py;
@@ -1817,12 +1820,9 @@ function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yra
             else{
                 py = dd[ly];
                 px = dd[lx];
-                //console.log(d);
 
-                //console.log(py);
-                //pz = data[dd][lz];
             }
-            let cx = x(px);
+            let cx = xx(px);
             let cy = yy(py);
             //let cl = c(pz);
 
@@ -1847,7 +1847,7 @@ function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yra
                 px = dd[lx];
                 pz = dd[lz];
             }
-            let cx = x(px);
+            let cx = xx(px);
             let cy = yy(py);
             let cl = c(pz);
 
@@ -1857,11 +1857,9 @@ function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yra
             context.fill();
         })
 
-        context.translate(0, size);
+        context.restore();
 
     });
-//context.restore();
-//context.save();
 }
 
 
