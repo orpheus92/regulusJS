@@ -24,8 +24,8 @@ export class Selected {
         //this._brushes = [];
         this._newid;
         this._reg = check;
-        this._canvas = true;
-        this._svg = false;
+        this._canvas = false;//true;
+        this._svg = true;//false;
         this._selected = {"index": 0};
         this._brushNum = {"index": 0};
         this._plottype = plottype;
@@ -329,400 +329,625 @@ export class Selected {
                 let newplot = self._plot.selectAll("div")
                     .data([newid[iii]],d=>{return d;});
                 let textsize = self._textsize;
-            {
-                let size = height,
-                padding = (margin.left + margin.right) / 3;
-                //padding = padding / 2
+                {
+                    let size = height,
+                        padding = (margin.left + margin.right) / 3;
+                    //padding = padding / 2
 
-                let x = d3.scaleLinear()
-                    .range([0, size - padding]);
+                    let x = d3.scaleLinear()
+                        .range([0, size - padding]);
 
-                let y = d3.scaleLinear()
-                    .range([size - padding, 0]);
+                    let y = d3.scaleLinear()
+                        .range([size - padding, 0]);
 
-                let xAxis = d3.axisBottom()
-                    .scale(x)
-                    .ticks(2);
+                    let xAxis = d3.axisBottom()
+                        .scale(x)
+                        .ticks(2);
 
-                let yAxis = d3.axisLeft()
-                    .scale(y)
-                    .ticks(2);
+                    let yAxis = d3.axisLeft()
+                        .scale(y)
+                        .ticks(2);
 
-                let domainByTrait = {},
-                    rangeByTrait = [],
-                    traits = d3.keys(data[0]).filter(d => {
-                        return d != self._y_attr;
-                    }),
-                    ztrait = self._y_attr,
-                    n = traits.length;
+                    let domainByTrait = {},
+                        rangeByTrait = [],
+                        traits = d3.keys(data[0]).filter(d => {
+                            return d != self._y_attr;
+                        }),
+                        ztrait = self._y_attr,
+                        n = traits.length;
 
-                traits.forEach(trait => {
-                    domainByTrait[trait] = self._objrange[trait];
+                    traits.forEach(trait => {
+                        domainByTrait[trait] = self._objrange[trait];
+                    });
 
-                });
+                    rangeByTrait = self._objrange[ztrait];
 
-                rangeByTrait = self._objrange[ztrait];
+                    let colorScale = d3.scaleLinear()
+                        .range(['blue', 'red'])
+                        .domain(rangeByTrait);
+                    //Later
 
-                let colorScale = d3.scaleLinear()
-                    .range(['blue', 'red'])
-                    .domain(rangeByTrait);
-                //Later
+                    //xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
+                    xAxis.tickSize(padding / 4).tickFormat(d3.format(".3g")).tickPadding(padding / 4);
+                    ;
+                    yAxis.tickSize(padding / 4).tickFormat(d3.format(".3g")).tickPadding(padding / 4);
+                    ;
 
-                //xAxis.tickSize(-size).tickFormat(d3.format(".3g"));
-                xAxis.tickSize(padding/4).tickFormat(d3.format(".3g")).tickPadding(padding / 4);;
-                yAxis.tickSize(padding/4).tickFormat(d3.format(".3g")).tickPadding(padding / 4);;
+                    let p_arr;
+                    // Attach index to each data;
+                    p_arr = Array.from(cur_node.data._total);
 
-                let p_arr;
-                // Attach index to each data;
-                p_arr = Array.from(cur_node.data._total);
+                    let dataind = [];
 
-                let dataind = [];
+                    data.forEach((obj, i) => {
+                        dataind[i] = Object.assign({}, obj);
+                        dataind[i].index = p_arr[i];
+                    });
 
-                data.forEach((obj, i) => {
-                    dataind[i] = Object.assign({}, obj);
-                    dataind[i].index = p_arr[i];
-                });
+                    if (self._canvas === true) {
 
-                //if(self._canvas===true) {
+                        let totalplts = halfcross(traits, traits);
+                        let ctx = newplot.append("canvas")
+                            .attr("width", ((size) * (n - 1) + 3 * padding))
+                            .attr("height", ((size) * (n - 1) + 3 * padding))
+                            .node().getContext("2d");
 
-                    let totalplts = halfcross(traits, traits);
-                    let ctx = newplot.append("canvas")
-                        .attr("width", ((size) * (n - 1)+3*padding))
-                        .attr("height", ((size) * (n - 1)+3*padding))
-                        .node().getContext("2d");
-
-                    ctx.translate(7/2 * padding, 2 * padding);
-                    ctx.save();
-                    for (let index = 0; index < totalplts.length; index++) {
-                        let cblx = totalplts[index]
-                        let transx = cblx.i;
-                        let transy = cblx.j-1;
-                        ctx.translate(transx*(size), transy*(size));
-                        ctx.rect(0, 0, size - padding, size - padding);
-                        ctx.strokeStyle = "#f1f1f1";
-                        ctx.stroke();
-                        //let py = totalplts[index].y;
-                        y.domain(domainByTrait[cblx.y]);
-                        x.domain(domainByTrait[cblx.x])
-                        dataind.forEach(d => {
-                            createplt(d, ctx, 1, cblx.x,cblx.y)
-                        })
-                        //ctx.translate(transx*(size), transy*(size));
-                        ctx.restore();
+                        ctx.translate(7 / 2 * padding, 2 * padding);
                         ctx.save();
-                    }
-
-                    function createplt(point, context, r, px,py) {
-
-                        let cx = x(point[px]);
-                        let cy = y(point[py]);
-                        let cl = colorScale(point[ztrait]);
-                        //console.log(colorScale(cx));
-
-                        context.fillStyle = cl;
-                        context.beginPath();
-                        context.arc(cx, cy, r, 0, 2 * Math.PI);
-                        context.fill();
-                        //ctx.fillRect(cx,cy,cx+r,cy+r)
-                    }
-                //}
-
-
-
-
-                let svg = newplot.append("svg")
-                    .attr("width", (size * (n - 1) + 4 * padding))
-                    .attr("height", (size * (n - 1) + 4 * padding))//size * n + padding)
-                    //.append("g")
-                    .attr("transform", "translate(" + padding + "," + 0 + ")");
-
-                //Header
-                {
-                    svg.selectAll(".plotlabel")
-                        .data([0])
-                        .enter().append("text")
-                        .attr("class", "plotlabel")
-                        .attr("x", (size*(n-1)/3))
-                        .attr("y", padding)
-                        .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
-                        .attr("font-weight", "bold")
-                        .attr("font-size", 3 * textsize + "px");
-                    svg.selectAll(".plotlabel").exit().remove();
-                }
-
-                //axis
-                {
-                svg.selectAll(".x.axis")
-                    .data(halfcross(traits, traits))
-                    .enter().append("g")
-                    .attr("class", "x axis")
-                    .attr("font-size", textsize + "px")
-                    .attr("transform", function (d) {
-                        return "translate(" + (( d.i ) * (size)+padding*5/2) + "," + ((d.j ) * (size)+padding) + ")";
-                    })
-                    .each(function (d) {
-
-                        if (d.j === (traits.length - 1)) {
-
-                            x.domain(domainByTrait[d.x]);
-                            xAxis.tickValues(domainByTrait[d.x]);
-                            d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate(" + (-padding) + "," + padding * 2 + ") rotate(-90)");
+                        for (let index = 0; index < totalplts.length; index++) {
+                            let cblx = totalplts[index]
+                            let transx = cblx.i;
+                            let transy = cblx.j - 1;
+                            ctx.translate(transx * (size), transy * (size));
+                            ctx.rect(0, 0, size - padding, size - padding);
+                            ctx.strokeStyle = "#696969";//"#f1f1f1";
+                            ctx.lineWidth = 0.8;
+                            ctx.stroke();
+                            //let py = totalplts[index].y;
+                            y.domain(domainByTrait[cblx.y]);
+                            x.domain(domainByTrait[cblx.x])
+                            dataind.forEach(d => {
+                                createplt(d, ctx, height / 75, cblx.x, cblx.y)
+                            })
+                            //ctx.translate(transx*(size), transy*(size));
+                            ctx.restore();
+                            ctx.save();
                         }
-                    });
-                    svg.selectAll(".x.axis").exit().remove();
-                    //console.log(halfcross(traits, traits));
-                    svg.selectAll(".xaxistext")
-                        .data(halfcross(traits, traits))//.slice(0,traits.length-1))
-                        .enter().append("text")
-                        .attr("x", (d)=>{return (( d.i ) * (size)+padding*3/2+size/3);})//-padding)
-                        .attr("y", (d)=>{return ((d.j ) * (size)+3*padding);})
-                        .attr("class", "xaxistext")
-                        .text(d=>{if (d.j === (traits.length - 1)) return d.x})
-                        .attr("font-size", 3* textsize + "px")
-                    svg.selectAll(".xaxistext").exit().remove();
-                }
-                //yaxis
-                {
-                svg.selectAll(".y.axis")
-                    .data(halfcross(traits, traits))
-                    .enter().append("g")
-                    .attr("class", "y axis")
-                    .attr("font-size", textsize + "px")
-                    .attr("transform", function (d) {
 
-                        return "translate(" + (( d.i ) * (size)+padding*5/2) + "," + ((d.j - 1) * (size )+padding*2) + ")";
-                    })
-                    .each(function (d, i) {
-                        if (d.i === 0) {
-                            yAxis.tickValues(domainByTrait[d.y]);
-                            y.domain(domainByTrait[d.y]);
-                            d3.select(this).call(yAxis);
+                        function createplt(point, context, r, px, py) {
+
+                            let cx = x(point[px]);
+                            let cy = y(point[py]);
+                            let cl = colorScale(point[ztrait]);
+                            //console.log(colorScale(cx));
+
+                            context.fillStyle = cl;
+                            context.beginPath();
+                            context.arc(cx, cy, r, 0, 2 * Math.PI);
+                            context.fill();
+                            //ctx.fillRect(cx,cy,cx+r,cy+r)
                         }
-                    });
 
-                    svg.selectAll(".y.axis").exit().remove();
-
-                    svg.selectAll(".yaxistext")
-                        .data(halfcross(traits, traits))//.slice(0,traits.length-1))
-                        .enter().append("text")
-                        .attr("x", (d)=>{return (-(d.j) * size +padding);})//-padding)
-                        .attr("y", (d)=>{return (2*padding);})
-                        .attr("class", "yaxistext")
-                        .text(d=>{ if (d.i === 0) return d.y})
-                        .attr("font-size", 3* textsize + "px")
-                        .attr("transform", "rotate(-90)");
-
-                    svg.selectAll(".yaxistext").exit().remove();
-
-                }
-                svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
-
-                let cell = svg.selectAll(".cell")
-                    .data(halfcross(traits, traits))
-                    .enter().append("g")//.style("z-index", 4)
-                    .attr("class", "cell")
-                    .attr("transform", function (d) {
-                        //console.log(d);
-                        return "translate(" + (( d.i ) * (size)+padding*5/2) + "," + ((d.j - 1) * (size)+padding*2) + ")";
-                    });
-                /*
-                    .each(plot);
+                        //}
 
 
-                function plot(p, i) {
-                    //console.log(i)
-                    let cell = d3.select(this);
+                        let svg = newplot.append("svg")
+                            .attr("width", (size * (n - 1) + 4 * padding))
+                            .attr("height", (size * (n - 1) + 4 * padding))//size * n + padding)
+                            //.append("g")
+                            .attr("transform", "translate(" + padding + "," + 0 + ")");
 
-                    x.domain(domainByTrait[p.x]);
-                    y.domain(domainByTrait[p.y]);
+                        //Header
+                        {
+                            svg.selectAll(".plotlabel")
+                                .data([0])
+                                .enter().append("text")
+                                .attr("class", "plotlabel")
+                                .attr("x", (size * (n - 1) / 3))
+                                .attr("y", padding)
+                                .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
+                                .attr("font-weight", "bold")
+                                .attr("font-size", 3 * textsize + "px");
+                            svg.selectAll(".plotlabel").exit().remove();
+                        }
 
-                    cell.append("rect")
-                        .attr("class", "frame")
-                        .attr("x", 0)
-                        .attr("y", 0)
-                        .attr("width", size - padding)
-                        .attr("height", size - padding);
+                        //axis
+                        {
+                            svg.selectAll(".x.axis")
+                                .data(halfcross(traits, traits))
+                                .enter().append("g")
+                                .attr("class", "x axis")
+                                .attr("font-size", textsize + "px")
+                                .attr("transform", function (d) {
+                                    return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j ) * (size) + padding) + ")";
+                                })
+                                .each(function (d) {
 
-                    if(self._svg === true)
-                    {
-                    cell.selectAll("circle")
-                        .data(dataind)
-                        .enter().append("circle")
-                        .attr("cx", function (d) { //console.log(d);
-                            return x(d[p.x]);
-                        })
-                        .attr("cy", function (d) {
-                            return y(d[p.y]);
-                        })
-                        .attr("r", height / 60)
-                        .style("fill", function (d) {
+                                    if (d.j === (traits.length - 1)) {
 
-                            return colorScale(d[ztrait]);
-                        });
-                    }
+                                        x.domain(domainByTrait[d.x]);
+                                        xAxis.tickValues(domainByTrait[d.x]);
+                                        d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate(" + (-padding) + "," + padding * 2 + ") rotate(-90)");
+                                    }
+                                });
+                            svg.selectAll(".x.axis").exit().remove();
+                            //console.log(halfcross(traits, traits));
+                            svg.selectAll(".xaxistext")
+                                .data(halfcross(traits, traits))//.slice(0,traits.length-1))
+                                .enter().append("text")
+                                .attr("x", (d) => {
+                                    return (( d.i ) * (size) + padding * 3 / 2 + size / 3);
+                                })//-padding)
+                                .attr("y", (d) => {
+                                    return ((d.j ) * (size) + 3 * padding);
+                                })
+                                .attr("class", "xaxistext")
+                                .text(d => {
+                                    if (d.j === (traits.length - 1)) return d.x
+                                })
+                                .attr("font-size", 3 * textsize + "px")
+                            svg.selectAll(".xaxistext").exit().remove();
+                        }
+                        //yaxis
+                        {
+                            svg.selectAll(".y.axis")
+                                .data(halfcross(traits, traits))
+                                .enter().append("g")
+                                .attr("class", "y axis")
+                                .attr("font-size", textsize + "px")
+                                .attr("transform", function (d) {
 
-                    // Xlable
+                                    return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j - 1) * (size ) + padding * 2) + ")";
+                                })
+                                .each(function (d, i) {
+                                    if (d.i === 0) {
+                                        yAxis.tickValues(domainByTrait[d.y]);
+                                        y.domain(domainByTrait[d.y]);
+                                        d3.select(this).call(yAxis);
+                                    }
+                                });
 
-                    cell.append("text")
-                        .attr("x", size / 3)
-                        .attr("y", size + 10)
-                        //.attr("dy", ".71em")
-                        .text(function (d) {
-                            if (d.j === (traits.length - 1)) {
-                                return d.x;
+                            svg.selectAll(".y.axis").exit().remove();
+
+                            svg.selectAll(".yaxistext")
+                                .data(halfcross(traits, traits))//.slice(0,traits.length-1))
+                                .enter().append("text")
+                                .attr("x", (d) => {
+                                    return (-(d.j) * size + padding);
+                                })//-padding)
+                                .attr("y", (d) => {
+                                    return (2 * padding);
+                                })
+                                .attr("class", "yaxistext")
+                                .text(d => {
+                                    if (d.i === 0) return d.y
+                                })
+                                .attr("font-size", 3 * textsize + "px")
+                                .attr("transform", "rotate(-90)");
+
+                            svg.selectAll(".yaxistext").exit().remove();
+
+                        }
+                        svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
+
+                        let cell = svg.selectAll(".cell")
+                            .data(halfcross(traits, traits))
+                            .enter().append("g")//.style("z-index", 4)
+                            .attr("class", "cell")
+                            .attr("transform", function (d) {
+                                //console.log(d);
+                                return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j - 1) * (size) + padding * 2) + ")";
+                            });
+                        /*
+                            .each(plot);
+
+
+                        function plot(p, i) {
+                            //console.log(i)
+                            let cell = d3.select(this);
+
+                            x.domain(domainByTrait[p.x]);
+                            y.domain(domainByTrait[p.y]);
+
+                            cell.append("rect")
+                                .attr("class", "frame")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("width", size - padding)
+                                .attr("height", size - padding);
+
+                            if(self._svg === true)
+                            {
+                            cell.selectAll("circle")
+                                .data(dataind)
+                                .enter().append("circle")
+                                .attr("cx", function (d) { //console.log(d);
+                                    return x(d[p.x]);
+                                })
+                                .attr("cy", function (d) {
+                                    return y(d[p.y]);
+                                })
+                                .attr("r", height / 60)
+                                .style("fill", function (d) {
+
+                                    return colorScale(d[ztrait]);
+                                });
                             }
-                        })
-                        .attr("font-size", 2 * textsize + "px");
 
-                    // Ylable
+                            // Xlable
 
-                    cell.append("text")
+                            cell.append("text")
+                                .attr("x", size / 3)
+                                .attr("y", size + 10)
+                                //.attr("dy", ".71em")
+                                .text(function (d) {
+                                    if (d.j === (traits.length - 1)) {
+                                        return d.x;
+                                    }
+                                })
+                                .attr("font-size", 2 * textsize + "px");
 
-                        .attr("x", -size * 2 / 3)//-padding)
-                        .attr("y", -padding)
-                        .attr("dy", ".71em").attr("transform", "rotate(-90)")
-                        .text(function (d) {
-                            if (d.i === 0) {
-                                return d.y;
+                            // Ylable
+
+                            cell.append("text")
+
+                                .attr("x", -size * 2 / 3)//-padding)
+                                .attr("y", -padding)
+                                .attr("dy", ".71em").attr("transform", "rotate(-90)")
+                                .text(function (d) {
+                                    if (d.i === 0) {
+                                        return d.y;
+                                    }
+                                })
+                                .attr("font-size", 2 * textsize + "px");
+
+
+
+                            .attr("transform", function (d) {
+                                console.log(d);
+                            //console.log(d, ( d.i ) * (size+padding),(d.j-1) * (size+padding));
+                            //return "translate(" + (n - i - 1) * halfcross(traits, traits) + ",0)";
+                            return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
+                        });
+
+                        }
+                        */
+                        let brush = myBrush()
+                            .on("start", brushstart)
+                            .on("brush", brushmove)
+                            .on("end", brushend)
+                            .extent([[-padding / 4, -padding / 4], [(size - padding + padding / 4), (size - padding + padding / 4)]]);
+
+                        let brushind = self._brushNum;
+                        let selectind = self._selected;
+
+                        cell.call(brush);
+                        //let brushes = [];
+                        let brushCell;
+
+                        // Clear the previously-active brush, if any.
+                        function brushstart(p) {
+                            if (brushCell !== this) {
+                                d3.select(brushCell).call(brush.move, null);
+                                brushCell = this;
+                                //x.domain(domainByTrait[p.x]);
+                                //y.domain(domainByTrait[p.y]);
                             }
+                        }
+
+                        // Highlight the selected circles.
+                        function brushmove(p) {
+                            let e = d3.brushSelection(this);
+                            let mypad = padding / 4;
+                            x.domain(domainByTrait[p.x]);
+                            y.domain(domainByTrait[p.y]);
+
+                            let sel_ind = getindex(e, dataind, p.x, p.y, x, y, mypad);
+                            cleardraw(ctx, size * n, padding, n, size * n);
+
+                            drawwithind2(dataind, ctx, height / 75, x, colorScale, [ztrait, halfcross(traits, traits)], sel_ind, size, size, padding, domainByTrait);
+
+                            /*
+                            svg.selectAll("circle").classed("hidden", function (d) {
+                                return !e
+                                    ? false
+                                    : (
+                                        e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                        || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                                    );
+                            });
+                            */
+
+                            /*
+                            if (brushes.length!=0) {
+                                //console.log('visible',svg.selectAll('#visible'))
+                                svg.selectAll("#visible").classed("hidden", function (d) {
+                                    return !e
+                                        ? false
+                                        : (
+                                            e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                            || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                                        );
+                                });
+                            }
+                            else{
+                                svg.selectAll("circle").classed("hidden", function (d) {
+                                    return !e
+                                        ? false
+                                        : (
+                                            e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                            || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                                        );
+                                });
+                            }
+
+                            */
+                        }
+
+                        // If the brush is empty, select all circles.
+                        function brushend(p) {
+                            let e = d3.brushSelection(this);
+                            //this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                            let mypad = padding / 4;
+                            x.domain(domainByTrait[p.x]);
+                            y.domain(domainByTrait[p.y]);
+
+                            let sel_ind = getindex(e, dataind, p.x, p.y, x, y, mypad);
+                            cleardraw(ctx, size * n, padding, n, n * size);
+
+                            drawwithind2(dataind, ctx, height / 75, x, colorScale, [ztrait, halfcross(traits, traits)], sel_ind, size, size, padding, domainByTrait);
+                            brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                            selectind.index = sel_ind;
+                        }
+
+                        /*
+                        svg.append("text")
+                            .attr("x", size * n / 3 -  padding)
+                            .attr("y", 0)
+                            .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
+                            .attr("font-weight", "bold")
+                            .attr("font-size", 2 * textsize + "px");
+                        */
+
+                        svg.on("mouseover", (cursvg) => {
+                            let ndtoremove = self._stored.filter(d => d.id === cursvg)[0];
+                            addbutton(svg, (size - padding) * n, padding / 4, padding, "red", "deletebutton", [1]);
+
+                            d3.selectAll(".deletebutton").on("click", () => {
+                                newplot.remove();
+                                pubsub.publish("RMNode", ndtoremove);
+                                self._stored = self._stored.filter(d => d.id != cursvg);//.splice(iii,1);
+                                delete self._totaldata[cursvg];
+                            });
+                            pubsub.publish("HighlightNode", ndtoremove)
                         })
-                        .attr("font-size", 2 * textsize + "px");
 
+                            .on("mouseleave", (cursvg) => {
+                                let ndtohlight = self._stored.filter(d => d.id === cursvg)[0];
 
-
-                    .attr("transform", function (d) {
-                        console.log(d);
-                    //console.log(d, ( d.i ) * (size+padding),(d.j-1) * (size+padding));
-                    //return "translate(" + (n - i - 1) * halfcross(traits, traits) + ",0)";
-                    return "translate(" + ( d.i ) * (size+padding) + "," + ((d.j-1) * (size+padding)+size) + ")";
-                });
-
-                }
-                */
-                let brush = myBrush()
-                    .on("start", brushstart)
-                    .on("brush", brushmove)
-                    .on("end", brushend)
-                    .extent([[-padding / 4, -padding / 4], [(size-padding+padding/4), (size-padding+padding/4)]]);
-
-                let brushind = self._brushNum;
-                let selectind = self._selected;
-
-                cell.call(brush);
-                //let brushes = [];
-                let brushCell;
-
-                // Clear the previously-active brush, if any.
-                function brushstart(p) {
-                    if (brushCell !== this) {
-                        d3.select(brushCell).call(brush.move, null);
-                        brushCell = this;
-                        //x.domain(domainByTrait[p.x]);
-                        //y.domain(domainByTrait[p.y]);
-                    }
-                }
-
-                // Highlight the selected circles.
-                function brushmove(p) {
-                    let e = d3.brushSelection(this);
-                    let mypad = padding/4;
-                    x.domain(domainByTrait[p.x]);
-                    y.domain(domainByTrait[p.y]);
-
-                    let sel_ind = getindex(e,dataind,p.x,p.y,x,y,mypad);
-                    cleardraw(ctx,size*n,padding,n,size*n);
-
-                    drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
-
-                    /*
-                    svg.selectAll("circle").classed("hidden", function (d) {
-                        return !e
-                            ? false
-                            : (
-                                e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
-                                || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
-                            );
-                    });
-                    */
-
-                    /*
-                    if (brushes.length!=0) {
-                        //console.log('visible',svg.selectAll('#visible'))
-                        svg.selectAll("#visible").classed("hidden", function (d) {
-                            return !e
-                                ? false
-                                : (
-                                    e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
-                                    || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
-                                );
-                        });
-                    }
-                    else{
-                        svg.selectAll("circle").classed("hidden", function (d) {
-                            return !e
-                                ? false
-                                : (
-                                    e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
-                                    || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
-                                );
-                        });
+                                svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                                pubsub.publish("UnHighlightNode", ndtohlight);
+                            });
                     }
 
-                    */
+                    else {
+
+                        let svg = newplot.append("svg")
+                            .attr("width", (size * (n - 1) + 4 * padding))
+                            .attr("height", (size * (n - 1) + 4 * padding))//size * n + padding)
+                            .attr("transform", "translate(" + padding + "," + 0 + ")");
+
+                        let cell = svg.selectAll(".cell")
+                            .data(halfcross(traits, traits))
+                            .enter().append("g")//.style("z-index", 4)
+                            .attr("class", "cell")
+                            .attr("transform", function (d) {
+                                //console.log(d);
+                                return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j - 1) * (size) + padding * 2) + ")";
+                            }).each(plot);
+
+                        function plot(p, di) {
+                            let cell = d3.select(this);
+
+                            x.domain(domainByTrait[p.x]);
+                            y.domain(domainByTrait[p.y]);
+
+                            cell.append("rect")
+                                .attr("class", "frame")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("width", size - padding)
+                                .attr("height", size - padding);
+
+                            cell.selectAll("circle")
+                                .data(dataind)
+                                .enter().append("circle")
+                                .attr("cx", function (d) {
+                                    return x(d[p.x]);
+                                })
+                                .attr("cy", function (d) {
+                                    return y(d[p.y]);
+                                })
+                                .attr("r", width / 200)
+                                .style("fill", function (d) {
+                                    return colorScale(d[ztrait]);
+                                });
+
+                        }
+
+                        //Header
+                        {
+                            svg.selectAll(".plotlabel")
+                                .data([0])
+                                .enter().append("text")
+                                .attr("class", "plotlabel")
+                                .attr("x", (size * (n - 1) / 3))
+                                .attr("y", padding)
+                                .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
+                                .attr("font-weight", "bold")
+                                .attr("font-size", 3 * textsize + "px");
+                            svg.selectAll(".plotlabel").exit().remove();
+                        }
+
+                        //axis
+                        {
+                            svg.selectAll(".x.axis")
+                                .data(halfcross(traits, traits))
+                                .enter().append("g")
+                                .attr("class", "x axis")
+                                .attr("font-size", textsize + "px")
+                                .attr("transform", function (d) {
+                                    return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j ) * (size) + padding) + ")";
+                                })
+                                .each(function (d) {
+
+                                    if (d.j === (traits.length - 1)) {
+
+                                        x.domain(domainByTrait[d.x]);
+                                        xAxis.tickValues(domainByTrait[d.x]);
+                                        d3.select(this).call(xAxis).selectAll("text").attr("transform", "translate(" + (-padding) + "," + padding * 2 + ") rotate(-90)");
+                                    }
+                                });
+                            svg.selectAll(".x.axis").exit().remove();
+                            //console.log(halfcross(traits, traits));
+                            svg.selectAll(".xaxistext")
+                                .data(halfcross(traits, traits))//.slice(0,traits.length-1))
+                                .enter().append("text")
+                                .attr("x", (d) => {
+                                    return (( d.i ) * (size) + padding * 3 / 2 + size / 3);
+                                })//-padding)
+                                .attr("y", (d) => {
+                                    return ((d.j ) * (size) + 3 * padding);
+                                })
+                                .attr("class", "xaxistext")
+                                .text(d => {
+                                    if (d.j === (traits.length - 1)) return d.x
+                                })
+                                .attr("font-size", 3 * textsize + "px")
+                            svg.selectAll(".xaxistext").exit().remove();
+                        }
+                        //yaxis
+                        {
+                            svg.selectAll(".y.axis")
+                                .data(halfcross(traits, traits))
+                                .enter().append("g")
+                                .attr("class", "y axis")
+                                .attr("font-size", textsize + "px")
+                                .attr("transform", function (d) {
+
+                                    return "translate(" + (( d.i ) * (size) + padding * 5 / 2) + "," + ((d.j - 1) * (size ) + padding * 2) + ")";
+                                })
+                                .each(function (d, i) {
+                                    if (d.i === 0) {
+                                        yAxis.tickValues(domainByTrait[d.y]);
+                                        y.domain(domainByTrait[d.y]);
+                                        d3.select(this).call(yAxis);
+                                    }
+                                });
+
+                            svg.selectAll(".y.axis").exit().remove();
+
+                            svg.selectAll(".yaxistext")
+                                .data(halfcross(traits, traits))//.slice(0,traits.length-1))
+                                .enter().append("text")
+                                .attr("x", (d) => {
+                                    return (-(d.j) * size + padding);
+                                })//-padding)
+                                .attr("y", (d) => {
+                                    return (2 * padding);
+                                })
+                                .attr("class", "yaxistext")
+                                .text(d => {
+                                    if (d.i === 0) return d.y
+                                })
+                                .attr("font-size", 3 * textsize + "px")
+                                .attr("transform", "rotate(-90)");
+
+                            svg.selectAll(".yaxistext").exit().remove();
+
+                        }
+
+                        svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
+
+                        let brush = myBrush()
+                            .on("start", brushstart)
+                            .on("brush", brushmove)
+                            .on("end", brushend)
+                            .extent([[-padding / 4, -padding / 4], [(size - padding + padding / 4), (size - padding + padding / 4)]]);
+
+                        let brushes = [];
+
+                        let brushCell;
+
+                        let brushind = self._brushNum;
+                        let selectind = self._selected;
+
+                        cell.call(brush, brushes);
+                        function brushstart(p) {
+
+                            if (brushCell != this) {
+                                d3.select(brushCell).call(brush.move, null);
+                                brushCell = this;
+                                x.domain(domainByTrait[p.x]);
+                                y.domain(domainByTrait[p.y]);
+                            }
+                        }
+
+                        // Highlight the selected circles.
+                        function brushmove(p) {
+                            x.domain(domainByTrait[p.x]);
+                            y.domain(domainByTrait[p.y]);
+                            let e = d3.brushSelection(this);
+                            svg.selectAll("circle").classed("hidden", function (d,i) {
+                                return !e
+                                    ? false
+                                    : (
+                                        e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                                        || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                                    );
+                            });
+                        }
+                        // If the brush is empty, select all circles.
+                        function brushend(p) {
+                            let e = d3.brushSelection(this);
+                            if (e === null) {
+                                svg.selectAll(".hidden").classed("hidden", false)
+                                //brushes = [];
+                            }
+                            let allhlt = svg.selectAll(".hidden").data();
+                            let hlt = new Set(allhlt.slice(0,(allhlt.length/(halfcross(traits, traits).length))).map(d=>d.index));
+                            let allind = cur_node.data._total;
+                            let inset = [...allind].filter((dd) => {return !hlt.has(dd)});
+                            brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                            selectind.index = inset;
+                        }
+
+                        svg.on("mouseover", (cursvg) => {
+                            let ndtoremove = self._stored.filter(d => d.id === cursvg)[0];
+                            addbutton(svg, ((n-1)*size), padding / 4, padding, "red", "deletebutton", [1]);
+
+                            d3.selectAll(".deletebutton").on("click", () => {
+                                newplot.remove();
+                                pubsub.publish("RMNode", ndtoremove);
+                                self._stored = self._stored.filter(d => d.id != cursvg);//.splice(iii,1);
+                                delete self._totaldata[cursvg];
+                            });
+                            pubsub.publish("HighlightNode", ndtoremove)
+                        })
+
+                            .on("mouseleave", (cursvg) => {
+                                let ndtohlight = self._stored.filter(d => d.id === cursvg)[0];
+                                svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                                pubsub.publish("UnHighlightNode", ndtohlight);
+                            });
+                    }
                 }
-
-                // If the brush is empty, select all circles.
-                function brushend(p) {
-                    let e = d3.brushSelection(this);
-                    //this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
-                    let mypad = padding/4;
-                    x.domain(domainByTrait[p.x]);
-                    y.domain(domainByTrait[p.y]);
-
-                    let sel_ind = getindex(e,dataind,p.x,p.y,x,y,mypad);
-                    cleardraw(ctx,size*n,padding,n,n*size);
-
-                    drawwithind2(dataind,ctx, 1, x, colorScale,[ztrait, halfcross(traits, traits)],sel_ind,size,size,padding,domainByTrait);
-                    brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
-                    selectind.index = sel_ind;
-                }
-
-                //console.log(this);
-                /*
-                svg.append("text")
-                    .attr("x", size * n / 3 -  padding)
-                    .attr("y", 0)
-                    .text("id: "+"("+cur_node.uid+","+cur_node.depth+")  "+" Size: "+cur_node.data._size)
-                    .attr("font-weight", "bold")
-                    .attr("font-size", 2 * textsize + "px");
-                */
-
-                svg.on("mouseover", (cursvg)=>{
-                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
-                    addbutton(svg, (size-padding)*n, padding/4, padding, "red", "deletebutton",[1]);
-
-                    d3.selectAll(".deletebutton").on("click",()=>{
-                        newplot.remove();
-                        pubsub.publish("RMNode",ndtoremove);
-                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
-                        delete self._totaldata[cursvg];
-                    });
-                    pubsub.publish("HighlightNode",ndtoremove)})
-
-                    .on("mouseleave", (cursvg)=>{
-                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
-
-                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",ndtohlight);
-                    });
-            }
 
         }
 
     }
     multiscatter(newid) {
-        //console.log("NEWID", newid);
-        //console.log("totaldata", this._totaldata);
+
         for (let iii = 0; iii<newid.length; iii++){
             drawscatter(iii,this)
         }
@@ -809,6 +1034,7 @@ export class Selected {
 
                 x.domain(rangeByTrait);
 
+                if (self._canvas === true) {
 
                     let ctx = newplot.append("canvas")
                         .attr("width", width + 3 * padding)
@@ -818,160 +1044,525 @@ export class Selected {
                     ctx.translate(7 / 2 * padding, 2 * padding);
                     ctx.save();
 
-                if (pxs != undefined) {
-                    for(let di = 0;di<n;di++) {
-                        y.domain(domainByTrait[traits[di]])
-                        let area = d3.area()
-                            .x0((d, i) => {
-                                return x(regy[i]);
-                            })
-                            .y0((d, i) => {
-                                return y(pxs[i][di] + std[i][di] / 2);
-                            })
-                            .x1((d, i) => {
-                                return x(regy[i]);
-                            })
-                            .y1((d, i) => {
-                                return y(pxs[i][di] - std[i][di] / 2);
-                            })
-                            .context(ctx);
+                    if (pxs != undefined) {
+                        for (let di = 0; di < n; di++) {
+                            y.domain(domainByTrait[traits[di]])
+                            let area = d3.area()
+                                .x0((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y0((d, i) => {
+                                    return y(pxs[i][di] + std[i][di] / 2);
+                                })
+                                .x1((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y1((d, i) => {
+                                    return y(pxs[i][di] - std[i][di] / 2);
+                                })
+                                .context(ctx);
 
-                        ctx.beginPath();
-                        area(regy);
-                        ctx.lineWidth = 1.5;
-                        ctx.fillStyle = "#f1f1f1";
-                        ctx.fill();
-                        ctx.translate(0,size)
-                        /*
-                        cell.insert("path")
-                            .datum(regy).attr("fill", "#f1f1f1")
-                            .attr("stroke", "#f1f1f1")
-                            .attr("stroke-linejoin", "round")
-                            .attr("stroke-linecap", "round")
-                            .attr("stroke-width", 1)
-                            .attr("stroke-opacity", 0.2)
-                            .attr("d", area)
-                        */
+                            ctx.beginPath();
+                            area(regy);
+                            ctx.lineWidth = 1.5;
+                            ctx.fillStyle = "#f1f1f1";
+                            ctx.fill();
+                            ctx.translate(0, size)
+                            /*
+                            cell.insert("path")
+                                .datum(regy).attr("fill", "#f1f1f1")
+                                .attr("stroke", "#f1f1f1")
+                                .attr("stroke-linejoin", "round")
+                                .attr("stroke-linecap", "round")
+                                .attr("stroke-width", 1)
+                                .attr("stroke-opacity", 0.2)
+                                .attr("d", area)
+                            */
+                        }
                     }
-                }
-                ctx.restore();
-                //ctx.translate(7 / 2 * padding, 2 * padding);
-                ctx.save();
+                    ctx.restore();
+                    //ctx.translate(7 / 2 * padding, 2 * padding);
+                    ctx.save();
                     for (let index = 0; index < n; index++) {
                         ctx.rect(0, 0, width - padding, size - padding);
-                        ctx.strokeStyle = "#A9A9A9";
-                        ctx.lineWidth = 0.5;
+                        ctx.strokeStyle = "#696969";//"#A9A9A9";
+                        ctx.lineWidth = 0.8;
                         ctx.stroke();
                         y.domain(domainByTrait[traits[index]]);
                         dataind.forEach(d => {
-                            drawpt(d, ctx, 1, x, y, colorScale, [ztrait, traits[index], ztrait])
+                            drawpt(d, ctx, height / 75, x, y, colorScale, [ztrait, traits[index], ztrait])
                         });
                         ctx.translate(0, size);
 
                     }
-                ctx.restore();
-                ctx.save();
-                if (pxs != undefined) {
-                    for(let di = 0;di<n;di++) {
-                        y.domain(domainByTrait[traits[di]])
-                        let line = d3.line()
-                            .x((d, i) => {
-                                return x(regy[i]);
-                            })
-                            .y((d, i) => {
-                                return y(pxs[i][di]);
-                            })
-                            .context(ctx);
+                    ctx.restore();
+                    ctx.save();
+                    if (pxs != undefined) {
+                        for (let di = 0; di < n; di++) {
+                            y.domain(domainByTrait[traits[di]])
+                            let line = d3.line()
+                                .x((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y((d, i) => {
+                                    return y(pxs[i][di]);
+                                })
+                                .context(ctx);
 
-                        ctx.beginPath();
-                        line(regy);
-                        ctx.lineWidth = 1.5;
-                        ctx.strokeStyle = "black";
-                        ctx.stroke();
-                        ctx.translate(0,size)
+                            ctx.beginPath();
+                            line(regy);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = "black";
+                            ctx.stroke();
+                            ctx.translate(0, size)
+                        }
+
                     }
 
+                    let svg = newplot.append("svg")
+                        .attr("width", width + 3 * padding)
+                        .attr("height", size * n + 3 * padding)
+                        .attr("transform", "translate(" + padding + "," + 0 + ")");
+
+
+                    let cell = svg.selectAll(".cell")
+                        .data(traits)
+                        .enter().append("g")//.style("z-index", 4)
+                        //.attr("width", width - padding)
+                        //.attr("height", size - padding)
+                        .attr("class", "cell")
+                        .attr("transform", function (d, i) {
+                            return "translate(" + 5 / 2 * padding + "," + ((i * size) + 2 * padding) + ")";
+                        });
+
+
+                    let brush = myBrush()
+                        .on("start", brushstart)
+                        .on("brush", brushmove)
+                        .on("end", brushend)
+                        .extent([[-padding / 4, -padding / 4], [(width - padding + padding / 4), (size - padding + padding / 4)]]);
+                    //.extent([padding/4,padding/4],[width-padding+padding/2, size-padding+padding/2])
+                    //let brushes = [];
+
+                    let brushCell;
+
+                    let brushind = self._brushNum;
+                    let selectind = self._selected;
+
+                    cell.call(brush);
+
+                    function brushstart(p) {
+
+                        if (brushCell != this) {
+                            d3.select(brushCell).call(brush.move, null);
+                            brushCell = this;//
+                            x.domain(rangeByTrait);
+                            y.domain(domainByTrait[p]);
+                        }
+                    }
+
+                    // Highlight the selected circles.
+                    function brushmove(p) {
+                        let e = d3.brushSelection(this);
+
+                        let mypad = padding / 4;
+                        y.domain(domainByTrait[p]);
+                        let sel_ind = getindex(e, dataind, ztrait, p, x, y, mypad);
+                        //console.log("During Draw",sel_ind);
+                        cleardraw(ctx, size * n, padding, n, width);
+
+                        if (pxs != undefined) {
+                            ctx.restore();
+                            ctx.save();
+                            for (let di = 0; di < n; di++) {
+                                y.domain(domainByTrait[traits[di]])
+                                let area = d3.area()
+                                    .x0((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y0((d, i) => {
+                                        return y(pxs[i][di] + std[i][di] / 2);
+                                    })
+                                    .x1((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y1((d, i) => {
+                                        return y(pxs[i][di] - std[i][di] / 2);
+                                    })
+                                    .context(ctx);
+
+                                ctx.beginPath();
+                                area(regy);
+                                ctx.lineWidth = 1.5;
+                                ctx.fillStyle = "#f1f1f1";
+                                ctx.fill();
+                                ctx.translate(0, size)
+                            }
+
+                        }
+                        ctx.restore();
+                        ctx.save();
+                        drawwithind(dataind, ctx, height / 75, x, colorScale, [ztrait, traits], sel_ind, width, size, padding, domainByTrait);
+                        if (pxs != undefined) {
+                            ctx.restore();
+                            ctx.save();
+                            for (let di = 0; di < n; di++) {
+                                y.domain(domainByTrait[traits[di]])
+                                let line = d3.line()
+                                    .x((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y((d, i) => {
+                                        return y(pxs[i][di]);
+                                    })
+                                    .context(ctx);
+
+                                ctx.beginPath();
+                                line(regy);
+                                ctx.lineWidth = 1;
+                                ctx.strokeStyle = "black";
+                                ctx.stroke();
+                                ctx.translate(0, size)
+                            }
+
+                        }
+
+                    }
+
+                    function brushend(p) {
+                        let mypad = padding / 4;
+                        let e = d3.brushSelection(this);
+                        //console.log(e);
+                        //brushes.push(e);
+                        cleardraw(ctx, size * n, padding, n, width);
+                        y.domain(domainByTrait[p]);
+                        let sel_ind = getindex(e, dataind, ztrait, p, x, y, mypad);
+                        //console.log(sel_ind);
+                        if (pxs != undefined) {
+                            ctx.restore();
+                            ctx.save();
+                            for (let di = 0; di < n; di++) {
+                                y.domain(domainByTrait[traits[di]])
+                                let area = d3.area()
+                                    .x0((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y0((d, i) => {
+                                        return y(pxs[i][di] + std[i][di] / 2);
+                                    })
+                                    .x1((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y1((d, i) => {
+                                        return y(pxs[i][di] - std[i][di] / 2);
+                                    })
+                                    .context(ctx);
+
+                                ctx.beginPath();
+                                area(regy);
+                                ctx.lineWidth = 1.5;
+                                ctx.fillStyle = "#f1f1f1";
+                                ctx.fill();
+                                ctx.translate(0, size)
+                            }
+
+                        }
+                        ctx.restore();
+                        ctx.save();
+                        drawwithind(dataind, ctx, height / 75, x, colorScale, [ztrait, traits], sel_ind, width, size, padding, domainByTrait);
+
+                        if (pxs != undefined) {
+                            ctx.restore();
+                            ctx.save();
+                            for (let di = 0; di < n; di++) {
+                                y.domain(domainByTrait[traits[di]])
+                                let line = d3.line()
+                                    .x((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y((d, i) => {
+                                        return y(pxs[i][di]);
+                                    })
+                                    .context(ctx);
+
+                                ctx.beginPath();
+                                line(regy);
+                                ctx.lineWidth = 1;
+                                ctx.strokeStyle = "black";
+                                ctx.stroke();
+                                ctx.translate(0, size)
+                            }
+
+
+                        }
+                        brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                        selectind.index = sel_ind;
+
+                    }
+
+                    /*    .each(plot);
+
+                    //function plot(p, di) {
+                        //let cell = d3.select(this);
+
+                        //x.domain(rangeByTrait);
+                        //y.domain(domainByTrait[p]);
+                        //console.log(width-padding)
+
+                        cell.append("rect")
+                            .attr("class", "frame")
+                            .attr("x", 0)
+                            .attr("y", 0)
+                            .attr("width", (width - padding))
+                            .attr("height", (size - padding));
+
+
+                        if (pxs != undefined) {
+                            let area = d3.area()
+                                .x0((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y0((d, i) => {
+                                    return y(pxs[i][di] + std[i][di] / 2);
+                                })
+                                .x1((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y1((d, i) => {
+                                    return y(pxs[i][di] - std[i][di] / 2);
+                                });
+
+                            cell.insert("path")
+                                .datum(regy).attr("fill", "#f1f1f1")
+                                .attr("stroke", "#f1f1f1")
+                                .attr("stroke-linejoin", "round")
+                                .attr("stroke-linecap", "round")
+                                .attr("stroke-width", 1)
+                                .attr("stroke-opacity", 0.2)
+                                .attr("d", area);
+
+                        }
+
+                        //if (self._svg === true){
+
+                            cell.selectAll("circle")
+                                .data(dataind)
+                                .enter().append("circle")
+                                .attr("cx", function (d) {
+                                    return x(d[ztrait]);
+                                })
+                                .attr("cy", function (d) {
+                                    return y(d[p]);
+
+                                })
+                                .attr("r", width / 200)
+                                .style("fill", function (d) {
+
+                                    return colorScale(d[ztrait]);
+                                });
+
+
+                            if (pxs != undefined) {
+
+                                let line = d3.line()
+                                    .x((d, i) => {
+                                        return x(regy[i]);
+                                    })
+                                    .y((d, i) => {
+                                        return y(pxs[i][di]);
+                                    });
+
+                                cell.append("path")
+                                    .datum(regy).attr("fill", "none")
+                                    .attr("stroke", "black")
+                                    .attr("stroke-linejoin", "round")
+                                    .attr("stroke-linecap", "round")
+                                    .attr("stroke-width", 1)
+                                    .attr("stroke-opacity", 0.8)
+                                    .attr("d", line);
+                            }
+
+
+                        //newplot.append("canvas")
+
+                        // If regression is turned on
+
+                   // }*/
+
+                    // Header
+                    {
+                        svg.selectAll(".plotlabel")
+                            .data([0])
+                            .enter().append("text")
+                            .attr("class", "plotlabel")
+                            .attr("x", width / 3 - padding)
+                            .attr("y", padding)
+                            .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
+                            .attr("font-weight", "bold")
+                            .attr("font-size", 3 * textsize + "px");
+                        svg.selectAll(".plotlabel").exit().remove();
+                    }
+                    // X AXIS
+                    {
+                        svg.selectAll(".x.axis")
+                            .data([ztrait])
+                            .enter().append("g")
+                            .attr("class", "x axis")//.attr("transform", "translate(" + padding + "," + padding + ")")
+                            .attr("font-size", textsize + "px")
+                            .attr("transform", function (d, i) {
+                                return "translate(" + (5 / 2 * padding) + "," + (n * size + padding) + ")";
+                            })
+                            .call(xAxis.tickValues(rangeByTrait));
+                        svg.selectAll(".x.axis").exit().remove();
+
+                        svg.selectAll(".xaxistext")
+                            .data([ztrait])//.slice(0,traits.length-1))
+                            .enter().append("text")
+                            .attr("x", (d, i) => {
+                                return (width / 2);
+                            })//-padding)
+                            .attr("y", (d, i) => {
+                                return (n * size + 2 * padding);
+                            })
+                            .attr("class", "xaxistext")
+                            .text(d => {
+                                return d
+                            })
+                            .attr("font-size", 3 * textsize + "px")
+                        //.attr("transform", "rotate(-90)");
+                        svg.selectAll(".xaxistext").exit().remove();
+                    }
+                    // Y AXIS
+                    {
+                        svg.selectAll(".y.axis")
+                            .data(traits)
+                            .enter().append("g")
+                            .attr("class", "y axis")
+                            .attr("font-size", textsize + "px")
+                            .attr("transform", function (d, i) {
+                                return "translate(" + (5 / 2 * padding) + "," + (i * size + 2 * padding) + ")";
+                            })
+                            .each(function (d) {
+                                y.domain(domainByTrait[d]);
+                                d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
+                            })
+
+                        svg.selectAll(".y.axis").exit().remove();
+
+                        svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
+
+                        svg.selectAll(".yaxistext")
+                            .data(traits)//.slice(0,traits.length-1))
+                            .enter().append("text")
+                            .attr("x", (d, i) => {
+                                return (-(i + 1) * size + padding);
+                            })//-padding)
+                            .attr("y", (d, i) => {
+                                return (2 * padding);
+                            })
+                            .attr("class", "yaxistext")
+                            .text(d => {
+                                return d
+                            })
+                            .attr("font-size", 3 * textsize + "px")
+                            .attr("transform", "rotate(-90)");
+                        svg.selectAll(".yaxistext").exit().remove();
+                    }
+
+
+                    svg.on("mouseover", (cursvg) => {
+                        let ndtoremove = self._stored.filter(d => d.id === cursvg)[0];
+                        addbutton(svg, width, padding / 4, padding, "red", "deletebutton", [1]);
+
+                        d3.selectAll(".deletebutton").on("click", () => {
+                            newplot.remove();
+                            pubsub.publish("RMNode", ndtoremove);
+                            self._stored = self._stored.filter(d => d.id != cursvg);//.splice(iii,1);
+                            delete self._totaldata[cursvg];
+                        });
+                        pubsub.publish("HighlightNode", ndtoremove)
+                    })
+
+                        .on("mouseleave", (cursvg) => {
+                            let ndtohlight = self._stored.filter(d => d.id === cursvg)[0];
+                            svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                            pubsub.publish("UnHighlightNode", ndtohlight);
+                        });
                 }
 
-                    //Clear Canvas and Redraw
+                else {
 
-                let svg = newplot.append("svg")
-                    .attr("width", width + 3 * padding)
-                    .attr("height", size * n + 3 * padding)
-                    //.append("g")
-                    .attr("transform", "translate(" + padding + "," + 0 + ")");
-
-
-                let cell = svg.selectAll(".cell")
-                    .data(traits)
-                    .enter().append("g")//.style("z-index", 4)
-                    //.attr("width", width - padding)
-                    //.attr("height", size - padding)
-                    .attr("class", "cell")
-                    .attr("transform", function (d, i) {
-                        return "translate("+5/2*padding+"," + ((i * size)+2*padding)+ ")";
-                    });
-                /*    .each(plot);
-
-                //function plot(p, di) {
-                    //let cell = d3.select(this);
-
-                    //x.domain(rangeByTrait);
-                    //y.domain(domainByTrait[p]);
-                    //console.log(width-padding)
-
-                    cell.append("rect")
-                        .attr("class", "frame")
-                        .attr("x", 0)
-                        .attr("y", 0)
-                        .attr("width", (width - padding))
-                        .attr("height", (size - padding));
+                    let svg = newplot.append("svg")
+                        .attr("width", width + 3 * padding)
+                        .attr("height", size * n + 3 * padding)
+                        .attr("transform", "translate(" + padding + "," + 0 + ")");
 
 
-                    if (pxs != undefined) {
-                        let area = d3.area()
-                            .x0((d, i) => {
-                                return x(regy[i]);
-                            })
-                            .y0((d, i) => {
-                                return y(pxs[i][di] + std[i][di] / 2);
-                            })
-                            .x1((d, i) => {
-                                return x(regy[i]);
-                            })
-                            .y1((d, i) => {
-                                return y(pxs[i][di] - std[i][di] / 2);
-                            });
+                    let cell = svg.selectAll(".cell")
+                        .data(traits)
+                        .enter().append("g")//.style("z-index", 4)
+                        //.attr("width", width - padding)
+                        //.attr("height", size - padding)
+                        .attr("class", "cell")
+                        .attr("transform", function (d, i) {
+                            return "translate(" + 5 / 2 * padding + "," + ((i * size) + 2 * padding) + ")";
+                        })
+                        .each(plot);
 
-                        cell.insert("path")
-                            .datum(regy).attr("fill", "#f1f1f1")
-                            .attr("stroke", "#f1f1f1")
-                            .attr("stroke-linejoin", "round")
-                            .attr("stroke-linecap", "round")
-                            .attr("stroke-width", 1)
-                            .attr("stroke-opacity", 0.2)
-                            .attr("d", area);
+                    function plot(p, di) {
+                        let cell = d3.select(this);
 
-                    }
+                        x.domain(rangeByTrait);
+                        y.domain(domainByTrait[p]);
 
-                    //if (self._svg === true){
+                        cell.append("rect")
+                            .attr("class", "frame")
+                            .attr("x", 0)
+                            .attr("y", 0)
+                            .attr("width", width - padding)
+                            .attr("height", size - padding);
 
-                        cell.selectAll("circle")
-                            .data(dataind)
-                            .enter().append("circle")
-                            .attr("cx", function (d) {
-                                return x(d[ztrait]);
-                            })
-                            .attr("cy", function (d) {
-                                return y(d[p]);
+                        if (pxs != undefined) {
+                            let area = d3.area()
+                                .x0((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y0((d, i) => {
+                                    return y(pxs[i][di] + std[i][di] / 2);
+                                })
+                                .x1((d, i) => {
+                                    return x(regy[i]);
+                                })
+                                .y1((d, i) => {
+                                    return y(pxs[i][di] - std[i][di] / 2);
+                                });
 
-                            })
-                            .attr("r", width / 200)
-                            .style("fill", function (d) {
 
-                                return colorScale(d[ztrait]);
-                            });
+                            cell.insert("path")
+                                .datum(regy).attr("fill", "#f1f1f1")
+                                .attr("stroke", "#f1f1f1")
+                                .attr("stroke-linejoin", "round")
+                                .attr("stroke-linecap", "round")
+                                .attr("stroke-width", 1)
+                                .attr("stroke-opacity", 0.3)
+                                .attr("d", area);
+                        }
 
+                            cell.selectAll("circle")
+                                .data(dataind)
+                                .enter().append("circle")
+                                .attr("cx", function (d) {
+                                    return x(d[ztrait]);
+                                })
+                                .attr("cy", function (d) {
+                                    return y(d[p]);
+
+                                })
+                                .attr("r", width / 200)
+                                .style("fill", function (d) {
+
+                                    return colorScale(d[ztrait]);
+                                });
 
                         if (pxs != undefined) {
 
@@ -989,269 +1580,175 @@ export class Selected {
                                 .attr("stroke-linejoin", "round")
                                 .attr("stroke-linecap", "round")
                                 .attr("stroke-width", 1)
-                                .attr("stroke-opacity", 0.8)
+                                .attr("stroke-opacity", 0.7)
                                 .attr("d", line);
+
                         }
 
 
-                    //newplot.append("canvas")
+                    }
 
-                    // If regression is turned on
+                    // Header
+                    {
+                        svg.selectAll(".plotlabel")
+                            .data([0])
+                            .enter().append("text")
+                            .attr("class", "plotlabel")
+                            .attr("x", width / 3 - padding)
+                            .attr("y", padding)
+                            .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
+                            .attr("font-weight", "bold")
+                            .attr("font-size", 3 * textsize + "px");
+                        svg.selectAll(".plotlabel").exit().remove();
+                    }
+                    // X AXIS
+                    {
+                        svg.selectAll(".x.axis")
+                            .data([ztrait])
+                            .enter().append("g")
+                            .attr("class", "x axis")//.attr("transform", "translate(" + padding + "," + padding + ")")
+                            .attr("font-size", textsize + "px")
+                            .attr("transform", function (d, i) {
+                                return "translate(" + (5 / 2 * padding) + "," + (n * size + padding) + ")";
+                            })
+                            .call(xAxis.tickValues(rangeByTrait));
+                        svg.selectAll(".x.axis").exit().remove();
 
-               // }*/
+                        svg.selectAll(".xaxistext")
+                            .data([ztrait])//.slice(0,traits.length-1))
+                            .enter().append("text")
+                            .attr("x", (d, i) => {
+                                return (width / 2);
+                            })//-padding)
+                            .attr("y", (d, i) => {
+                                return (n * size + 2 * padding);
+                            })
+                            .attr("class", "xaxistext")
+                            .text(d => {
+                                return d
+                            })
+                            .attr("font-size", 3 * textsize + "px")
+                        //.attr("transform", "rotate(-90)");
+                        svg.selectAll(".xaxistext").exit().remove();
+                    }
+                    // Y AXIS
+                    {
+                        svg.selectAll(".y.axis")
+                            .data(traits)
+                            .enter().append("g")
+                            .attr("class", "y axis")
+                            .attr("font-size", textsize + "px")
+                            .attr("transform", function (d, i) {
+                                return "translate(" + (5 / 2 * padding) + "," + (i * size + 2 * padding) + ")";
+                            })
+                            .each(function (d) {
+                                y.domain(domainByTrait[d]);
+                                d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
+                            })
 
-                // Header
-                {
-                svg.selectAll(".plotlabel")
-                    .data([0])
-                    .enter().append("text")
-                    .attr("class", "plotlabel")
-                    .attr("x", width / 3 - padding)
-                    .attr("y", padding)
-                    .text("id: " + "(" + cur_node.uid + "," + cur_node.depth + ")  " + " Size: " + cur_node.data._size)
-                    .attr("font-weight", "bold")
-                    .attr("font-size", 3 * textsize + "px");
-                svg.selectAll(".plotlabel").exit().remove();
-                }
-                // X AXIS
-                {
-                    svg.selectAll(".x.axis")
-                        .data([ztrait])
-                        .enter().append("g")
-                        .attr("class", "x axis")//.attr("transform", "translate(" + padding + "," + padding + ")")
-                        .attr("font-size", textsize + "px")
-                        .attr("transform", function (d, i) {
-                            return "translate(" + (5 / 2 * padding) + "," + (n * size + padding) + ")";
-                        })
-                        .call(xAxis.tickValues(rangeByTrait));
-                    svg.selectAll(".x.axis").exit().remove();
+                        svg.selectAll(".y.axis").exit().remove();
 
-                    svg.selectAll(".xaxistext")
-                        .data([ztrait])//.slice(0,traits.length-1))
-                        .enter().append("text")
-                        .attr("x", (d,i)=>{return (width/2);})//-padding)
-                        .attr("y", (d,i)=>{return (n*size+2*padding);})
-                        .attr("class", "xaxistext")
-                        .text(d=>{return d})
-                        .attr("font-size", 3* textsize + "px")
-                    //.attr("transform", "rotate(-90)");
-                    svg.selectAll(".xaxistext").exit().remove();
-                }
-                // Y AXIS
-                {
-                svg.selectAll(".y.axis")
-                    .data(traits)
-                    .enter().append("g")
-                    .attr("class", "y axis")
-                    .attr("font-size", textsize + "px")
-                    .attr("transform", function (d, i) {
-                        return "translate("+(5/2*padding)+"," + (i * size +2*padding)+ ")";
+                        svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
+
+                        svg.selectAll(".yaxistext")
+                            .data(traits)//.slice(0,traits.length-1))
+                            .enter().append("text")
+                            .attr("x", (d, i) => {
+                                return (-(i + 1) * size + padding);
+                            })//-padding)
+                            .attr("y", (d, i) => {
+                                return (2 * padding);
+                            })
+                            .attr("class", "yaxistext")
+                            .text(d => {
+                                return d
+                            })
+                            .attr("font-size", 3 * textsize + "px")
+                            .attr("transform", "rotate(-90)");
+                        svg.selectAll(".yaxistext").exit().remove();
+                    }
+
+
+                    let brush = myBrush()
+                        .on("start", brushstart)
+                        .on("brush", brushmove)
+                        .on("end", brushend)
+                        .extent([[-padding / 4, -padding / 4], [(width - padding + padding / 4), (size - padding + padding / 4)]]);
+                    //.extent([[-padding / 4, -padding / 4], [width - padding / 3, size - padding / 3]]);
+
+                    let brushes = [];
+
+                    let brushCell;
+
+                    let brushind = self._brushNum;
+                    let selectind = self._selected;
+                    cell.call(brush, brushes);
+
+                    function brushstart(p) {
+
+                        if (brushCell != this) {
+                            d3.select(brushCell).call(brush.move, null);
+                            brushCell = this;
+                            x.domain(rangeByTrait);
+                            y.domain(domainByTrait[p]);
+                        }
+                    }
+
+                    // Highlight the selected circles.
+                    function brushmove(p) {
+                        let e = d3.brushSelection(this);
+                        svg.selectAll("circle").classed("hidden", function (d) {
+                            return !e
+                                ? false
+                                : (
+                                    e[0][0] > x(+d[ztrait]) || x(+d[ztrait]) > e[1][0]
+                                    || e[0][1] > y(+d[p]) || y(+d[p]) > e[1][1]
+                                );
+                        });
+                    }
+                    // If the brush is empty, select all circles.
+                    function brushend(p) {
+                        let e = d3.brushSelection(this);
+
+                        if (e === null) {
+                            svg.selectAll(".hidden").classed("hidden", false)
+                            //brushes = [];
+                        }
+                        let allhlt = svg.selectAll(".hidden").data();
+                        let hlt = new Set(allhlt.slice(0,(allhlt.length/n)).map(d=>d.index));
+                        let allind = cur_node.data._total;
+                        let inset = [...allind].filter((dd) => {return !hlt.has(dd)});
+                        //console.log(inset);
+                        brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+                        selectind.index = inset;
+
+                    }
+
+                    svg.on("mouseover", (cursvg) => {
+                        let ndtoremove = self._stored.filter(d => d.id === cursvg)[0];
+                        addbutton(svg, width, padding / 4, padding, "red", "deletebutton", [1]);
+
+                        d3.selectAll(".deletebutton").on("click", () => {
+                            newplot.remove();
+                            pubsub.publish("RMNode", ndtoremove);
+                            self._stored = self._stored.filter(d => d.id != cursvg);//.splice(iii,1);
+                            delete self._totaldata[cursvg];
+                        });
+                        pubsub.publish("HighlightNode", ndtoremove)
                     })
-                    .each(function (d) {
-                        y.domain(domainByTrait[d]);
-                        d3.select(this).call(yAxis.tickValues(domainByTrait[d]));
-                    })
 
-                svg.selectAll(".y.axis").exit().remove();
-
-                svg.selectAll(".tick").selectAll("text").style("font-size", 2 * textsize + "px");
-
-                svg.selectAll(".yaxistext")
-                    .data(traits)//.slice(0,traits.length-1))
-                    .enter().append("text")
-                    .attr("x", (d,i)=>{return (-(i+1) * size +padding);})//-padding)
-                    .attr("y", (d,i)=>{return (2*padding);})
-                    .attr("class", "yaxistext")
-                    .text(d=>{return d})
-                    .attr("font-size", 3* textsize + "px")
-                    .attr("transform", "rotate(-90)");
-                svg.selectAll(".yaxistext").exit().remove();
+                        .on("mouseleave", (cursvg) => {
+                            let ndtohlight = self._stored.filter(d => d.id === cursvg)[0];
+                            svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
+                            pubsub.publish("UnHighlightNode", ndtohlight);
+                        });
                 }
 
-                let brush = myBrush()
-                    .on("start", brushstart)
-                    .on("brush", brushmove)
-                    .on("end", brushend)
-                    .extent([[-padding / 4, -padding / 4], [(width - padding+padding/4), (size-padding+padding/4)]]);
-                    //.extent([padding/4,padding/4],[width-padding+padding/2, size-padding+padding/2])
-                //let brushes = [];
-
-                let brushCell;
-
-                let brushind = self._brushNum;
-                let selectind = self._selected;
-
-                cell.call(brush);
-
-                function brushstart(p) {
-
-                    if (brushCell != this) {
-                        d3.select(brushCell).call(brush.move, null);
-                        brushCell = this;//
-                        x.domain(rangeByTrait);
-                        y.domain(domainByTrait[p]);
-                    }
                 }
-                // Highlight the selected circles.
-                function brushmove(p) {
-                    let e = d3.brushSelection(this);
-
-                    let mypad = padding/4;
-                    y.domain(domainByTrait[p]);
-                    let sel_ind = getindex(e,dataind,ztrait,p,x,y,mypad);
-                    //console.log("During Draw",sel_ind);
-                    cleardraw(ctx,size*n,padding,n,width);
-
-                    if (pxs != undefined) {
-                        ctx.restore();
-                        ctx.save();
-                        for(let di = 0;di<n;di++) {
-                            y.domain(domainByTrait[traits[di]])
-                            let area = d3.area()
-                                .x0((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y0((d, i) => {
-                                    return y(pxs[i][di] + std[i][di] / 2);
-                                })
-                                .x1((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y1((d, i) => {
-                                    return y(pxs[i][di] - std[i][di] / 2);
-                                })
-                                .context(ctx);
-
-                            ctx.beginPath();
-                            area(regy);
-                            ctx.lineWidth = 1.5;
-                            ctx.fillStyle = "#f1f1f1";
-                            ctx.fill();
-                            ctx.translate(0,size)
-                        }
-
-                    }
-                    ctx.restore();
-                    ctx.save();
-                    drawwithind(dataind,ctx, 1, x, colorScale,[ztrait, traits],sel_ind,width,size,padding,domainByTrait);
-                    if (pxs != undefined) {
-                        ctx.restore();
-                        ctx.save();
-                        for(let di = 0;di<n;di++) {
-                            y.domain(domainByTrait[traits[di]])
-                            let line = d3.line()
-                                .x((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y((d, i) => {
-                                    return y(pxs[i][di]);
-                                })
-                                .context(ctx);
-
-                            ctx.beginPath();
-                            line(regy);
-                            ctx.lineWidth = 1.5;
-                            ctx.strokeStyle = "black";
-                            ctx.stroke();
-                            ctx.translate(0,size)
-                        }
-
-                    }
-
-                }
-
-                function brushend(p) {
-                    let mypad = padding/4;
-                    let e = d3.brushSelection(this);
-                    //console.log(e);
-                    //brushes.push(e);
-                    cleardraw(ctx,size*n,padding,n,width);
-                    y.domain(domainByTrait[p]);
-                    let sel_ind = getindex(e,dataind,ztrait,p,x,y,mypad);
-                    //console.log(sel_ind);
-                    if (pxs != undefined) {
-                        ctx.restore();
-                        ctx.save();
-                        for(let di = 0;di<n;di++) {
-                            y.domain(domainByTrait[traits[di]])
-                            let area = d3.area()
-                                .x0((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y0((d, i) => {
-                                    return y(pxs[i][di] + std[i][di] / 2);
-                                })
-                                .x1((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y1((d, i) => {
-                                    return y(pxs[i][di] - std[i][di] / 2);
-                                })
-                                .context(ctx);
-
-                            ctx.beginPath();
-                            area(regy);
-                            ctx.lineWidth = 1.5;
-                            ctx.fillStyle = "#f1f1f1";
-                            ctx.fill();
-                            ctx.translate(0,size)
-                        }
-
-                    }
-                    ctx.restore();
-                    ctx.save();
-                    drawwithind(dataind,ctx, 1, x, colorScale,[ztrait, traits],sel_ind,width,size,padding,domainByTrait);
-
-                    if (pxs != undefined) {
-                        ctx.restore();
-                        ctx.save();
-                        for(let di = 0;di<n;di++) {
-                            y.domain(domainByTrait[traits[di]])
-                            let line = d3.line()
-                                .x((d, i) => {
-                                    return x(regy[i]);
-                                })
-                                .y((d, i) => {
-                                    return y(pxs[i][di]);
-                                })
-                                .context(ctx);
-
-                            ctx.beginPath();
-                            line(regy);
-                            ctx.lineWidth = 1.5;
-                            ctx.strokeStyle = "black";
-                            ctx.stroke();
-                            ctx.translate(0,size)
-                        }
-
-
-                    }
-                    brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
-                    selectind.index = sel_ind;
-                }
-
-                svg.on("mouseover", (cursvg)=>{
-                    let ndtoremove = self._stored.filter(d=>d.id===cursvg)[0];
-                    addbutton(svg, width, padding/4, padding, "red", "deletebutton",[1]);
-
-                    d3.selectAll(".deletebutton").on("click",()=>{
-                        newplot.remove();
-                        pubsub.publish("RMNode",ndtoremove);
-                        self._stored = self._stored.filter(d=>d.id!=cursvg);//.splice(iii,1);
-                        delete self._totaldata[cursvg];
-                    });
-                    pubsub.publish("HighlightNode",ndtoremove)})
-
-                    .on("mouseleave", (cursvg)=>{
-                        let ndtohlight = self._stored.filter(d=>d.id===cursvg)[0];
-                        svg.selectAll(".deletebutton").remove();//classed("deletebutton", false);
-                        pubsub.publish("UnHighlightNode",ndtohlight);
-                    });
             }
 
-            //newplot.merge(self._plot.selectAll("div"))
         }
-    }
+
     //BoxPlot
     boxPlot(newid) {
         //console.log(newid)
@@ -1715,8 +2212,8 @@ function drawwithind(data,context, r, x, c, dataattr,ind,width,size,padding,yran
     dataattr[1].forEach(d=>{
         context.rect(0, 0, width - padding, size - padding);
         //context.strokeStyle = "#DCDCDC";
-        context.strokeStyle = "#A9A9A9";
-        context.lineWidth = 0.5;
+        context.strokeStyle = "#696969"//"#A9A9A9";
+        context.lineWidth = 0.8;
         context.stroke();
         let lx,ly,lz;
         lx = dataattr[0];
@@ -1798,8 +2295,8 @@ function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yra
         context.save()
         context.translate(d.i*size, (d.j-1)*size);
         context.rect(0, 0, width - padding, size - padding);
-        context.strokeStyle = "#A9A9A9";
-        context.lineWidth = 0.5;
+        context.strokeStyle = "#696969";//"#A9A9A9";
+        context.lineWidth = 0.8;
         context.stroke();
         let lx,ly,lz;
         lx = d.x;
