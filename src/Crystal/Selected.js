@@ -24,8 +24,8 @@ export class Selected {
         //this._brushes = [];
         this._newid;
         this._reg = check;
-        this._canvas = false;//true;
-        this._svg = true;//false;
+        this._canvas = true;
+        this._svg = false;
         this._selected = {"index": 0};
         this._brushNum = {"index": 0};
         this._plottype = plottype;
