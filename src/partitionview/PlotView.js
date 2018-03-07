@@ -1,13 +1,16 @@
 import * as d3 from 'd3';
 import './style.css';
 import * as pubsub from '../PubSub';
+import {addbutton} from '../component/plotshare'
+import {drawwithind,drawwithind2,cleardraw,drawpt, getindex} from '../component/plotcanvas'
+//import {addbutton} from '../component/plotcanvas'
 //import {on} from "d3-selection"
-import * as kernel from '../Process/kernel';
+import * as kernel from '../process/kernel';
 
 import {myBrush} from '../customd3';
 
 //console.log('.');
-export class Selected {
+export class PlotView {
     // Assign a parentnode for all divs
     constructor(data, width, height, yattr, plottype, check, band, dataarray) {
         this._rawdata = data;
@@ -20,7 +23,6 @@ export class Selected {
         this._barWidth = width / 20;
         this._textsize = height / 20;
         this._stored = [];
-
         //this._brushes = [];
         this._newid;
         this._reg = check;
@@ -28,6 +30,7 @@ export class Selected {
         this._svg = false;
         this._selected = {"index": 0};
         this._brushNum = {"index": 0};
+        this._brushbox = {"index": 0};
         this._plottype = plottype;
         this._bandwidth = band;
         // This part is necessary when people try to call update attribute before selecting partition
@@ -43,8 +46,56 @@ export class Selected {
 
         this._attr = attr;
         this._totaldata = {};
-        pubsub.subscribe("plotupdateattr", this.updateattr);
-        pubsub.subscribe("plottypechange", this.updateplot);
+        let self = this;
+        //pubsub.subscribe("plotupdateattr", this.updateattr);
+        //pubsub.subscribe("plottypechange", this.updateplot);
+        //pubsub.subscribe("plotupdateattr",self.updateattr.bind(self));
+        //pubsub.subscribe("plottypechange",self.updateplot.bind(self));
+        pubsub.subscribe("RFChanged",self.updatediv.bind(self));
+
+        d3.select('#usesvg')
+            .on('click', () =>  {
+                self._canvas = !self._canvas;
+                self._svg = !self._svg;
+                self.updateplot("RemoveOld");
+            });
+
+        d3.select("#plus").on('click',()=>{
+            self.increase();
+        })
+
+        d3.select("#minus").on('click',()=>{
+            self.decrease();
+        })
+
+        d3.select('#myCheck').on('click', () =>  {
+                self.updatereg();
+        });
+
+        d3.select("#y_attr").on('change',()=>{
+                self.updateattr(d3.select("#y_attr").node().value);
+        });
+
+        d3.select('#removeS')
+            .on('click', () =>  {
+                d3.selectAll("#selected").attr("id", null);
+            });
+
+        d3.select('#searchC')
+            .on('click', () =>  {
+                let [cur_selection,cur_node] = this.highlight();
+                let selectindex = new Set(cur_selection);//cur_selection.map(obj=>obj.index));
+                //if(selectindex!= undefined)
+                pubsub.publish("BrushedSamples",selectindex, cur_node)
+                //tree.searchchildren(selectindex, cur_node);
+                //else
+                //console.log("No Points Selected");
+            });
+
+        d3.select("#plottype").on('change',()=>{
+            //pubsub.publish("plottypechange",document.getElementById('plottype').value);
+            self.updateplot("RemoveOld",d3.select("#plottype").node().value);
+        });
 
     }
     updatesize() {
@@ -99,7 +150,8 @@ export class Selected {
 
 
     // Update divs based on input data
-    updatediv(crange) {
+    updatediv(msg,index,crange) {
+        //console.log(msg,index,crange)
         let selected;
         this._allrange = crange;
 
@@ -118,9 +170,7 @@ export class Selected {
                 inputnode.data._saddleinfo = this._rawdata[inputnode.data._saddleind];
         }
         */
-
         this._totaldata = {};
-        //this._objrange = {};
 
         for (let i = 0; i < selected.length; i++) {
             let nodeinfo = selected[i];
@@ -158,7 +208,10 @@ export class Selected {
             */
             this._totaldata[nodeinfo.id] = selectdata;
         }
+        if(crange===undefined)
         this.updateplot();
+        else
+            this.updateplot("RemoveOld")
     }
 
     // remove all divs in it
@@ -173,17 +226,15 @@ export class Selected {
     }
 
     // Update all the plots based on plot selection
-    updateplot(channel, self, option) {
+    updateplot(channel, option) {
 
         let newplot = [];
         let plottype;
 
-        if (self === undefined) {
-            if(((option!=undefined)&&(option!=this._plottype))||channel!=undefined)
+        //if (self === undefined) {
+            if(((option!=undefined)&&(option!=this._plottype))||channel==="RemoveOld")
                 this._plot.selectAll("div").remove();
 
-            //console.log(this._plot.selectAll("div"));
-            //console.log(this._plot.selectAll(".crystaldiv")
             //    .data(Object.keys(this._totaldata),(d)=>{console.log(d);return d}))
             let alldiv = this._plot.selectAll("div").data(Object.keys(this._totaldata),(d,i)=>{return d;});
             //console.log(alldiv)
@@ -241,7 +292,8 @@ export class Selected {
 
                 default:
             }
-        }
+        //}
+        /*
         else {
             if((option!=undefined)&&(option!=self._plottype))
                 self._plot.selectAll("div").remove();
@@ -292,12 +344,13 @@ export class Selected {
             }
 
         }
+           */
     }
 
     // Update all the plots based on attr selection
-    updateattr(channel, self, yattr) {
-        self._y_attr = yattr;
-        self.updateplot("RemoveOld");
+    updateattr(yattr) {
+        this._y_attr = yattr;
+        this.updateplot("RemoveOld");
     }
 
 
@@ -620,6 +673,7 @@ export class Selected {
 
                         let brushind = self._brushNum;
                         let selectind = self._selected;
+                        let brushbox = self._brushbox;
 
                         cell.call(brush);
                         //let brushes = [];
@@ -687,7 +741,21 @@ export class Selected {
                         // If the brush is empty, select all circles.
                         function brushend(p) {
                             let e = d3.brushSelection(this);
-                            //this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
+
+                            if(e === null)
+                            {
+                                console.log("Empty Brush");
+                            }
+                            else
+                            {
+                                    y.domain(domainByTrait[p.x]);
+                                    x.domain(domainByTrait[p.y]);
+                                    let filterbox = converte2range(e, x,y);
+                                    brushbox.index = {};
+                                    brushbox.index[p.x] = filterbox[0];
+                                    brushbox.index[p.y] = filterbox[1];
+                            }
+
                             let mypad = padding / 4;
                             x.domain(domainByTrait[p.x]);
                             y.domain(domainByTrait[p.y]);
@@ -695,7 +763,7 @@ export class Selected {
                             let sel_ind = getindex(e, dataind, p.x, p.y, x, y, mypad);
                             cleardraw(ctx, size * n, padding, n, n * size);
 
-                            drawwithind2(dataind, ctx, height / 75, x, colorScale, [ztrait, halfcross(traits, traits)], sel_ind, size, size, padding, domainByTrait);
+                            drawwithind2(dataind, ctx, height / 75, x, colorScale, [ztrait, halfcross(traits, traits)], sel_ind, size, size, padding, domainByTrait,e);
                             brushind.index = cur_node;//this.parentNode.parentNode.parentNode.getAttribute('id').slice(-1);
                             selectind.index = sel_ind;
                         }
@@ -881,6 +949,7 @@ export class Selected {
 
                         let brushind = self._brushNum;
                         let selectind = self._selected;
+                        let brushbox = self._brushbox;
 
                         cell.call(brush, brushes);
                         function brushstart(p) {
@@ -913,6 +982,14 @@ export class Selected {
                             if (e === null) {
                                 svg.selectAll(".hidden").classed("hidden", false)
                                 //brushes = [];
+                            }
+                            else{
+                                y.domain(domainByTrait[p.x]);
+                                x.domain(domainByTrait[p.y]);
+                                let filterbox = converte2range(e, x, y);
+                                brushbox.index = {};
+                                brushbox.index[p.x] = filterbox[0];
+                                brushbox.index[p.y] = filterbox[1];
                             }
                             let allhlt = svg.selectAll(".hidden").data();
                             let hlt = new Set(allhlt.slice(0,(allhlt.length/(halfcross(traits, traits).length))).map(d=>d.index));
@@ -1148,6 +1225,7 @@ export class Selected {
 
                     let brushind = self._brushNum;
                     let selectind = self._selected;
+                    let brushbox = self._brushbox;
 
                     cell.call(brush);
 
@@ -1232,8 +1310,19 @@ export class Selected {
                     function brushend(p) {
                         let mypad = padding / 4;
                         let e = d3.brushSelection(this);
-                        //console.log(e);
-                        //brushes.push(e);
+                        if (e === null) {
+                            console.log("Empty Brush");
+                        }
+                        else
+                        {
+                            y.domain(domainByTrait[p]);
+                            x.domain(rangeByTrait);
+                            let filterbox = converte2range(e, x,y);
+                            brushbox.index = {};
+                            brushbox.index[ztrait] = filterbox[0];
+                            brushbox.index[p] = filterbox[1];
+                        }
+
                         cleardraw(ctx, size * n, padding, n, width);
                         y.domain(domainByTrait[p]);
                         let sel_ind = getindex(e, dataind, ztrait, p, x, y, mypad);
@@ -1269,7 +1358,7 @@ export class Selected {
                         }
                         ctx.restore();
                         ctx.save();
-                        drawwithind(dataind, ctx, height / 75, x, colorScale, [ztrait, traits], sel_ind, width, size, padding, domainByTrait);
+                        drawwithind(dataind, ctx, height / 75, x, colorScale, [ztrait, traits], sel_ind, width, size, padding, domainByTrait,e);
 
                         if (pxs != undefined) {
                             ctx.restore();
@@ -1680,6 +1769,7 @@ export class Selected {
 
                     let brushCell;
 
+                    let brushbox = self._brushbox;
                     let brushind = self._brushNum;
                     let selectind = self._selected;
                     cell.call(brush, brushes);
@@ -1711,8 +1801,15 @@ export class Selected {
                         let e = d3.brushSelection(this);
 
                         if (e === null) {
-                            svg.selectAll(".hidden").classed("hidden", false)
-                            //brushes = [];
+                            svg.selectAll(".hidden").classed("hidden", false);
+                        }
+                        else{
+                            y.domain(domainByTrait[p]);
+                            x.domain(rangeByTrait);
+                            let filterbox = converte2range(e, x,y);
+                            brushbox.index = {};
+                            brushbox.index[ztrait] = filterbox[0];
+                            brushbox.index[p] = filterbox[1];
                         }
                         let allhlt = svg.selectAll(".hidden").data();
                         let hlt = new Set(allhlt.slice(0,(allhlt.length/n)).map(d=>d.index));
@@ -2097,8 +2194,20 @@ export class Selected {
         }
     }
 
-    highlight() {
+    highlight(parent) {
+        if(parent === undefined)
         return [this._selected.index, this._brushNum.index];
+        else
+            return [this._selected.index, this._brushNum.index, this._brushbox.index];
+    }
+
+    updatereg() {
+        this._reg = !this._reg;
+        this.updateplot("RemoveOld");
+    }
+
+    sychronize(cur_selection,cur_node,filterbox){
+        console.log("Highlight pts in other plots when brushing");
     }
 
 }
@@ -2149,216 +2258,21 @@ export function parseObj(data, option) {
     return [outx, outy];
 
 }
-function drawpt(point, context, r, x, y, c, dataattr) {
 
-    let py;
-    let px;
-    let pz;
-    if (dataattr === undefined){
-        py = point.y;
-        px = point.x;
-    }
-    else{
-        py = point[dataattr[1]];
-        px = point[dataattr[0]];
-        pz = point[dataattr[2]];//}
-    }
-    let cx = x(px);
-    let cy = y(py);
-    let cl = c(pz);
-    //console.log(colorScale(cx));
+function converte2range(e,x,y){
 
-    context.fillStyle = cl
-    context.beginPath();
-    context.arc(cx, cy, r, 0, 2 * Math.PI);
-    context.fill();
-    //ctx.fillRect(cx,cy,cx+r,cy+r)
+    let xrange = [];
+    xrange.push((x.range()[0]>e[0][0])?x.range()[0]:e[0][0]);
+    xrange.push((x.range()[1]<e[1][0])?x.range()[1]:e[1][0]);
+    let yrange = [];
+    yrange.push((y.range()[0]>e[0][1])?y.range()[0]:e[0][1]);
+    yrange.push((y.range()[1]<e[1][1])?y.range()[1]:e[1][1]);
+
+    let filterbydomain = [];
+    filterbydomain.push([x.invert(xrange[0]),x.invert(xrange[1])]);
+    filterbydomain.push([y.invert(yrange[0]),y.invert(yrange[1])]);
+    return filterbydomain;
 }
-
-function cleardraw(ctx,height,padding,n,width){
-    ctx.restore();
-    ctx.translate(-padding / 2, - padding / 2);
-    ctx.clearRect(0, 0, width + 3 * padding, height + 3 * padding);
-    ctx.translate(padding / 2, padding / 2);
-    ctx.save();
-
-}
-
-function getindex(e,data,xlabel,ylabel,x,y,mypad){
-    //let seletedindex = new Set();
-    /*let selectedindex = */
-    //console.log(e,data,xlabel,ylabel,x,y,mypad);
-    let selectedindex;
-    if(e!=null)
-    {//console.log(e[0][0])
-        //console.log(x(d[xlabel]))
-    selectedindex = data.filter((d,i)=>{
-        return ((e[0][0] <= x(d[xlabel])) && (x(d[xlabel]) <= e[1][0])
-        && (e[0][1] <= y(d[ylabel])) && (y(d[ylabel]) <= e[1][1]));
-            //return d.index;
-    }).map(dd=>dd.index)
-    }
-    else selectedindex = [];
-    return selectedindex;
-}
-function drawwithind(data,context, r, x, c, dataattr,ind,width,size,padding,yrange){
-
-    let yy = d3.scaleLinear()
-        .range([size - padding, 0]);
-    let indset = new Set(ind);
-    let notset = data.filter((dd) => {return !indset.has(dd.index)});//.map(d=>d.index);
-    let inset = data.filter((dd) => {return indset.has(dd.index)});
-
-    dataattr[1].forEach(d=>{
-        context.rect(0, 0, width - padding, size - padding);
-        //context.strokeStyle = "#DCDCDC";
-        context.strokeStyle = "#696969"//"#A9A9A9";
-        context.lineWidth = 0.8;
-        context.stroke();
-        let lx,ly,lz;
-        lx = dataattr[0];
-        ly = d;
-        lz = dataattr[0];
-
-        yy.domain(yrange[ly]);
-
-        notset.forEach(dd=>{
-            //console.log()
-            let py;
-            let px;
-            let pz;
-            if (dataattr === undefined){
-                py = point.y;
-                px = point.x;
-            }
-            else{
-                py = dd[ly];
-                px = dd[lx];
-                //console.log(d);
-
-                //console.log(py);
-                //pz = data[dd][lz];
-            }
-            let cx = x(px);
-            let cy = yy(py);
-            //let cl = c(pz);
-
-            context.fillStyle = "#DCDCDC";
-            context.beginPath();
-            context.arc(cx, cy, r, 0, 2 * Math.PI);
-            context.fill();
-
-        })
-
-        inset.forEach(dd=>{
-            //y.domain = yrange[ly];
-            let py;
-            let px;
-            let pz;
-            if (dataattr === undefined){
-                py = point.y;
-                px = point.x;
-            }
-            else{
-                py = dd[ly];
-                px = dd[lx];
-                pz = dd[lz];
-            }
-            let cx = x(px);
-            let cy = yy(py);
-            let cl = c(pz);
-
-            context.fillStyle = cl;
-            context.beginPath();
-            context.arc(cx, cy, r, 0, 2 * Math.PI);
-            context.fill();
-        })
-
-        context.translate(0, size);
-
-    });
-//context.restore();
-//context.save();
-}
-
-function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yrange){
-
-    let yy = d3.scaleLinear()
-        .range([size - padding, 0]);
-    let xx = d3.scaleLinear()
-        .range([0, size - padding]);
-    let indset = new Set(ind);
-    let notset = data.filter((dd) => {return !indset.has(dd.index)});//.map(d=>d.index);
-    let inset = data.filter((dd) => {return indset.has(dd.index)});
-
-    dataattr[1].forEach(d=>{
-        context.save()
-        context.translate(d.i*size, (d.j-1)*size);
-        context.rect(0, 0, width - padding, size - padding);
-        context.strokeStyle = "#696969";//"#A9A9A9";
-        context.lineWidth = 0.8;
-        context.stroke();
-        let lx,ly,lz;
-        lx = d.x;
-        ly = d.y;
-        lz = dataattr[0];
-        //console.log(d.x,d.y)
-        yy.domain(yrange[ly]);
-        xx.domain(yrange[lx]);
-        notset.forEach(dd=>{
-            //console.log()
-            let py;
-            let px;
-            let pz;
-            if (dataattr === undefined){
-                py = point.y;
-                px = point.x;
-            }
-            else{
-                py = dd[ly];
-                px = dd[lx];
-
-            }
-            let cx = xx(px);
-            let cy = yy(py);
-            //let cl = c(pz);
-
-            context.fillStyle = "#DCDCDC";
-            context.beginPath();
-            context.arc(cx, cy, r, 0, 2 * Math.PI);
-            context.fill();
-
-        })
-
-        inset.forEach(dd=>{
-            //y.domain = yrange[ly];
-            let py;
-            let px;
-            let pz;
-            if (dataattr === undefined){
-                py = point.y;
-                px = point.x;
-            }
-            else{
-                py = dd[ly];
-                px = dd[lx];
-                pz = dd[lz];
-            }
-            let cx = xx(px);
-            let cy = yy(py);
-            let cl = c(pz);
-
-            context.fillStyle = cl;
-            context.beginPath();
-            context.arc(cx, cy, r, 0, 2 * Math.PI);
-            context.fill();
-        })
-
-        context.restore();
-
-    });
-}
-
 
 function linspace(a, b, n) {
     if (typeof n === "undefined") n = Math.max(Math.round(b - a) + 1, 1);
@@ -2373,46 +2287,3 @@ function linspace(a, b, n) {
     return ret;
 }
 
-function addbutton(svg, x, y, size,color, cname,data){
-
-    svg.selectAll("."+cname).data(data,d=>{return d;}).enter()
-        .append("rect").attr("class", cname)
-        .attr("x", x)
-        .attr("y", y)
-        //.attr("dy",".9em")
-        .attr("width", size)
-        .attr("height", size).attr("fill", "transparent").attr("stroke",color);
-
-    svg.selectAll("."+cname).data(data+1,d=>{return d;}).enter().append("line").attr("class", cname)
-        .attr("x1", x+ size/4)
-        .attr("y1", y + size/4)
-        .attr("x2", x + size - size/4)
-        .attr("y2", (y + size) - size/4).attr("stroke",color);
-
-    svg.selectAll("."+cname).data(data+2,d=>{return d;}).enter().append("line").attr("class", cname)
-        .attr("x1", (x + size) - size/4)
-        .attr("y1", y + size/4)
-        .attr("x2", x + size/4)
-        .attr("y2", (y + size) - size/4).attr("stroke",color);
-
-    /*
-    svg.append("rect").attr("class", "deletebutton")
-        .attr("x", (n-1)*size)
-        .attr("y", 0)
-        .attr("width", padding*2)
-        .attr("height", padding*2).attr("fill", "transparent").attr("stroke","red");
-
-    svg.append("line").attr("class", "deletebutton")
-        .attr("x1", (n-1)*size + padding/4)
-        .attr("y1", 0 + padding/4)
-        .attr("x2", ((n-1)*size + padding*2) - padding/4)
-        .attr("y2", (0 + padding*2) - padding/4).attr("stroke","red");
-
-    svg.append("line").attr("class", "deletebutton")
-        .attr("x1", ((n-1)*size + padding*2) - padding/4)
-        .attr("y1", 0 + padding/4)
-        .attr("x2", (n-1)*size + padding/4)
-        .attr("y2", (0 + padding*2) - padding/4).attr("stroke","red");
-    */
-
-}

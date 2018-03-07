@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {getKeyByValue} from "./Tree";
+import {getKeyByValue} from "./TreeView";
 import './style.css';
 import * as pubsub from '../PubSub';
 
@@ -13,13 +13,19 @@ export class TreeLevel {
 
         this.Level = "tLevel";
         this.Scale = "linear";
-        pubsub.subscribe("levelchange1", this.switchLevel);
+        let self = this;
+        pubsub.subscribe("levelchange", self.switchLevel.bind(self));
+        pubsub.subscribe("treechange", self.plotLevel.bind(self));
+        //pubsub.subscribe("levelchange", self.updatelevel.bind(self));
 
     }
 
 
-    plotLevel(ctree) {
-        if (ctree != undefined)
+    plotLevel(msg,ctree) {
+
+
+        //if (ctree != undefined)
+        if(msg === "treechange")
         {
             this.yScale.range([ctree.treelength, 0]);
             this.yScale2.range([ctree.treelength, 0]);
@@ -141,22 +147,20 @@ export class TreeLevel {
             this._ctree = ctree;
         }
         else
-            this.plotLevel(this._ctree)
-
-
+            this.plotLevel("treechange",this._ctree);
     }
 
-    switchLevel(channel,self,level,scale) {
+    switchLevel(channel,level,scale) {
         //if (level!=undefined)
-        self.Level = level;
-        self.Scale = scale;
+        this.Level = level;
+        this.Scale = scale;
         switch (self.Level) {
             case "tLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
             case "pLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
 
