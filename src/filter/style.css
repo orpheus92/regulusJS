@@ -28,8 +28,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-weight: bold;
-    /*font: 10px sans-serif;*/
+    /*font-weight: bold;*/
+    font: 10px sans-serif;
 
 
 }
@@ -37,12 +37,10 @@
 .sizechart{
     top: 50%;
     transform: translateY(100%);
-    font-weight: bold;
-    /*font: 10px sans-serif;*/
+    font: 10px sans-serif;
 
 ;}
-
-.tick{
+#slider.tick{
     color: #1B2733;
     font: 10px sans-serif;
 }
@@ -52,17 +50,18 @@
 .track-overlay {
     stroke-linecap: round;
 }
-/*
-.track-inset {
-// stroke: #ddd;
-// stroke-width: 10px;
+
+
+canvas{
+
+position: absolute;
+
 }
-*/
+
 .track-overlay {
     pointer-events: stroke;
     stroke-width: 50px;
     stroke: transparent;
-    cursor: crosshair;
 }
 .domain{
     stroke-width: 1px;
@@ -74,7 +73,7 @@
 .line {
     fill: none;
     stroke: #ffab00;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 /* Style the dots by assigning a fill and stroke */

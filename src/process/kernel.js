@@ -252,7 +252,60 @@ ns.ImultipleRegression = function( Xs, ys, kernel, bandwidth ) {
     return matrixize( kernel_smoother );
 };
 
+ns.averageStd = function( Xs, ys, kernel, bandwidth ) {
+    if ( bandwidth <= 0 ) {
+        throw new RangeError( 'Bandwidth has to be a positive number.' );
+    }
+    if ( !ys ) {
+        throw new TypeError('Numeric y must be supplied. For density estimation' +
+            'use .density() function' );
+    }
+    if ( isFunction(kernel) === false ) {
+        throw new TypeError( 'Kernel function has to be supplied.' );
+    }
+    if ( isArray(Xs) === false || isArray(Xs[0]) === false ) {
+        throw new TypeError( 'Xs has to be a two-dimensional array' );
+    }
 
+    bandwidth = bandwidth || 0.5;
+    var _Xs = Xs;
+    var _ys = ys;
+    var _p  = Xs[0].length;
+    var weight_fun = weight.bind( null, kernel, bandwidth );
+
+    var kernel_smoother = function( y,x ) {
+
+            //let y = yx[0];
+            //let x = yx[1];
+            //console.log("YX = ",yx)
+        //console.log("Y = ",y,"X = ", x);
+        let arr = [];
+        for (let ii = 0; ii < y.length; ii++) {
+            let weights = _ys.map(function (y_i) {
+
+                return weight_fun(y[ii], y_i);
+            });
+            //console.log("Weight",weights);
+            var denom = sum(weights);
+
+            let curarr = [];
+            for(let jj = 0;jj<_Xs[0].length;jj++){
+                curarr.push(Math.sqrt(sum(weights.map(function (w, i) {
+                    return w * (Math.pow((x[ii][jj]-_Xs[i][jj]),2));
+                })) / denom))
+
+            }
+
+            arr.push(curarr);
+
+        }
+
+        return arr;
+
+    };
+
+    return kernel_smoother;//matrixize( kernel_smoother );
+};
 // EXPORTS //
 
 module.exports = ns;

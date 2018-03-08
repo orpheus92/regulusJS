@@ -1,3 +1,3 @@
 export * from './pBar';
-export * from './rangefilter'
+export * from './RangeFilter'
 export * from './Slider'

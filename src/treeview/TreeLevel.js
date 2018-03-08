@@ -1,30 +1,31 @@
 import * as d3 from 'd3';
-import {getKeyByValue} from "./Tree";
+import {getKeyByValue} from "./TreeView";
 import './style.css';
 import * as pubsub from '../PubSub';
 
 export class TreeLevel {
     constructor(){
-        //this.svgBounds = d3.select("#treesvg").node().getBoundingClientRect();
-        //this.xAxisWidth = 100;
-        //this.yAxisHeight = 70;
-        //this.g = d3.select("#treelevel");
+
         this.yScale = d3.scaleLinear().nice();
-        //this.yScale2 = d3.scalePow().nice();
         this.yScale2 = d3.scaleLog().nice();
         d3.select("#treelevel").append("rect").attr("class", "bar");
         d3.select("#treelevel").append("text").attr("class", "levellabel");
-        //console.log(d3.select("#treelevel"))
 
         this.Level = "tLevel";
         this.Scale = "linear";
-        pubsub.subscribe("levelchange1", this.switchLevel);
+        let self = this;
+        pubsub.subscribe("levelchange", self.switchLevel.bind(self));
+        pubsub.subscribe("treechange", self.plotLevel.bind(self));
+        //pubsub.subscribe("levelchange", self.updatelevel.bind(self));
 
     }
-    
-    
-    plotLevel(ctree) {
-        if (ctree != undefined)
+
+
+    plotLevel(msg,ctree) {
+
+
+        //if (ctree != undefined)
+        if(msg === "treechange")
         {
             this.yScale.range([ctree.treelength, 0]);
             this.yScale2.range([ctree.treelength, 0]);
@@ -49,9 +50,9 @@ export class TreeLevel {
                     let cy = this.yScale(clevel);
 
                     d3.select(".levellabel")
-                        .attr("x", 40)
+                        .attr("x", 100)
                         .attr("y", -20)
-                        .text("Tree Level")
+                        .text("Persistence Level")
                         .attr("font-size", "15px")
                         .attr("class", "levellabel")
                         .attr("fill", "blue");
@@ -69,48 +70,48 @@ export class TreeLevel {
 
                     switch (this.Scale){
                         case "linear":{
-                    // Define Scale Function
-                    if (ctree.pShow == undefined)
-                        this.yScale.domain([ctree.pInter, 1]);
-                    else
-                        this.yScale.domain([ctree.pShow, 1]);
-                    // Draw Axis
-                    let yAxis = d3.axisLeft()
-                        .scale(this.yScale);
+                            // Define Scale Function
+                            if (ctree.pShow == undefined)
+                                this.yScale.domain([ctree.pInter, 1]);
+                            else
+                                this.yScale.domain([ctree.pShow, 1]);
+                            // Draw Axis
+                            let yAxis = d3.axisLeft()
+                                .scale(this.yScale);
 
-                    t.select("#treelevel")
-                        .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
-                        .call(yAxis);
+                            t.select("#treelevel")
+                                .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
+                                .call(yAxis);
 
-                    //Draw Current Level
+                            //Draw Current Level
 
-                    clevel = ctree.pInter;
-                    let cy = this.yScale(clevel);
+                            clevel = ctree.pInter;
+                            let cy = this.yScale(clevel);
 
                             d3.select(".levellabel")
-                                .attr("x", 80)
-                                .attr("y", -40)
-                                .text("Persistence Level")
+                                .attr("x", 100)
+                                .attr("y", -20)
+                                .text("Persistence Value")
                                 .attr("font-size", "15px")
                                 .attr("class", "levellabel")
                                 .attr("fill","blue");
 
-                    t.select(".bar")//.data([clevel])
-                        .attr("x", -5)
-                        .attr("y", cy)
-                        .attr("width", 10)
-                        .attr("height", 5)
-                        .attr("class", "bar")
-                        .attr("fill","blue");
-                    break;
+                            t.select(".bar")//.data([clevel])
+                                .attr("x", -5)
+                                .attr("y", cy)
+                                .attr("width", 10)
+                                .attr("height", 5)
+                                .attr("class", "bar")
+                                .attr("fill","blue");
+                            break;
                         }
                         case "log":{
                             //this.clearPlots();
                             //console.log("Draw Log");
                             if (ctree.pShow == undefined)
-                                this.yScale2.domain([ctree.pInter, 1]);
+                                this.yScale2.domain([ctree.pInter+Number.EPSILON, 1+Number.EPSILON]);
                             else
-                                this.yScale2.domain([ctree.pShow, 1]);
+                                this.yScale2.domain([ctree.pShow+Number.EPSILON, 1+Number.EPSILON]);
 
                             // Draw Axis
                             let yAxis = d3.axisLeft()
@@ -120,7 +121,7 @@ export class TreeLevel {
                                 .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
                                 .call(yAxis);
                             //Draw Current Level
-                            clevel = ctree.pInter;
+                            clevel = ctree.pInter+Number.EPSILON;
                             //console.log(clevel);
 
                             let cy = this.yScale2(clevel);
@@ -146,27 +147,25 @@ export class TreeLevel {
             this._ctree = ctree;
         }
         else
-            this.plotLevel(this._ctree)
-
-
+            this.plotLevel("treechange",this._ctree);
     }
 
-    switchLevel(channel,self,level,scale) {
+    switchLevel(channel,level,scale) {
         //if (level!=undefined)
-        self.Level = level;
-        self.Scale = scale;
+        this.Level = level;
+        this.Scale = scale;
         switch (self.Level) {
             case "tLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
             case "pLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
 
             default:
         }
     }
-    
+
 }

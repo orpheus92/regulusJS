@@ -1,0 +1,23 @@
+
+
+#loadData{
+  //font: 11px 'font2';
+  font-size: 11px;
+}
+
+
+.group {
+  margin-left: 5px;
+}
+
+.item {
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+#dims {
+  list-style-type: none;
+  padding-left: 5px;
+  margin-top: 0;
+}

@@ -15,14 +15,20 @@ class PostMSC(object):
         with open(base) as data_file:
             self.base = json.load(data_file)
 
+    def addnoise(self,hsorted):
+        for i in range(len(hsorted)):
+            hsorted[i,0] = hsorted[i,0] + i*np.finfo(float).eps
+        return hsorted
+
     def compute(self):
         hierarchy_sorted = self.hierarchy[np.argsort(self.hierarchy[:, 0])]
         p_max = hierarchy_sorted[-1, 0]
         hierarchy_sorted[:, 0] = hierarchy_sorted[:, 0] / p_max
-
+        num = len(hierarchy_sorted[:,0][hierarchy_sorted[:,0]==1])
+        # print(num)
         # Remove indexes for the root from the hierarchy which did not merge to any parent
-        hierarchy_sorted = hierarchy_sorted[0:-2, :]
-
+        hierarchy_sorted = hierarchy_sorted[0:-num, :]
+        hierarchy_sorted = self.addnoise(hierarchy_sorted)
         child = hierarchy_sorted[:, 2]
         parent = hierarchy_sorted[:, 3]
         saddle = hierarchy_sorted[:, 4]
@@ -32,6 +38,7 @@ class PostMSC(object):
         total_partitions = []
         p_tree = {}
         for i in range(r):
+
             if hierarchy_sorted[i, 1] == 0:
                 p_map[hierarchy_sorted[i, 0]] = self.mergemin(int(child[i]), int(parent[i]), self.base, r - i)
                 p_tree[hierarchy_sorted[i, 0]] = self.getPartition(p_map[hierarchy_sorted[i, 0]],saddle[i])
@@ -92,47 +99,52 @@ class PostMSC(object):
 
     def mergemin(self, c, p, d, per):
         outlist = []
-        indpair = list(d.keys())
-        indpair2 = np.array([self.str2int(pair) for pair in indpair])
-        listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
-        listother = indpair2[indpair2[:, 0] != int(c)]
+        if c!=p:
+            indpair = list(d.keys())
+            indpair2 = np.array([self.str2int(pair) for pair in indpair])
 
-        for maxin in listmax:
-            if self.int2str(int(p), maxin) in indpair:
-                temp = d[self.int2str(int(c), maxin)]
-                d[self.int2str(int(p), maxin)] = d[self.int2str(int(p), maxin)] + temp
-                del d[self.int2str(int(c), maxin)]
-                outlist.append(self.int2str(int(p), maxin, per - 1))
-                outlist.append(self.int2str(int(c), maxin, per))
-            else:
-                d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
-                outlist.append(self.int2str(int(p), maxin, per - 1))
-                outlist.append(self.int2str(int(c), maxin, per))
-        for pair in listother:
-            outlist.append(self.int2str(pair[0], pair[1], per - 1))
-            outlist.append(self.int2str(pair[0], pair[1], per))
+            ##print(indpair2[:, 0] != int(c))
+
+            listmax = indpair2[:, 1][indpair2[:, 0] == int(c)]
+            listother = indpair2[indpair2[:, 0] != int(c)]
+
+            for maxin in listmax:
+                if self.int2str(int(p), maxin) in indpair:
+                    temp = d[self.int2str(int(c), maxin)]
+                    d[self.int2str(int(p), maxin)] = d[self.int2str(int(p), maxin)] + temp
+                    del d[self.int2str(int(c), maxin)]
+                    outlist.append(self.int2str(int(p), maxin, per - 1))
+                    outlist.append(self.int2str(int(c), maxin, per))
+                else:
+                    d[self.int2str(int(p), maxin)] = d.pop(self.int2str(int(c), maxin))
+                    outlist.append(self.int2str(int(p), maxin, per - 1))
+                    outlist.append(self.int2str(int(c), maxin, per))
+            for pair in listother:
+                outlist.append(self.int2str(pair[0], pair[1], per - 1))
+                outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def mergemax(self, c, p, d, per):
         outlist = []
-        indpair = list(d.keys())
-        indpair2 = np.array([self.str2int(pair) for pair in indpair])
-        listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
-        listother = indpair2[indpair2[:, 1] != int(c)]
-        for minin in listmin:
-            if (self.int2str(minin, int(p)) in indpair):
-                temp = d[self.int2str(minin, int(c))]
-                d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
-                del d[self.int2str(minin, int(c))]
-                outlist.append(self.int2str(minin, int(p), per - 1))
-                outlist.append(self.int2str(minin, int(c), per))
-            else:
-                d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
-                outlist.append(self.int2str(minin, int(p), per - 1))
-                outlist.append(self.int2str(minin, int(c), per))
-        for pair in listother:
-            outlist.append(self.int2str(pair[0], pair[1], per - 1))
-            outlist.append(self.int2str(pair[0], pair[1], per))
+        if c != p:
+            indpair = list(d.keys())
+            indpair2 = np.array([self.str2int(pair) for pair in indpair])
+            listmin = indpair2[:, 0][indpair2[:, 1] == int(c)]
+            listother = indpair2[indpair2[:, 1] != int(c)]
+            for minin in listmin:
+                if (self.int2str(minin, int(p)) in indpair):
+                    temp = d[self.int2str(minin, int(c))]
+                    d[self.int2str(minin, int(p))] = d[self.int2str(minin, int(p))] + temp
+                    del d[self.int2str(minin, int(c))]
+                    outlist.append(self.int2str(minin, int(p), per - 1))
+                    outlist.append(self.int2str(minin, int(c), per))
+                else:
+                    d[self.int2str(minin, int(p))] = d.pop(self.int2str(minin, int(c)))
+                    outlist.append(self.int2str(minin, int(p), per - 1))
+                    outlist.append(self.int2str(minin, int(c), per))
+            for pair in listother:
+                outlist.append(self.int2str(pair[0], pair[1], per - 1))
+                outlist.append(self.int2str(pair[0], pair[1], per))
         return outlist
 
     def str2int(self, str):
@@ -168,14 +180,17 @@ def process(args=None):
 
     path = Path(ns.filename).parent
 
-    msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
-    msc.LoadData(ns.filename)
-    msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
+    try:
+        msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
+        msc.LoadData(ns.filename)
+        msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
 
-    post = PostMSC()
-    post.load(path / 'Hierarchy.csv', path / 'Base_Partition.json')
-    post.compute()
-    post.save(str(path / 'P_Partition.json'), str(path / 'Final_Tree.csv'))
+        post = PostMSC()
+        post.load(path / 'Hierarchy.csv', path / 'Base_Partition.json')
+        post.compute()
+        post.save(str(path / 'P_Partition.json'), str(path / 'Final_Tree.csv'))
+    except ValueError as error:
+        print(error)
 
 
 if __name__ == '__main__':
