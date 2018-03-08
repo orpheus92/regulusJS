@@ -1,23 +1,18 @@
 import './style.css';
-import {event,select,selectAll} from 'd3-selection';
-import {csv,json,scaleLinear,csvParse} from 'd3';
+import {event, select, selectAll} from 'd3-selection';
+import {csv, json, scaleLinear, csvParse} from 'd3';
 import {drag} from 'd3-drag';
-//import { event as currentEvent } from 'd3-selection';
-
 import {pBar} from '../filter'
-import {parseObj,PlotView} from '../partitionview';
+import {parseObj, PlotView} from '../partitionview';
 import {Info} from '../info';
-import {TreeView,TreeLevel} from '../treeview';
+import {TreeView, TreeLevel} from '../treeview';
 import {Slider} from '../filter';
 import * as pubsub from '../PubSub';
-//import {Partition} from '../process';
 import {RangeFilter} from "../filter/RangeFilter";
-
 
 let pInter;
 let sizeInter;
 let tree;
-//let partition;
 let loaddata;
 let cnode;
 let treelevel;
@@ -38,11 +33,13 @@ let dataarray;
 
 
 select('#catalog')
-    .on('change', function () { load(this.value);});
+    .on('change', function () {
+        load(this.value);
+    });
 
 fetch('/catalog')
-    .then( response => response.json() )
-    .then( catalog => {
+    .then(response => response.json())
+    .then(catalog => {
         catalog.unshift("");
         let l = select('#catalog').selectAll('options')
             .data(catalog);
@@ -53,10 +50,9 @@ fetch('/catalog')
     });
 
 
-function load(dataset){
-    csv(`data/${dataset}/data.csv`, rawdata=> {
-        for (let i = rawdata.columns.length-1; i>= 0; i--)
-        {
+function load(dataset) {
+    csv(`data/${dataset}/data.csv`, rawdata => {
+        for (let i = rawdata.columns.length - 1; i >= 0; i--) {
             selectAll("#y_attr")
                 .append("option")
                 .attr("value", rawdata.columns[i])
@@ -77,11 +73,11 @@ function load(dataset){
             //will be updated later
 
 
-            csv(`data/${dataset}/Final_Tree.csv`, treedata=>{
+            csv(`data/${dataset}/Final_Tree.csv`, treedata => {
                 json(`data/${dataset}/Base_Partition.json`, function (error, basedata) {
                     // Convert rawdata to floats in the beginning
-                    rawdata.forEach(d=>{
-                        for (let i = rawdata.columns.length-1; i>= 0; i--){
+                    rawdata.forEach(d => {
+                        for (let i = rawdata.columns.length - 1; i >= 0; i--) {
                             d[rawdata.columns[i]] = parseFloat(d[rawdata.columns[i]])
                         }
                     });
@@ -94,9 +90,9 @@ function load(dataset){
                         }
                     }
 
-                    measure = rawdata.columns[rawdata.columns.length-1];
+                    measure = rawdata.columns[rawdata.columns.length - 1];
                     // Initialize Range Filter
-                    let rfilter = new RangeFilter(dataarray,rawdata);
+                    let rfilter = new RangeFilter(dataarray, rawdata);
 
                     // Will be changed later such that i did not depend on the DOM
                     let yattr = select("#y_attr").node().value;//document.getElementById('y_attr').value;
@@ -113,14 +109,14 @@ function load(dataset){
                     // Data View Constructor
                     loaddata = new Info();
                     // Persistence Array
-                    let parr = loaddata.create(data, pInter, sizeInter,measure, dataarray);
+                    let parr = loaddata.create(data, pInter, sizeInter, measure, dataarray);
                     //pubsub.publish("infoupdate", pInter, sizeInter);
                     // Tree
                     tree = new TreeView(treedata, data, basedata);
                     treelevel = new TreeLevel();
                     tree.updateTree(pInter, sizeInter);
 
-                    let plots = new PlotView(rawdata, width, height, yattr, plottype,check,band,dataarray);
+                    let plots = new PlotView(rawdata, width, height, yattr, plottype, check, band, dataarray);
 
                     // filter Event
 
@@ -132,15 +128,15 @@ function load(dataset){
 
                     // Initialize Slider
                     let newslider = new Slider(select("#treeslider"));
-                    let slider = newslider.createslider([parr[0], parr[parr.length-1]],150);
+                    let slider = newslider.createslider([parr[0], parr[parr.length - 1]], 150);
                     let x = scaleLinear()
-                        .domain([parr[0], parr[parr.length-1]])
+                        .domain([parr[0], parr[parr.length - 1]])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
                     slider.handle.attr("cx", x(pInter));
 
                     //Initialize Charts
-                    let pb = new pBar(tree,data,basedata);
+                    let pb = new pBar(tree, data, basedata);
                     //pb.updateBar(pInter,sizeInter);
                     pubsub.publish("ParameterUpdate", pInter, sizeInter);
                     slider.curslide.call(drag()
@@ -152,7 +148,7 @@ function load(dataset){
                             //loaddata.update(pInter, sizeInter);
                             //pubsub.publish("infoupdate", pInter, sizeInter);
                             //tree.updateTree(pInter, sizeInter);
-                            [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                            [pInter, sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
                             // update persistence chart and size chart
                             //pb.updateBar(pInter,sizeInter);
 
@@ -161,49 +157,47 @@ function load(dataset){
 
                     select(".ppbar").call(drag()
                         .on("start drag", () => {
-                                select(".ppbar").attr("x", pb.padding-2+pb.xScale(pb.xScale.invert(event.x-pb.padding+2)));
-                                pInter = pb.xScale.invert(event.x-pb.padding+2)-Number.EPSILON;
-                                slider.handle.attr("cx", x(pInter));
+                            select(".ppbar").attr("x", pb.padding - 2 + pb.xScale(pb.xScale.invert(event.x - pb.padding + 2)));
+                            pInter = pb.xScale.invert(event.x - pb.padding + 2) - Number.EPSILON;
+                            slider.handle.attr("cx", x(pInter));
 
-                                //pubsub.publish("infoupdate", pInter, sizeInter);
-                                [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
-
+                            //pubsub.publish("infoupdate", pInter, sizeInter);
+                            [pInter, sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
 
 
                         }));
 
                     select(".pbar").call(drag()
-                        .on("start drag", ()=>{
-                            select(".pbar").attr("x", pb.padding-2+pb.xScale2(pb.xScale2.invert(event.x-pb.padding+2)));
-                            sizeInter = parseInt(pb.xScale2.invert(event.x-pb.padding+2));
+                        .on("start drag", () => {
+                            select(".pbar").attr("x", pb.padding - 2 + pb.xScale2(pb.xScale2.invert(event.x - pb.padding + 2)));
+                            sizeInter = parseInt(pb.xScale2.invert(event.x - pb.padding + 2));
                             //pubsub.publish("infoupdate", pInter, sizeInter);
-                            [pInter,sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
+                            [pInter, sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
                             //treelevel.plotLevel(tree);
                         }));
 
                     //Separate clicking from double clicking
-                    select("#tree").node().onmouseover = function(event) {
-                    //document.getElementById("tree").onmouseover = function(event) {
+                    select("#tree").node().onmouseover = function (event) {
+                        //document.getElementById("tree").onmouseover = function(event) {
 
-                            let clicks = 0;
+                        let clicks = 0;
                         let DELAY = 500;
                         selectAll(".node")
-                            .on("click", (nodeinfo)=>{
+                            .on("click", (nodeinfo) => {
 
                                 console.log(event.altKey, event, this, nodeinfo);
-                                if (!event.altKey)
-                                {
+                                if (!event.altKey) {
                                     plots.storedata(nodeinfo);
                                 }
-                                else
-                                {selectAll(".Clicked").classed("Clicked",false);
+                                else {
+                                    selectAll(".Clicked").classed("Clicked", false);
                                     plots.removedata();
                                     plots.storedata(nodeinfo);
                                 }
                                 let timer;
                                 clicks++;  //count clicks
-                                if(clicks === 1) {
-                                    timer = setTimeout(function() {
+                                if (clicks === 1) {
+                                    timer = setTimeout(function () {
                                         let selectedNodes = plots.getdata();
                                         tree.mark(selectedNodes);
                                         plots.updatediv();
@@ -215,8 +209,7 @@ function load(dataset){
                                     }, DELAY);
 
                                 }
-                                else
-                                {
+                                else {
                                     clearTimeout(timer);    //prevent process-click action
                                     tree.reshapeTree(nodeinfo);
                                     //treelevel.plotLevel(tree);
@@ -224,38 +217,38 @@ function load(dataset){
                                     clicks = 0;             //after action performed, reset counter
                                 }
                             })
-                            .on("mouseover", (nodeinfo)=>{
+                            .on("mouseover", (nodeinfo) => {
                                 //loaddata.select(nodeinfo,document.getElementById('CompAttr').value);
                                 pubsub.publish("infoselect", nodeinfo.data, select("#CompAttr").node().value);//document.getElementById('CompAttr').value);
-                                if (cnode===undefined)
-                                {cnode = nodeinfo;
+                                if (cnode === undefined) {
+                                    cnode = nodeinfo;
                                     //console.log(nodeinfo);
                                 }
                             })
-                            .on("mouseout", (nodeinfo)=>{
-                                if (cnode===undefined)
-                                {cnode = nodeinfo;
+                            .on("mouseout", (nodeinfo) => {
+                                if (cnode === undefined) {
+                                    cnode = nodeinfo;
                                 }
                                 pubsub.publish("infoselect", cnode.data, select('#CompAttr').node().value);//document.getElementById('CompAttr').value);
                             });
                     };
-                    select("#level").on('change',()=>{
-                        pubsub.publish("levelchange", select('#level').node().value,select('#scale').node().value);
-                        });
-                    select("#scale").on('change',()=>{
-                        pubsub.publish("levelchange", select('#level').node().value,select('#scale').node().value);
-                        });
+                    select("#level").on('change', () => {
+                        pubsub.publish("levelchange", select('#level').node().value, select('#scale').node().value);
+                    });
+                    select("#scale").on('change', () => {
+                        pubsub.publish("levelchange", select('#level').node().value, select('#scale').node().value);
+                    });
 
-                    select("#CompAttr").on('change',()=> {
+                    select("#CompAttr").on('change', () => {
                         if (cnode != undefined) {
-                        pubsub.publish("infoselect", cnode.data, select('#CompAttr').node().value);//document.getElementById('CompAttr').value);
+                            pubsub.publish("infoselect", cnode.data, select('#CompAttr').node().value);//document.getElementById('CompAttr').value);
                         }
                     });
 
-                    selectAll(".wb-button").on('click',()=>{
+                    selectAll(".wb-button").on('click', () => {
                         let option = pb.mycb();
                         // update tree plot
-                        [pInter,sizeInter] = tree.setParameter(option);
+                        [pInter, sizeInter] = tree.setParameter(option);
                         // update persistence chart and size chart
                         //pb.updateBar(pInter,sizeInter);
                         // update plot level
@@ -266,15 +259,15 @@ function load(dataset){
                     });
 
                     select('#searchP')
-                        .on('click', () =>  {
+                        .on('click', () => {
                             //clear();
-                            [cur_selection,cur_node,filterbox] = plots.highlight();
+                            [cur_selection, cur_node, filterbox] = plots.highlight();
                             selectindex = new Set(cur_selection);//cur_selection.map(obj=>obj.index));
                             //if(selectindex!= undefined)
                             //    tree.searchchildren(selectindex, cur_node);
                             //else
                             //    console.log("No Points Selected");
-                            plots.sychronize(cur_selection,cur_node,filterbox);
+                            plots.sychronize(cur_selection, cur_node, filterbox);
 
                         });
 
@@ -304,7 +297,7 @@ function load(dataset){
     });
 }
 
-function clear(){
+function clear() {
     let myNode = document.getElementById("foo");
     while (myNode.firstChild) {
         myNode.removeChild(myNode.firstChild);

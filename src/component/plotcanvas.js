@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,padding,yrange,e){
+export function drawwithind(data, context, r, x, c, dataattr, ind, width, size, padding, yrange, e) {
 
     let yy = d3.scaleLinear()
         .range([size - padding, 0]);
@@ -9,8 +9,7 @@ export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,paddi
     let notset
     let inset;
 
-    if(e===undefined)
-    {
+    if (e === undefined) {
         notset = data.filter((dd) => {
             return !indset.has(dd.index)
         });
@@ -18,8 +17,7 @@ export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,paddi
             return indset.has(dd.index)
         });
     }
-    else
-    {
+    else {
         if (e != null) {
             notset = data.filter((dd) => {
                 return !indset.has(dd.index)
@@ -35,29 +33,29 @@ export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,paddi
     }
 
 
-    dataattr[1].forEach(d=>{
+    dataattr[1].forEach(d => {
         context.rect(0, 0, width - padding, size - padding);
         //context.strokeStyle = "#DCDCDC";
         context.strokeStyle = "#696969"//"#A9A9A9";
         context.lineWidth = 0.8;
         context.stroke();
-        let lx,ly,lz;
+        let lx, ly, lz;
         lx = dataattr[0];
         ly = d;
         lz = dataattr[0];
 
         yy.domain(yrange[ly]);
 
-        notset.forEach(dd=>{
+        notset.forEach(dd => {
             //console.log()
             let py;
             let px;
             let pz;
-            if (dataattr === undefined){
+            if (dataattr === undefined) {
                 py = point.y;
                 px = point.x;
             }
-            else{
+            else {
                 py = dd[ly];
                 px = dd[lx];
                 //console.log(d);
@@ -76,16 +74,16 @@ export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,paddi
 
         })
 
-        inset.forEach(dd=>{
+        inset.forEach(dd => {
             //y.domain = yrange[ly];
             let py;
             let px;
             let pz;
-            if (dataattr === undefined){
+            if (dataattr === undefined) {
                 py = point.y;
                 px = point.x;
             }
-            else{
+            else {
                 py = dd[ly];
                 px = dd[lx];
                 pz = dd[lz];
@@ -107,7 +105,7 @@ export function drawwithind(data,context, r, x, c, dataattr,ind,width,size,paddi
 //context.save();
 }
 
-export function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padding,yrange,e){
+export function drawwithind2(data, context, r, x, c, dataattr, ind, width, size, padding, yrange, e) {
 
     let yy = d3.scaleLinear()
         .range([size - padding, 0]);
@@ -116,50 +114,54 @@ export function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padd
     let indset = new Set(ind);
     let notset;
     let inset;
-    if(e===undefined)
-    {
-        notset = data.filter((dd) => {return !indset.has(dd.index)});//.map(d=>d.index);
-        inset = data.filter((dd) => {return indset.has(dd.index)});
+    if (e === undefined) {
+        notset = data.filter((dd) => {
+            return !indset.has(dd.index)
+        });//.map(d=>d.index);
+        inset = data.filter((dd) => {
+            return indset.has(dd.index)
+        });
     }
-    else
-    {
-    if(e!=null)
-    {
-        notset = data.filter((dd) => {return !indset.has(dd.index)});//.map(d=>d.index);
-        inset = data.filter((dd) => {return indset.has(dd.index)});
-    }
-    else
-    {
-        inset = data;
-        notset = [];
-    }
+    else {
+        if (e != null) {
+            notset = data.filter((dd) => {
+                return !indset.has(dd.index)
+            });//.map(d=>d.index);
+            inset = data.filter((dd) => {
+                return indset.has(dd.index)
+            });
+        }
+        else {
+            inset = data;
+            notset = [];
+        }
     }
 
 
-    dataattr[1].forEach(d=>{
+    dataattr[1].forEach(d => {
         context.save()
-        context.translate(d.i*size, (d.j-1)*size);
+        context.translate(d.i * size, (d.j - 1) * size);
         context.rect(0, 0, width - padding, size - padding);
         context.strokeStyle = "#696969";//"#A9A9A9";
         context.lineWidth = 0.8;
         context.stroke();
-        let lx,ly,lz;
+        let lx, ly, lz;
         lx = d.x;
         ly = d.y;
         lz = dataattr[0];
         //console.log(d.x,d.y)
         yy.domain(yrange[ly]);
         xx.domain(yrange[lx]);
-        notset.forEach(dd=>{
+        notset.forEach(dd => {
             //console.log()
             let py;
             let px;
             let pz;
-            if (dataattr === undefined){
+            if (dataattr === undefined) {
                 py = point.y;
                 px = point.x;
             }
-            else{
+            else {
                 py = dd[ly];
                 px = dd[lx];
 
@@ -175,16 +177,16 @@ export function drawwithind2(data,context, r, x, c, dataattr,ind,width,size,padd
 
         })
 
-        inset.forEach(dd=>{
+        inset.forEach(dd => {
             //y.domain = yrange[ly];
             let py;
             let px;
             let pz;
-            if (dataattr === undefined){
+            if (dataattr === undefined) {
                 py = point.y;
                 px = point.x;
             }
-            else{
+            else {
                 py = dd[ly];
                 px = dd[lx];
                 pz = dd[lz];
@@ -209,11 +211,11 @@ export function drawpt(point, context, r, x, y, c, dataattr) {
     let py;
     let px;
     let pz;
-    if (dataattr === undefined){
+    if (dataattr === undefined) {
         py = point.y;
         px = point.x;
     }
-    else{
+    else {
         py = point[dataattr[1]];
         px = point[dataattr[0]];
         pz = point[dataattr[2]];//}
@@ -230,28 +232,27 @@ export function drawpt(point, context, r, x, y, c, dataattr) {
     //ctx.fillRect(cx,cy,cx+r,cy+r)
 }
 
-export function cleardraw(ctx,height,padding,n,width){
+export function cleardraw(ctx, height, padding, n, width) {
     ctx.restore();
-    ctx.translate(-padding / 2, - padding / 2);
+    ctx.translate(-padding / 2, -padding / 2);
     ctx.clearRect(0, 0, width + 3 * padding, height + 3 * padding);
     ctx.translate(padding / 2, padding / 2);
     ctx.save();
 
 }
 
-export function getindex(e,data,xlabel,ylabel,x,y,mypad){
+export function getindex(e, data, xlabel, ylabel, x, y, mypad) {
     //let seletedindex = new Set();
     /*let selectedindex = */
     //console.log(e,data,xlabel,ylabel,x,y,mypad);
     let selectedindex;
-    if(e!=null)
-    {//console.log(e[0][0])
+    if (e != null) {//console.log(e[0][0])
         //console.log(x(d[xlabel]))
-        selectedindex = data.filter((d,i)=>{
+        selectedindex = data.filter((d, i) => {
             return ((e[0][0] <= x(d[xlabel])) && (x(d[xlabel]) <= e[1][0])
                 && (e[0][1] <= y(d[ylabel])) && (y(d[ylabel]) <= e[1][1]));
             //return d.index;
-        }).map(dd=>dd.index)
+        }).map(dd => dd.index)
     }
     else selectedindex = [];
     return selectedindex;
