@@ -24,6 +24,7 @@ def static(filename='index.html'):
 @app.route('/catalog')
 def catalog():
     datasets = sorted([str(d.name) for d in data_dir.iterdir() if d.is_dir()])
+    print(json.dumps(datasets))
     return json.dumps(datasets)
 
 

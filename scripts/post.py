@@ -10,8 +10,6 @@ from collections import namedtuple, defaultdict
 from topopy.MorseSmaleComplex import MorseSmaleComplex as MSC
 
 
-# Merge = namedtuple('Merge', ['level', 'merge_max', 'src', 'dest'])
-
 class Merge(object):
     def __init__(self, level, is_max, src, dest):
         self.level = level
@@ -247,6 +245,8 @@ def post(args=None):
     p.add_argument('-c', '--col', type=int, default=-1, help='measure column index starting at 0')
     p.add_argument('-a', '--all', action='store_true', help='process all measures')
 
+    p.add_argument('--name', default=None, help='dataset name')
+
     p.add_argument('--debug', action='store_true', help='process all measures')
 
     ns = p.parse_args(args)
@@ -279,11 +279,16 @@ def post(args=None):
             catalog = json.load(f)
     else:
         catalog = {
+            'name': Path(ns.filename).parent,
             'data': Path(ns.filename).name,
             'dims': dims,
             'msc': []
         }
 
+    if ns.name is not None:
+        catalog['name'] = ns.name
+
+    available = set(catalog['msc'])
     for measure in measures:
         try:
             name = header[measure]
@@ -292,10 +297,11 @@ def post(args=None):
             msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
             msc.Build(X=x, Y=y, names=header[:dims]+[name])
             Post(ns.debug).data(msc.base_partitions, msc.hierarchy).build().save(path, name)
-            catalog['msc'].append(name)
+            available.add(name)
         except RuntimeError as error:
             print(error)
 
+    catalog['msc'] = sorted(list(available))
     with open(catalog_path, 'w') as f:
         json.dump(catalog, f, indent=2)
 
