@@ -1,0 +1,1110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/index.js" afterPath="$PROJECT_DIR$/src/app/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/component/plotcanvas.js" afterPath="$PROJECT_DIR$/src/component/plotcanvas.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filter/pBar.js" afterPath="$PROJECT_DIR$/src/filter/pBar.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/partitionview/PlotView.js" afterPath="$PROJECT_DIR$/src/partitionview/PlotView.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/treeview/TreeLevel.js" afterPath="$PROJECT_DIR$/src/treeview/TreeLevel.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/treeview/TreeView.js" afterPath="$PROJECT_DIR$/src/treeview/TreeView.js" />
+    </list>
+    <ignored path="$PROJECT_DIR$/node_modules/" />
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" show_ignored="true" />
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="skeleton" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="Info.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/info/Info.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="36">
+              <caret line="17" column="41" lean-forward="false" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
+              <folding>
+                <element signature="n#!!block;n#create#0;n#Info#0" expanded="false" />
+                <element signature="n#!!block;n#update#0;n#Info#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RangeFilter.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/filter/RangeFilter.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="67">
+              <caret line="88" column="5" lean-forward="true" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#352#569#0" expanded="false" />
+                <element signature="e#1503#1967#0" expanded="false" />
+                <element signature="e#2017#2187#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="37" column="23" lean-forward="true" selection-start-line="37" selection-start-column="23" selection-end-line="37" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2262">
+              <caret line="94" column="14" lean-forward="false" selection-start-line="94" selection-start-column="14" selection-end-line="94" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#217#247#0" expanded="true" />
+                <element signature="e#6437#6936#0" expanded="false" />
+                <element signature="e#7037#7523#0" expanded="false" />
+                <element signature="e#7663#10630#0" expanded="false" />
+                <element signature="e#9717#10215#0" expanded="false" />
+                <element signature="e#10688#10828#0" expanded="false" />
+                <element signature="e#10887#11027#0" expanded="false" />
+                <element signature="e#11090#11338#0" expanded="false" />
+                <element signature="e#12075#12653#0" expanded="false" />
+                <element signature="e#12677#13391#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TreeView.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/treeview/TreeView.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="822">
+              <caret line="765" column="53" lean-forward="false" selection-start-line="765" selection-start-column="53" selection-end-line="765" selection-end-column="53" />
+              <folding>
+                <element signature="e#211#247#0" expanded="true" />
+                <element signature="n#!!block;n#updatelevel#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#updateTree#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#updatemodel#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#layout#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#render#0;n#TreeView#0" expanded="false" />
+                <element signature="e#12153#12376#0" expanded="false" />
+                <element signature="n#!!doc;n#clearTree#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#clearTree#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#reshapeTree#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#reshapemodel#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#rmnd#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#mark#0;n#TreeView#0" expanded="false" />
+                <element signature="e#17592#18130#0" expanded="false" />
+                <element signature="e#18171#18758#0" expanded="false" />
+                <element signature="e#18800#18956#0" expanded="false" />
+                <element signature="e#18998#19178#0" expanded="false" />
+                <element signature="e#19216#20167#0" expanded="false" />
+                <element signature="e#20221#20580#0" expanded="false" />
+                <element signature="n#!!block;n#searchchildren#0;n#TreeView#0" expanded="false" />
+                <element signature="n#!!block;n#highlightnd#0" expanded="false" />
+                <element signature="n#!!block;n#nodeupdate#0" expanded="false" />
+                <element signature="n#!!block;n#getKeyByValue#0" expanded="false" />
+                <element signature="n#!!block;n#findparent#0" expanded="false" />
+                <element signature="n#!!block;n#checklowestchild#0" expanded="false" />
+                <element signature="n#!!block;n#diagonal#0" expanded="false" />
+                <element signature="n#!!block;n#layoutdfs#0" expanded="false" />
+                <marker date="1520468999039" expanded="false" signature="21642:21915" ph="{...}" />
+                <marker date="1520468999039" expanded="true" signature="25200:25209" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TreeLevel.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/treeview/TreeLevel.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+              <folding>
+                <element signature="e#815#5868#0" expanded="false" />
+                <element signature="e#1031#5775#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pBar.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/filter/pBar.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#54#0" expanded="true" />
+                <element signature="n#!!block;n#updateBar#0;n#pBar#0" expanded="false" />
+                <element signature="n#!!block;n#mybutton#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlotView.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/partitionview/PlotView.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="154">
+              <caret line="273" column="0" lean-forward="false" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+                <element signature="n#!!block;n#constructor#0;n#PlotView#0" expanded="false" />
+                <element signature="e#1762#1909#0" expanded="false" />
+                <element signature="e#1958#1998#0" expanded="false" />
+                <element signature="e#2047#2087#0" expanded="false" />
+                <element signature="e#2138#2179#0" expanded="false" />
+                <element signature="e#2231#2306#0" expanded="false" />
+                <element signature="e#2371#2446#0" expanded="false" />
+                <element signature="e#2511#2943#0" expanded="false" />
+                <element signature="n#!!block;n#updatesize#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#reconstruct#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#storedata#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#removedata#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#getdata#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#updatediv#0;n#PlotView#0" expanded="false" />
+                <element signature="e#4901#6323#0" expanded="false" />
+                <element signature="n#!!block;n#removediv#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#updateplot#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#updateattr#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#increase#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#decrease#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#scatterMat#0;n#PlotView#0" expanded="false" />
+                <element signature="n#!!block;n#multiscatter#0;n#PlotView#0" expanded="false" />
+                <element signature="e#42350#43669#0" expanded="false" />
+                <element signature="e#45128#45211#0" expanded="false" />
+                <element signature="e#45241#45623#0" expanded="false" />
+                <element signature="e#45924#47243#0" expanded="false" />
+                <element signature="e#47512#48493#0" expanded="false" />
+                <element signature="n#!!block;n#cross#0" expanded="false" />
+                <element signature="n#!!block;n#halfcross#0" expanded="false" />
+                <element signature="n#!!block;n#parseObj#0" expanded="false" />
+                <element signature="n#!!block;n#converte2range#0" expanded="false" />
+                <element signature="n#!!block;n#linspace#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plotcanvas.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/component/plotcanvas.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="108" column="0" lean-forward="false" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+              <folding>
+                <element signature="n#!!block;n#drawwithind#0" expanded="false" />
+                <element signature="e#311#500#0" expanded="false" />
+                <element signature="e#510#834#0" expanded="false" />
+                <element signature="e#535#752#0" expanded="false" />
+                <element signature="e#766#828#0" expanded="false" />
+                <element signature="e#2920#3128#0" expanded="false" />
+                <element signature="e#3138#3481#0" expanded="false" />
+                <element signature="e#3413#3475#0" expanded="false" />
+                <element signature="n#!!block;n#drawpt#0" expanded="false" />
+                <element signature="n#!!block;n#cleardraw#0" expanded="false" />
+                <element signature="n#!!block;n#getindex#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>removediv</find>
+      <find>remove</find>
+      <find>RFChanged</find>
+      <find>plottype</find>
+      <find>level</find>
+      <find>clicks</find>
+      <find>updateplot</find>
+      <find>DELAY</find>
+      <find>getelement</find>
+      <find>_total</find>
+      <find>cnode</find>
+      <find>plotLevel</find>
+      <find>pb.</find>
+      <find>setParameter</find>
+      <find>updateBar</find>
+      <find>infoupdate</find>
+      <find>d3.select</find>
+      <find>CompAttr</find>
+      <find>pInter</find>
+      <find>brushend</find>
+      <find>e===null</find>
+      <find>e==</find>
+      <find>null</find>
+      <find>getind</find>
+      <find>plotview</find>
+      <find>getindex</find>
+      <find>draw</find>
+      <find>plotlevel</find>
+      <find>drawwithind</find>
+      <find>ind</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>.fontSize(10)</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>C:\Anaconda\regulusJS\skeleton\src\Structure</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/PubSub/index.js" />
+        <option value="$PROJECT_DIR$/src/PubSub/pubsub.js" />
+        <option value="$PROJECT_DIR$/src/Slider/index.js" />
+        <option value="$PROJECT_DIR$/data/slidertest/d3-slider/index.html" />
+        <option value="$PROJECT_DIR$/data/slidertest/d3-slider/d3.slider.js" />
+        <option value="$PROJECT_DIR$/src/Slider/d3.slider.js" />
+        <option value="$PROJECT_DIR$/webpack.config.js" />
+        <option value="$PROJECT_DIR$/src/customd3/brush.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/node_modules/kernel-smooth/lib/index.js" />
+        <option value="$PROJECT_DIR$/newscript/Process2.py" />
+        <option value="$PROJECT_DIR$/node_modules/d3-axis/src/axis.js" />
+        <option value="$PROJECT_DIR$/src/Process/kernel.js" />
+        <option value="$PROJECT_DIR$/scripts/process.py" />
+        <option value="E:/Anaconda/Lib/site-packages/topopy/MorseSmaleComplex.py" />
+        <option value="$PROJECT_DIR$/src/Process/Partition.js" />
+        <option value="$PROJECT_DIR$/src/Info/Info.js" />
+        <option value="$PROJECT_DIR$/src/Info/style.css" />
+        <option value="$PROJECT_DIR$/src/Slider/Slider.js" />
+        <option value="$PROJECT_DIR$/src/Slider/pBar.js" />
+        <option value="$PROJECT_DIR$/src/Crystal/index.js" />
+        <option value="$PROJECT_DIR$/src/Process/index.js" />
+        <option value="$PROJECT_DIR$/src/Slider/rangefilter.js" />
+        <option value="$PROJECT_DIR$/data/newcanvas/testPlot.js" />
+        <option value="$PROJECT_DIR$/data/newcanvas/index.html" />
+        <option value="$PROJECT_DIR$/src/Slider/style.css" />
+        <option value="$PROJECT_DIR$/data/newcanvas/index2.html" />
+        <option value="$PROJECT_DIR$/src/app/index.html" />
+        <option value="$PROJECT_DIR$/src/Structure/TreeLevel.js" />
+        <option value="$PROJECT_DIR$/data/promisetest/index.html" />
+        <option value="$PROJECT_DIR$/src/app/style.css" />
+        <option value="$PROJECT_DIR$/src/Crystal/style.css" />
+        <option value="$PROJECT_DIR$/src/Structure/style.css" />
+        <option value="$APPLICATION_CONFIG_DIR$/webstorm64.exe.vmoptions" />
+        <option value="$PROJECT_DIR$/data/d3line/index.html" />
+        <option value="$PROJECT_DIR$/src/Structure/Tree.js" />
+        <option value="$PROJECT_DIR$/src/Crystal/Selected.js" />
+        <option value="$PROJECT_DIR$/src/partitionview/index.js" />
+        <option value="$PROJECT_DIR$/src/component/plot.js" />
+        <option value="$PROJECT_DIR$/src/component/plotsvg.js" />
+        <option value="$PROJECT_DIR$/src/component/index.js" />
+        <option value="$PROJECT_DIR$/dist/index.html" />
+        <option value="$PROJECT_DIR$/src/filter/RangeFilter.js" />
+        <option value="$PROJECT_DIR$/src/loader/loader.js" />
+        <option value="$PROJECT_DIR$/src/info/Info.js" />
+        <option value="$PROJECT_DIR$/src/partitionview/PlotView.js" />
+        <option value="$PROJECT_DIR$/src/app/index.js" />
+        <option value="$PROJECT_DIR$/src/treeview/TreeView.js" />
+        <option value="$PROJECT_DIR$/src/treeview/TreeLevel.js" />
+        <option value="$PROJECT_DIR$/src/filter/pBar.js" />
+        <option value="$PROJECT_DIR$/src/component/plotcanvas.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <annotation-enable>false</annotation-enable>
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="794" />
+    <option name="y" value="-11" />
+    <option name="width" value="426" />
+    <option name="height" value="151" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="component" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="filter" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="info" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="partitionview" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="process" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="PubSub" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="skeleton" type="b2602c69:ProjectViewProjectNode" />
+              <item name="skeleton" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="treeview" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path" value="node" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Anaconda/regulusJS/skeleton/src/app/index.html&#10;font&#9;ACTION&#9;JumpToColorsAndFonts" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Process2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="E:\Anaconda\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/newscript" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="skeleton" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/newscript/Process2.py" />
+      <option name="PARAMETERS" value="..\data\Pu_TOT.csv" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="Process3" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/newscript" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="skeleton" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/newscript/Process3.py" />
+      <option name="PARAMETERS" value="..\data\Pu_TOT.csv" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="process" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="E:\Anaconda\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="skeleton" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/process.py" />
+      <option name="PARAMETERS" value="../data/full/full/excess/data.csv -k 500" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="199a8b85-cfb0-46a9-8640-f18a13867273" name="Default" comment="" />
+      <created>1510602736534</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1510602736534</updated>
+      <workItem from="1510602737682" duration="1933000" />
+      <workItem from="1510627815875" duration="121000" />
+      <workItem from="1510684501826" duration="17711000" />
+      <workItem from="1510863492155" duration="2317000" />
+      <workItem from="1510891146853" duration="14000" />
+      <workItem from="1510891175890" duration="619000" />
+      <workItem from="1512497118677" duration="1033000" />
+      <workItem from="1516896438289" duration="2825000" />
+      <workItem from="1516899283126" duration="36683000" />
+      <workItem from="1517028700111" duration="4601000" />
+      <workItem from="1517243617585" duration="3510000" />
+      <workItem from="1517411209618" duration="897000" />
+      <workItem from="1517413343030" duration="24000" />
+      <workItem from="1517413493001" duration="36457000" />
+      <workItem from="1517608766375" duration="2363000" />
+      <workItem from="1517686652396" duration="5302000" />
+      <workItem from="1517766379278" duration="596000" />
+      <workItem from="1517810384601" duration="3174000" />
+      <workItem from="1517854775159" duration="5000" />
+      <workItem from="1517864488085" duration="2802000" />
+      <workItem from="1517896086468" duration="115695000" />
+      <workItem from="1518150082861" duration="852000" />
+      <workItem from="1518151376766" duration="1720000" />
+      <workItem from="1518190591139" duration="614000" />
+      <workItem from="1518459951749" duration="502000" />
+      <workItem from="1518536520999" duration="3564000" />
+      <workItem from="1519452104501" duration="29316000" />
+      <workItem from="1519584466100" duration="631000" />
+      <workItem from="1519667149554" duration="7643000" />
+      <workItem from="1519677647493" duration="1291000" />
+      <workItem from="1519680049330" duration="282000" />
+      <workItem from="1519683566771" duration="851000" />
+      <workItem from="1519685376648" duration="497000" />
+      <workItem from="1519690521458" duration="1216000" />
+      <workItem from="1519692035480" duration="177000" />
+      <workItem from="1519692299946" duration="17909000" />
+      <workItem from="1519750256354" duration="59538000" />
+      <workItem from="1519846597506" duration="28771000" />
+      <workItem from="1519928755402" duration="26273000" />
+      <workItem from="1519963984345" duration="11603000" />
+      <workItem from="1519983262258" duration="2280000" />
+      <workItem from="1520008005959" duration="7917000" />
+      <workItem from="1520195982740" duration="14895000" />
+      <workItem from="1520273518628" duration="268000" />
+      <workItem from="1520274553134" duration="2345000" />
+      <workItem from="1520278781568" duration="37823000" />
+      <workItem from="1520389227529" duration="13349000" />
+      <workItem from="1520447321629" duration="160000" />
+      <workItem from="1520448169895" duration="20168000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="668215000" />
+  </component>
+  <component name="TodoView" selected-index="2">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-9" y="-9" width="1618" height="868" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17305236" sideWeight="0.49452055" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17780429" sideWeight="0.51908803" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.74145615" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25705793" sideWeight="0.4957582" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30007446" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497349" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2986627" sideWeight="0.48091197" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14587738" sideWeight="0.50547945" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14221556" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32966322" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="286" />
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="hierarchy_sorted[0:73] " />
+        <watch expression="__py_debug_temp_var_400175043" />
+        <watch expression="total_partitions" />
+        <watch expression="self.partition_copy['0.3202115717916251']['9646, 8927']" />
+        <watch expression="p_tree" />
+        <watch expression="level_p" />
+        <watch expression="hierarchy_sorted[0:73] [2]" />
+        <watch expression="self" />
+        <watch expression="level_p" />
+        <watch expression="indpair2[0:205] [204][0:2] [0]" />
+        <watch expression="p_map" />
+        <watch expression="child[0:51] " />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/scripts/Process2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="16" column="40" lean-forward="false" selection-start-line="16" selection-start-column="40" selection-end-line="16" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Anaconda/Lib/site-packages/topopy/MorseSmaleComplex.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="672">
+          <caret line="565" column="25" lean-forward="false" selection-start-line="565" selection-start-column="25" selection-end-line="565" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/process.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="354">
+          <caret line="191" column="20" lean-forward="true" selection-start-line="191" selection-start-column="20" selection-end-line="191" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/d3-shape/src/line.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="5" column="15" lean-forward="false" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Process/Partition.js" />
+    <entry file="file://$PROJECT_DIR$/src/process/kernel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5742">
+          <caret line="198" column="45" lean-forward="false" selection-start-line="198" selection-start-column="45" selection-end-line="198" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/process/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="25" lean-forward="false" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filter/Slider.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1508">
+          <caret line="54" column="2" lean-forward="false" selection-start-line="54" selection-start-column="2" selection-end-line="54" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/science/science.js/lib/d3/d3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="2181" column="0" lean-forward="false" selection-start-line="2181" selection-start-column="0" selection-end-line="2181" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/info/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="4" column="18" lean-forward="true" selection-start-line="3" selection-start-column="2" selection-end-line="4" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/newcanvas/index.html" />
+    <entry file="file://$PROJECT_DIR$/data/newcanvas/index2.html" />
+    <entry file="file://$PROJECT_DIR$/data/newcanvas/testPlot.js" />
+    <entry file="file://$PROJECT_DIR$/src/filter/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="51" column="1" lean-forward="false" selection-start-line="51" selection-start-column="1" selection-end-line="51" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PubSub/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="19" lean-forward="true" selection-start-line="0" selection-start-column="19" selection-end-line="0" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PubSub/pubsub.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="38" lean-forward="false" selection-start-line="9" selection-start-column="38" selection-end-line="9" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/promisetest/index.html" />
+    <entry file="file://$PROJECT_DIR$/node_modules/d3-drag/src/drag.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="348">
+          <caret line="25" column="29" lean-forward="false" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1595">
+          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/treeview/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1682">
+          <caret line="58" column="2" lean-forward="false" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/brushexample/scatter-canvas-large.html" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/webstorm64.exe.vmoptions" />
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js" />
+    <entry file="file://$PROJECT_DIR$/node_modules/d3-shape/src/area.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="103" column="30" lean-forward="false" selection-start-line="103" selection-start-column="30" selection-end-line="103" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/HTML5.js" />
+    <entry file="file://$PROJECT_DIR$/data/brushexample/lib/dc-canvas-scatterplot.js" />
+    <entry file="file://$PROJECT_DIR$/scripts/post.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="65" column="25" lean-forward="true" selection-start-line="65" selection-start-column="25" selection-end-line="65" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/d3line/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="46" column="20" lean-forward="false" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/brushexample/lib/crossfilter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="8" column="29" lean-forward="false" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/partitionview/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1102">
+          <caret line="38" column="13" lean-forward="false" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Crystal/Selected.js" />
+    <entry file="file://$PROJECT_DIR$/src/treeview/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filter/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loader/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="12" lean-forward="false" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="1" column="29" lean-forward="true" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/plotsvg.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/plotshare.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="1" column="7" lean-forward="false" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+          <folding>
+            <element signature="n#!!block;n#addbutton#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/info/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/partitionview/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="27" lean-forward="true" selection-start-line="0" selection-start-column="27" selection-end-line="0" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="106" column="30" lean-forward="true" selection-start-line="106" selection-start-column="30" selection-end-line="106" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loader/loader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/info/Info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="17" column="41" lean-forward="false" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
+          <folding>
+            <element signature="n#!!block;n#create#0;n#Info#0" expanded="false" />
+            <element signature="n#!!block;n#update#0;n#Info#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filter/RangeFilter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="67">
+          <caret line="88" column="5" lean-forward="true" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#352#569#0" expanded="false" />
+            <element signature="e#1503#1967#0" expanded="false" />
+            <element signature="e#2017#2187#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="37" column="23" lean-forward="true" selection-start-line="37" selection-start-column="23" selection-end-line="37" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2262">
+          <caret line="94" column="14" lean-forward="false" selection-start-line="94" selection-start-column="14" selection-end-line="94" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#217#247#0" expanded="true" />
+            <element signature="e#6437#6936#0" expanded="false" />
+            <element signature="e#7037#7523#0" expanded="false" />
+            <element signature="e#7663#10630#0" expanded="false" />
+            <element signature="e#9717#10215#0" expanded="false" />
+            <element signature="e#10688#10828#0" expanded="false" />
+            <element signature="e#10887#11027#0" expanded="false" />
+            <element signature="e#11090#11338#0" expanded="false" />
+            <element signature="e#12075#12653#0" expanded="false" />
+            <element signature="e#12677#13391#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filter/pBar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="n#!!block;n#updateBar#0;n#pBar#0" expanded="false" />
+            <element signature="n#!!block;n#mybutton#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/partitionview/PlotView.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="273" column="0" lean-forward="false" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#PlotView#0" expanded="false" />
+            <element signature="e#1762#1909#0" expanded="false" />
+            <element signature="e#1958#1998#0" expanded="false" />
+            <element signature="e#2047#2087#0" expanded="false" />
+            <element signature="e#2138#2179#0" expanded="false" />
+            <element signature="e#2231#2306#0" expanded="false" />
+            <element signature="e#2371#2446#0" expanded="false" />
+            <element signature="e#2511#2943#0" expanded="false" />
+            <element signature="n#!!block;n#updatesize#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#reconstruct#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#storedata#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#removedata#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#getdata#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#updatediv#0;n#PlotView#0" expanded="false" />
+            <element signature="e#4901#6323#0" expanded="false" />
+            <element signature="n#!!block;n#removediv#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#updateplot#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#updateattr#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#increase#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#decrease#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#scatterMat#0;n#PlotView#0" expanded="false" />
+            <element signature="n#!!block;n#multiscatter#0;n#PlotView#0" expanded="false" />
+            <element signature="e#42350#43669#0" expanded="false" />
+            <element signature="e#45128#45211#0" expanded="false" />
+            <element signature="e#45241#45623#0" expanded="false" />
+            <element signature="e#45924#47243#0" expanded="false" />
+            <element signature="e#47512#48493#0" expanded="false" />
+            <element signature="n#!!block;n#cross#0" expanded="false" />
+            <element signature="n#!!block;n#halfcross#0" expanded="false" />
+            <element signature="n#!!block;n#parseObj#0" expanded="false" />
+            <element signature="n#!!block;n#converte2range#0" expanded="false" />
+            <element signature="n#!!block;n#linspace#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/plotcanvas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="108" column="0" lean-forward="false" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#drawwithind#0" expanded="false" />
+            <element signature="e#311#500#0" expanded="false" />
+            <element signature="e#510#834#0" expanded="false" />
+            <element signature="e#535#752#0" expanded="false" />
+            <element signature="e#766#828#0" expanded="false" />
+            <element signature="e#2920#3128#0" expanded="false" />
+            <element signature="e#3138#3481#0" expanded="false" />
+            <element signature="e#3413#3475#0" expanded="false" />
+            <element signature="n#!!block;n#drawpt#0" expanded="false" />
+            <element signature="n#!!block;n#cleardraw#0" expanded="false" />
+            <element signature="n#!!block;n#getindex#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/treeview/TreeView.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="822">
+          <caret line="765" column="53" lean-forward="false" selection-start-line="765" selection-start-column="53" selection-end-line="765" selection-end-column="53" />
+          <folding>
+            <element signature="e#211#247#0" expanded="true" />
+            <element signature="n#!!block;n#updatelevel#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#updateTree#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#updatemodel#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#layout#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#render#0;n#TreeView#0" expanded="false" />
+            <element signature="e#12153#12376#0" expanded="false" />
+            <element signature="n#!!doc;n#clearTree#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#clearTree#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#reshapeTree#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#reshapemodel#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#rmnd#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#mark#0;n#TreeView#0" expanded="false" />
+            <element signature="e#17592#18130#0" expanded="false" />
+            <element signature="e#18171#18758#0" expanded="false" />
+            <element signature="e#18800#18956#0" expanded="false" />
+            <element signature="e#18998#19178#0" expanded="false" />
+            <element signature="e#19216#20167#0" expanded="false" />
+            <element signature="e#20221#20580#0" expanded="false" />
+            <element signature="n#!!block;n#searchchildren#0;n#TreeView#0" expanded="false" />
+            <element signature="n#!!block;n#highlightnd#0" expanded="false" />
+            <element signature="n#!!block;n#nodeupdate#0" expanded="false" />
+            <element signature="n#!!block;n#getKeyByValue#0" expanded="false" />
+            <element signature="n#!!block;n#findparent#0" expanded="false" />
+            <element signature="n#!!block;n#checklowestchild#0" expanded="false" />
+            <element signature="n#!!block;n#diagonal#0" expanded="false" />
+            <element signature="n#!!block;n#layoutdfs#0" expanded="false" />
+            <marker date="1520468999039" expanded="false" signature="21642:21915" ph="{...}" />
+            <marker date="1520468999039" expanded="true" signature="25200:25209" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/treeview/TreeLevel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+          <folding>
+            <element signature="e#815#5868#0" expanded="false" />
+            <element signature="e#1031#5775#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

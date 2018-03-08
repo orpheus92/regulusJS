@@ -1,2 +1,2 @@
-export * from './Tree';
+export * from './TreeView';
 export * from './TreeLevel';

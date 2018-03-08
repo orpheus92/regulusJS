@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
-import {getKeyByValue} from "./Tree";
+import {getKeyByValue} from "./TreeView";
 import './style.css';
 import * as pubsub from '../PubSub';
 
 export class TreeLevel {
-    constructor(){
+    constructor() {
 
         this.yScale = d3.scaleLinear().nice();
         this.yScale2 = d3.scaleLog().nice();
@@ -13,14 +13,19 @@ export class TreeLevel {
 
         this.Level = "tLevel";
         this.Scale = "linear";
-        pubsub.subscribe("levelchange1", this.switchLevel);
+        let self = this;
+        pubsub.subscribe("levelchange", self.switchLevel.bind(self));
+        pubsub.subscribe("treechange", self.plotLevel.bind(self));
+        //pubsub.subscribe("levelchange", self.updatelevel.bind(self));
 
     }
 
 
-    plotLevel(ctree) {
-        if (ctree != undefined)
-        {
+    plotLevel(msg, ctree) {
+
+
+        //if (ctree != undefined)
+        if (msg === "treechange") {
             this.yScale.range([ctree.treelength, 0]);
             this.yScale2.range([ctree.treelength, 0]);
 
@@ -62,8 +67,8 @@ export class TreeLevel {
                 }
                 case "pLevel": {
 
-                    switch (this.Scale){
-                        case "linear":{
+                    switch (this.Scale) {
+                        case "linear": {
                             // Define Scale Function
                             if (ctree.pShow == undefined)
                                 this.yScale.domain([ctree.pInter, 1]);
@@ -88,7 +93,7 @@ export class TreeLevel {
                                 .text("Persistence Value")
                                 .attr("font-size", "15px")
                                 .attr("class", "levellabel")
-                                .attr("fill","blue");
+                                .attr("fill", "blue");
 
                             t.select(".bar")//.data([clevel])
                                 .attr("x", -5)
@@ -96,16 +101,16 @@ export class TreeLevel {
                                 .attr("width", 10)
                                 .attr("height", 5)
                                 .attr("class", "bar")
-                                .attr("fill","blue");
+                                .attr("fill", "blue");
                             break;
                         }
-                        case "log":{
+                        case "log": {
                             //this.clearPlots();
                             //console.log("Draw Log");
                             if (ctree.pShow == undefined)
-                                this.yScale2.domain([ctree.pInter+Number.EPSILON, 1+Number.EPSILON]);
+                                this.yScale2.domain([ctree.pInter + Number.EPSILON, 1 + Number.EPSILON]);
                             else
-                                this.yScale2.domain([ctree.pShow+Number.EPSILON, 1+Number.EPSILON]);
+                                this.yScale2.domain([ctree.pShow + Number.EPSILON, 1 + Number.EPSILON]);
 
                             // Draw Axis
                             let yAxis = d3.axisLeft()
@@ -115,7 +120,7 @@ export class TreeLevel {
                                 .attr("transform", "translate(" + (ctree.translatex - 10) + "," + ctree.translatey + ")")                //.transition(t)
                                 .call(yAxis);
                             //Draw Current Level
-                            clevel = ctree.pInter+Number.EPSILON;
+                            clevel = ctree.pInter + Number.EPSILON;
                             //console.log(clevel);
 
                             let cy = this.yScale2(clevel);
@@ -126,7 +131,7 @@ export class TreeLevel {
                                 .attr("width", 10)
                                 .attr("height", 5)
                                 .attr("class", "bar")
-                                .attr("fill","blue");
+                                .attr("fill", "blue");
                             break;
                         }
                         default:
@@ -141,22 +146,20 @@ export class TreeLevel {
             this._ctree = ctree;
         }
         else
-            this.plotLevel(this._ctree)
-
-
+            this.plotLevel("treechange", this._ctree);
     }
 
-    switchLevel(channel,self,level,scale) {
+    switchLevel(channel, level, scale) {
         //if (level!=undefined)
-        self.Level = level;
-        self.Scale = scale;
+        this.Level = level;
+        this.Scale = scale;
         switch (self.Level) {
             case "tLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
             case "pLevel": {
-                self.plotLevel();
+                this.plotLevel();
                 break;
             }
 

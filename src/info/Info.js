@@ -13,8 +13,9 @@ export class Info {
         this.persistence = d3.select("#persistence");
         this.cper = d3.select("#cper");
         this.csize = d3.select("#csize");
-        pubsub.subscribe("infoselect",this.select);
-        pubsub.subscribe("infoupdate",this.update);
+        let self = this;
+        pubsub.subscribe("infoselect",self.select.bind(self));
+        pubsub.subscribe("ParameterUpdate",self.update.bind(self));
 
     }
     create(data, cpInter, csInter, measure, dataarray){
@@ -50,16 +51,16 @@ export class Info {
         return(totalper);
     }
 
-    update(channel,self,cpInter,csInter){
+    update(channel,cpInter,csInter){
         d3.select('#filter_persistent').text(format(cpInter));
         d3.select('#filter_size').text(csInter);
     }
 
-    select(channel, self, data, attr){
+    select(channel, data, attr){
         //Should be changed to data not node
         if (data!=undefined) {
             let p_arr = Array.from(data._total);
-            let selectionarr = p_arr.map(x=>parseFloat(self.dataarray[attr][x]));
+            let selectionarr = p_arr.map(x=>parseFloat(this.dataarray[attr][x]));
             d3.select('#selected_size').text(data._total.size);
             d3.select('#selected_range').text(`[${format(Math.min(...selectionarr))}, ${format(Math.max(...selectionarr))}]`);
             d3.select('#selected_persistence').text(format(data._persistence));
