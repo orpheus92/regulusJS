@@ -29,7 +29,7 @@ let measure;
 let filterdata;
 let dataarray;
 
-//select('#catalog').on('click', () =>  {load("waste_Pu")});
+//select('#catalog').on('click', () =>  {load("dataresample2")});
 
 
 select('#catalog')
@@ -110,6 +110,7 @@ function load(dataset) {
                     loaddata = new Info();
                     // Persistence Array
                     let parr = loaddata.create(data, pInter, sizeInter, measure, dataarray);
+                    //console.log(parr, data);
                     //pubsub.publish("infoupdate", pInter, sizeInter);
                     // Tree
                     tree = new TreeView(treedata, data, basedata);
@@ -127,19 +128,22 @@ function load(dataset) {
                     // Everytime this gets updated, tree should get updated, plot should get updated
 
                     // Initialize Slider
-                    let newslider = new Slider(select("#treeslider"));
+                    let newslider = new Slider();//select("#treeslider"));
+
                     let slider = newslider.createslider([parr[0], parr[parr.length - 1]], 150);
                     let x = scaleLinear()
                         .domain([parr[0], parr[parr.length - 1]])
                         .range([0, 150])//size of slider and range of output, put persistence here
                         .clamp(true);
+
                     slider.handle.attr("cx", x(pInter));
 
                     //Initialize Charts
                     let pb = new pBar(tree, data, basedata);
                     //pb.updateBar(pInter,sizeInter);
                     pubsub.publish("ParameterUpdate", pInter, sizeInter);
-                    slider.curslide.call(drag()
+
+                    slider.curslider.call(drag()
                         .on("start drag", function () {
                             //console.log("BBB");
                             //slider.handle.attr("cx", x(pInter)); //initial position for the slider
@@ -157,8 +161,8 @@ function load(dataset) {
 
                     select(".ppbar").call(drag()
                         .on("start drag", () => {
-                            select(".ppbar").attr("x", pb.padding - 2 + pb.xScale(pb.xScale.invert(event.x - pb.padding + 2)));
-                            pInter = pb.xScale.invert(event.x - pb.padding + 2) - Number.EPSILON;
+                            select(".ppbar").attr("x", pb.padding*3/2 - 2 + pb.xScale(pb.xScale.invert(event.x - pb.padding*3/2 + 2)));
+                            pInter = pb.xScale.invert(event.x - pb.padding*3/2 + 2) - Number.EPSILON;
                             slider.handle.attr("cx", x(pInter));
 
                             //pubsub.publish("infoupdate", pInter, sizeInter);
@@ -169,8 +173,8 @@ function load(dataset) {
 
                     select(".pbar").call(drag()
                         .on("start drag", () => {
-                            select(".pbar").attr("x", pb.padding - 2 + pb.xScale2(pb.xScale2.invert(event.x - pb.padding + 2)));
-                            sizeInter = parseInt(pb.xScale2.invert(event.x - pb.padding + 2));
+                            select(".pbar").attr("x", pb.padding*3/2 - 2 + pb.xScale2(pb.xScale2.invert(event.x - pb.padding*3/2 + 2)));
+                            sizeInter = parseInt(pb.xScale2.invert(event.x - pb.padding*3/2 + 2));
                             //pubsub.publish("infoupdate", pInter, sizeInter);
                             [pInter, sizeInter] = tree.setParameter("slide", [pInter, sizeInter]);
                             //treelevel.plotLevel(tree);

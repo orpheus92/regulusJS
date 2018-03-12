@@ -84,8 +84,11 @@ export class TreeView {
         this._color = d3.scaleSqrt().domain([1, this._maxsize])
             .range(["#bae4b3", '#006d2c']);
         let svg = d3.select("#tree").attr("transform", "translate(" + this.translatex + "," + this.translatey + ")");
-        this._linkgroup = svg.append('g');
-        this._nodegroup = svg.append('g');
+        this._curtree = svg;
+        //this._linkgroup = svg.append('g');
+        //this._nodegroup = svg.append('g');
+
+
 
         let uid = 0;
         this._root.descendants().forEach(d => {
@@ -257,11 +260,13 @@ export class TreeView {
             .duration(250).ease(d3.easeLinear);
         //Update Link
         {
-            let newlink = this._linkgroup.selectAll(".link").data(this._activenode.slice(1), d => {
+            let newlink = this._curtree.selectAll(".link").data(this._activenode.slice(1), d => {
                 return d.id
             });
-            newlink.enter().insert("path")
-                .attr("class", "link").attr("d", d => {
+            newlink.enter()
+                .insert("path")
+                .attr("class", "link")
+                .attr("d", d => {
                 if (d.parent != null) {
 
                     if (d.parent.oldx != undefined) {
@@ -274,8 +279,11 @@ export class TreeView {
                 }
                 else
                     return diagonal(d.x, d.y, d.x, d.y)
-            });
+            })
+                .merge(newlink);
+
             newlink.exit().remove();
+
             t.selectAll('.link')
                 .attr("d", d => {
                     return diagonal(d, d.parent);
@@ -283,17 +291,22 @@ export class TreeView {
         }
         // Update Node
         {
-            this._nodegroup.selectAll(".node").data(this._activenode, d => {
+            let newnode = this._curtree.selectAll(".node").data(this._activenode, d => {
                 return d.id
-            })
-                .enter().append("circle").attr("class", 'node')
+            });
+
+            newnode.enter()
+                .append("circle")
+                .attr("class", 'node')
                 .attr("r", /*5 / Math.sqrt(this._circlesize) + */4)
                 .attr("transform", function (d) {
                     if (d.parent != null)
                         if (d.parent.oldx != undefined) {
                             return "translate(" + d.parent.oldx + "," + d.parent.oldy + ")";
                         }
-                });
+                }).merge(newnode);
+
+            newnode.exit().remove();
 
             t.selectAll('.node')
                 .attr("r", /*5 / Math.sqrt(this._circlesize) + */4)
@@ -313,11 +326,11 @@ export class TreeView {
                 .attr("transform", function (d) {
                     return "translate(" + d.x + "," + d.y + ")";
                 });
-
+/*
             d3.selectAll('.node').data(this._activenode, d => {
                 return d.id
             }).exit().remove();
-
+*/
         }
 
         this.mark();
@@ -648,7 +661,6 @@ export function getbaselevelInd(node, accum) {
 
     return accum;
 }
-
 
 export function nodeupdate(node, p, s) {
     //Check current node, if meets the contraint, then check its children recursively

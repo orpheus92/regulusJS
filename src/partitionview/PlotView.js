@@ -79,6 +79,7 @@ export class PlotView {
                 let selectindex = new Set(cur_selection);//cur_selection.map(obj=>obj.index));
                 //if(selectindex!= undefined)
                 pubsub.publish("BrushedSamples", selectindex, cur_node)
+                console.log(this._brushbox);
                 //tree.searchchildren(selectindex, cur_node);
                 //else
                 //console.log("No Points Selected");
@@ -948,7 +949,7 @@ export class PlotView {
                             ctx.beginPath();
                             area(regy);
                             ctx.lineWidth = 1.5;
-                            ctx.fillStyle = "#f1f1f1";
+                            ctx.fillStyle = "#bdbdbd";
                             ctx.fill();
                             ctx.translate(0, size)
 
@@ -1064,7 +1065,7 @@ export class PlotView {
                                 ctx.beginPath();
                                 area(regy);
                                 ctx.lineWidth = 1.5;
-                                ctx.fillStyle = "#f1f1f1";
+                                ctx.fillStyle = "#bdbdbd";
                                 ctx.fill();
                                 ctx.translate(0, size)
                             }
@@ -1141,7 +1142,7 @@ export class PlotView {
                                 ctx.beginPath();
                                 area(regy);
                                 ctx.lineWidth = 1.5;
-                                ctx.fillStyle = "#f1f1f1";
+                                ctx.fillStyle = "#bdbdbd";
                                 ctx.fill();
                                 ctx.translate(0, size)
                             }
@@ -1328,12 +1329,12 @@ export class PlotView {
 
 
                             cell.insert("path")
-                                .datum(regy).attr("fill", "#f1f1f1")
-                                .attr("stroke", "#f1f1f1")
+                                .datum(regy).attr("fill", "#bdbdbd")
+                                .attr("stroke", "#969696")
                                 .attr("stroke-linejoin", "round")
                                 .attr("stroke-linecap", "round")
-                                .attr("stroke-width", 1)
-                                .attr("stroke-opacity", 0.3)
+                                .attr("stroke-width", 2)
+                                .attr("stroke-opacity", 1)
                                 .attr("d", area);
                         }
 
@@ -1956,9 +1957,9 @@ function converte2range(e, x, y) {
     xrange.push((x.range()[0] > e[0][0]) ? x.range()[0] : e[0][0]);
     xrange.push((x.range()[1] < e[1][0]) ? x.range()[1] : e[1][0]);
     let yrange = [];
-    yrange.push((y.range()[0] > e[0][1]) ? y.range()[0] : e[0][1]);
-    yrange.push((y.range()[1] < e[1][1]) ? y.range()[1] : e[1][1]);
-
+    yrange.push((y.range()[1] > e[0][1]) ? y.range()[1] : e[0][1]);
+    yrange.push((y.range()[0] < e[1][1]) ? y.range()[0] : e[1][1]);
+    //console.log(y.range(),e,yrange);
     let filterbydomain = [];
     filterbydomain.push([x.invert(xrange[0]), x.invert(xrange[1])]);
     filterbydomain.push([y.invert(yrange[0]), y.invert(yrange[1])]);

@@ -18,15 +18,15 @@ export class pBar {
             return parseFloat(b) - parseFloat(a)
         });
         let psize = [];
-
+        //console.log(plist);
+        //console.log(data);
         for (let p in plist) {
-
-            p = parseInt(p);
-
-            psize.push([plist[p], data[plist[p]].length]);
-            if (parseInt(p) + 1 <= plist.length - 1) {
-                psize.push([plist[p + 1], data[plist[p]].length]);
-            }
+            //console.log(p);
+            //p = parseInt(p);
+            psize.push([parseFloat(plist[p]), data[plist[p]].length-1]);
+            //if (parseInt(p) + 1 <= plist.length - 1) {
+            //    psize.push([plist[p + 1], data[plist[p]].length]);
+            //}
         }
 
         let margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -44,47 +44,72 @@ export class pBar {
             .range([0, width - padding]).clamp(true); // output
 
         this.yScale = scaleLinear()
-            .domain([1, psize[psize.length - 1][1]]) // input
+            .domain([psize[0][1], psize[psize.length - 1][1]]) // input
             .range([height - padding, 0]); // output
+        //console.log(psize);
 
         let line = myline()
-            .x(d => {
+            .x((d,i) => {//console.log("i = ",i, 'd= ', d);//, psize[i][0]);
                 return this.xScale(parseFloat(d[0]) + Number.EPSILON);
             }) // set the x values for the line generator
-            .y(d => {
+            .y((d,i) => {
                 return this.yScale(parseFloat(d[1]));
             }); // set the y values for the line generator
 
         this.dataset = psize;
 
-        let svg = select("#pBarcode").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)//;
-            .attr("class", "pchart");
-        //Path for Partitions vs Persistence
-        svg.append("path")
-            .datum(this.dataset)
+        let svg = select(".pchart");//.attr("transform", "translate(" + (padding) + "," + margin.top + ")");
+
+        // Persistence Chart
+        let myplt = svg.selectAll(".line").data([this.dataset]);
+
+        myplt.enter()
+            .append("path")
+            .merge(myplt)
             .attr("class", "line")
-            .attr("transform", "translate(" + (padding) + "," + margin.top + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + margin.top + ")")
             .attr("d", line);
+
+        myplt.exit().remove();
         // Axis
-        svg.append("g")
+        let xaxis = svg.selectAll('.pxaxis').data([0]);
+            xaxis
+            .enter()
+            .append("g")
+            .merge(xaxis)
             .attr("class", "pxaxis")
-            .attr("transform", "translate(" + (padding) + "," + (height - padding + margin.top) + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + (height - padding + margin.top) + ")")
             .call(axisBottom(this.xScale));
 
-        svg.append("g")
+        xaxis.exit().remove();
+
+        let yaxis = svg.selectAll('.pyaxis').data([0]);
+        yaxis.enter()
+            .append("g")
+            .merge(yaxis)
             .attr("class", "pyaxis")
-            .attr("transform", "translate(" + (padding) + "," + (margin.top) + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + (margin.top) + ")")
             .call(axisLeft(this.yScale));
 
+        yaxis.exit().remove();
+
         svg.selectAll(".tick").selectAll("text").style("font-size", 8 + "px");
-        svg.append("text")
+
+        let ylabel =svg.selectAll('.ylabel').data([0]);
+
+        ylabel.enter()
+            .append("text")
+            .merge(ylabel)
+            .attr("class","ylabel")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate(" + 0 + "," + (height / 2) + ")rotate(-90)")
+            .attr("transform", "translate(" + padding/2 + "," + (height / 2) + ")rotate(-90)")
             .text("Partitions");
 
-        svg.append("text")
+        let xlabel = svg.selectAll('.xlabel').data([1]);
+        xlabel.enter()
+            .append("text")
+            .merge(xlabel)
+            .attr("class","xlabel")
             .attr("text-anchor", "middle")
             .attr("transform", "translate(" + (width / 2) + "," + (height + margin.top) + ")")
             .text("Persistence");
@@ -95,7 +120,7 @@ export class pBar {
         }
 
         let btn = mybutton()
-            .x(width - 1.5 * padding) // X Location
+            .x(width - padding) // X Location
             .y(height) // Y Location
             .labels(["-"]) // Array of round-robin labels
             .callback(callback) // User callback on click
@@ -112,7 +137,7 @@ export class pBar {
         }
 
         let btn2 = mybutton()
-            .x(width - 0.5 * padding) // X Location
+            .x(width) // X Location
             .y(height) // Y Location
             .labels(["+"]) // Array of round-robin labels
             .callback(callback2) // User callback on click
@@ -124,22 +149,34 @@ export class pBar {
         svg.call(btn2)
 
         //add persistence bar
-        svg.append("rect").attr("class", "ppbar");
+        let handle = svg.selectAll(".ppbar")
+            .data([0]);
+
+        handle.enter()
+            .append("rect")
+            .merge(handle)
+            .attr("class", "ppbar");
+
+        handle.exit().remove();
 
         let maxsize = parseInt(this.totalsize / 50);
-
+        //console.log(maxsize);
         let psize2 = new Array(maxsize);
         psize2.fill(0);
+        //console.log(this.basedata);
         for (let key in this.basedata) {
+           //console.log(key);
             if (this.basedata[key].length < maxsize)
-                psize2[this.basedata[key].length]++;
+                psize2[this.basedata[key].length-1]++;
             else
                 psize2[maxsize - 1]++;
         }
+        //console.log(psize2);
         for (let i = psize2.length - 1; i > 0; i--) {
             psize2[i - 1] = psize2[i - 1] + psize2[i];
         }
         this.dataset2 = psize2;
+        //console.log(psize2);
         this.xScale2 = scaleLinear()
             .domain([0, maxsize - 1]) // input
             .range([0, width - padding]).clamp(true); // output
@@ -157,39 +194,68 @@ export class pBar {
                 return this.yScale2(d);
             });
 
-        let svg2 = select("#pBarcode").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .attr("class", "sizechart");
+        let svg2 = select(".sizechart");
+            //.append("svg")
+            //.attr("width", width + margin.left + margin.right)
+            //.attr("height", height + margin.top + margin.bottom)
+            //.attr("class", "sizechart");
 
-        svg2.append("path")
-            .datum(psize2)
+        let myplt2 =svg2.selectAll(".line").data([psize2]);
+            //.datum(psize2)
+        myplt2.enter().append("path")
+            .merge(myplt2)
             .attr("class", "line")
-            .attr("transform", "translate(" + (padding) + "," + margin.top + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + margin.top + ")")
             .attr("d", line2);
 
-        svg2.append("g")
+        myplt2.exit().remove();
+
+        let xaxis2 = svg2.selectAll('.pxaxis').data([0]);
+        xaxis2.enter()
+            .append("g")
+            .merge(xaxis2)
             .attr("class", "pxaxis")
-            .attr("transform", "translate(" + (padding) + "," + (height - padding + margin.top) + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + (height - padding + margin.top) + ")")
             .call(axisBottom(this.xScale2));
 
-        svg2.append("g")
+        xaxis2.exit().remove();
+
+        let yaxis2 = svg2.selectAll('.pyaxis').data([0]);
+        yaxis2.enter()
+            .append("g")
+            .merge(yaxis2)
             .attr("class", "pyaxis")
-            .attr("transform", "translate(" + (padding) + "," + (margin.top) + ")")
+            .attr("transform", "translate(" + (3*padding/2) + "," + (margin.top) + ")")
             .call(axisLeft(this.yScale2));
+
+        yaxis2.exit().remove();
 
         svg2.selectAll(".tick").selectAll("text").style("font-size", 8 + "px");
 
 
-        svg2.append("text")
+        let ylabel2 = svg2.selectAll('.ylabel').data([0]);
+
+        ylabel2.enter()
+            .append("text")
+            .merge(ylabel2)
+            .attr("class", "ylabel")
             .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate(" + 0 + "," + (height / 2) + ")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate(" + (padding/2) + "," + (height / 2) + ")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
             .text("Partitions");
 
-        svg2.append("text")
+        ylabel2.exit().remove();
+
+        let xlabel2 = svg2.selectAll('.xlabel').data([0]);
+
+        xlabel2.enter()
+            .append("text")
+            .merge(xlabel2)
+            .attr("class", "xlabel")
             .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
             .attr("transform", "translate(" + (width / 2) + "," + (height + margin.top) + ")")  // centre below axis
             .text("Size");
+
+        xlabel2.exit().remove();
 
         // Add Buttons
         let callback3 = () => {
@@ -197,7 +263,7 @@ export class pBar {
         }
 
         let btn3 = mybutton()
-            .x(width - 1.5 * padding) // X Location
+            .x(width - padding) // X Location
             .y(height) // Y Location
             .labels(["-"]) // Array of round-robin labels
             .callback(callback3) // User callback on click
@@ -214,7 +280,7 @@ export class pBar {
         }
 
         let btn4 = mybutton()
-            .x(width - 0.5 * padding) // X Location
+            .x(width) // X Location
             .y(height) // Y Location
             .labels(["+"]) // Array of round-robin labels
             .callback(callback4) // User callback on click
@@ -226,7 +292,14 @@ export class pBar {
         svg2.call(btn4)
 
         //add persistence bar
-        svg2.append("rect").attr("class", "pbar");
+        let handle2 = svg2.selectAll(".pbar").data([0]);
+
+        handle2.enter()
+            .append("rect")
+            .merge(handle2)
+            .attr("class", "pbar");
+
+        handle2.exit().remove();
 
         let self = this;
         pubsub.subscribe("ParameterUpdate", self.updateBar.bind(self));
@@ -252,8 +325,9 @@ export class pBar {
                 cy = this.yScale(this.dataset[i][1]);
             }
         }
+
         select(".ppbar")//.data([cx])
-            .attr("x", cx + this.padding - 2)
+            .attr("x", cx + this.padding*3/2 - 2)
             .attr("y", this.margin.top - 2)
             .attr("width", 4)
             .attr("height", this.height - this.margin.top - this.margin.bottom)
@@ -277,7 +351,7 @@ export class pBar {
 
 
         select(".pbar")//.data([cx])
-            .attr("x", cx2 + this.padding - 2)
+            .attr("x", cx2 + this.padding*3/2 - 2)
             .attr("y", this.margin.top - 2)
             .attr("width", 4)
             .attr("height", this.height - this.margin.top - this.margin.bottom)

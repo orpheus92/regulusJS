@@ -182,8 +182,8 @@ def process(args=None):
 
     try:
         msc = MSC(ns.graph, ns.gradient, ns.knn, ns.beta, ns.norm)
-        msc.load_data_and_build(ns.filename)
-        msc.save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
+        msc.LoadData(ns.filename)
+        msc.Save(path / 'Hierarchy.csv', path / 'Base_Partition.json')
 
         post = PostMSC()
         post.load(path / 'Hierarchy.csv', path / 'Base_Partition.json')
