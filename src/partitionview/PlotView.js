@@ -9,6 +9,7 @@ import {myBrush} from '../customd3';
 export class PlotView {
     // Assign a parentnode for all divs
     constructor(data, width, height, yattr, plottype, check, band, dataarray) {
+        d3.select("#hdPlot").selectAll("div").remove();
         this._rawdata = data;
         this._data = data;
         this._margin = {top: height / 10, right: height / 10, bottom: width / 10, left: width / 10};
